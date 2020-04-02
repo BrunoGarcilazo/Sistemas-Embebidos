@@ -43,7 +43,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC32MM-GPM-0XX_DFP" vendor="Microchip" version="1.2.31"/>
+        <pack name="PIC32MM-GPM-0XX_DFP" vendor="Microchip" version="1.0.14"/>
       </packs>
       <compileType>
         <linkerTool>
