@@ -194,7 +194,7 @@ int main( void ){
     LEDA_SetDigitalOutput();
     LEDB_SetDigitalOutput();
     LEDA_SetHigh();
-    LEDB_SetLow();
+    LEDB_SetHigh();
     while (1){
         LEDA_Toggle();
         LEDB_Toggle();

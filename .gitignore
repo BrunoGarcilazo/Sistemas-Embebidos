@@ -27,3 +27,7 @@ Laboratorio1.X/nbproject/Makefile-local-default.mk
 Laboratorio1.X/nbproject/Makefile-variables.mk
 Laboratorio1.X/nbproject/Package-default.bash
 Laboratorio1.X/nbproject/private/private.xml
+Laboratorio1.X/nbproject/Makefile-local-default.mk
+*.mk
+*.bash
+*.properties
