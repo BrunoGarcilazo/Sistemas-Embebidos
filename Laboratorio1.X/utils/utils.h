@@ -18,7 +18,7 @@
 #ifndef _EXAMPLE_FILE_NAME_H    /* Guard against multiple inclusion */
 #define _EXAMPLE_FILE_NAME_H
 
-#define UT_DELAY_CYCLES 500
+#define UT_DELAY_CYCLES 50000
 
 
 

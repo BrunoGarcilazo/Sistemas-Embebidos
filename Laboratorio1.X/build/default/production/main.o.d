@@ -1,4 +1,4 @@
 build/default/production/main.o:  \
 main.c  \
-platform/HardwareProfile.h  \
- utils/utils.h 
+mcc_generated_files/system.h  \
+ mcc_generated_files/pin_manager.h 
