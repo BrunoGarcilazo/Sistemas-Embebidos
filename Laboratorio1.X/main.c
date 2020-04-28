@@ -47,7 +47,7 @@
 */
 #include "mcc_generated_files/system.h"
 #include "mcc_generated_files/pin_manager.h"
-
+#include "buttons.h"
 /*
                          Main application
  */
@@ -55,67 +55,22 @@ int main(void)
 {
     // initialize the device
     SYSTEM_Initialize();
-    while (1)
-    {
-<<<<<<< Updated upstream
-        return 3;
-    }
- */
-static int ExampleLocalFunction(int param1, int param2) {
-    return 0;
-}
-
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-// Section: Interface Functions                                               */
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-/*  A brief description of a section can be given directly below the section
-    banner.
- */
-
-// *****************************************************************************
-
-
-/** 
-  @Function
-    int ExampleInterfaceFunctionName ( int param1, int param2 ) 
-
-  @Summary
-    Brief one-line description of the function.
-
-  @Remarks
-    Refer to the example_file.h interface header for function usage details.
- */
-int main( void ){
-    LEDA_SetDigitalOutput();
-    LEDB_SetDigitalOutput();
-    LEDA_SetHigh();
-    LEDB_SetLow();
-    while (1){
-        LEDA_Toggle();
-        LEDB_Toggle();
-=======
-        
-        if(BTN1_GetValue() == 1){           
+    BTN1_Reset1();
+    BTN2_Reset2();
+    while (1){   
+        if(BTN1_GetValue1()){
             LEDA_Toggle();
-            while(BTN1_GetValue() == 1){
-            }
-        }                   
->>>>>>> Stashed changes
-        UT_delay();
-        if(BTN2_GetValue() == 1){
+            BTN1_Reset1();            
+        }
+        if(BTN2_GetValue2()){
             LEDB_Toggle();
-            while(BTN2_GetValue() == 1){
-            }
-        } 
-        UT_delay();      
+            BTN2_Reset2();
+        }       
     }
     return 1; 
 }
 /**
  End of File
 */
+
 
