@@ -18,7 +18,7 @@
     The generated drivers are tested against the following:
         Compiler          :  XC16 v1.50
         MPLAB 	          :  MPLAB X v5.35
-*/
+ */
 
 /*
     (c) 2020 Microchip Technology Inc. and its subsidiaries. You may use this
@@ -40,37 +40,48 @@
 
     MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE OF THESE
     TERMS.
-*/
+ */
 
 /**
   Section: Included Files
-*/
+ */
 #include "mcc_generated_files/system.h"
 #include "mcc_generated_files/pin_manager.h"
 #include "buttons.h"
+#include "utils/utils.h"
+#include "mcc_generated_files/tmr2.h"
+
 /*
                          Main application
  */
-int main(void)
-{
+int main(void) {
     // initialize the device
     SYSTEM_Initialize();
+    TMR2_Stop();
     Boton1Flag_Reset();
     Boton2Flag_Reset();
-    while (1){   
-        if(Boton1Flag_GetValue()){
+
+    while (1) {
+        if (Boton1Flag_GetValue()) {
             LEDA_Toggle();
-            Boton1Flag_Reset();            
+            UT_delayms(2);
+            LEDA_Toggle();
+            Boton1Flag_Reset();
         }
-        if(Boton2Flag_GetValue()){
+        if (Boton2Flag_GetValue()) {
+            LEDB_Toggle();
+            UT_delayms(2);
             LEDB_Toggle();
             Boton2Flag_Reset();
-        }       
+        }
     }
-    return 1; 
+
+
+
+    return 1;
 }
 /**
  End of File
-*/
+ */
 
 
