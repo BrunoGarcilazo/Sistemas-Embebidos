@@ -55,16 +55,16 @@ int main(void)
 {
     // initialize the device
     SYSTEM_Initialize();
-    BTN1_Reset1();
-    BTN2_Reset2();
+    Boton1Flag_Reset();
+    Boton2Flag_Reset();
     while (1){   
-        if(BTN1_GetValue1()){
+        if(Boton1Flag_GetValue()){
             LEDA_Toggle();
-            BTN1_Reset1();            
+            Boton1Flag_Reset();            
         }
-        if(BTN2_GetValue2()){
+        if(Boton2Flag_GetValue()){
             LEDB_Toggle();
-            BTN2_Reset2();
+            Boton2Flag_Reset();
         }       
     }
     return 1; 

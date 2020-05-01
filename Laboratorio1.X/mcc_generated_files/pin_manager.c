@@ -142,12 +142,12 @@ void PIN_MANAGER_Initialize (void)
 
 void __attribute__ ((weak)) BTN2_CallBack(void)
 {
-    BTN2_Set();
+    Boton2Flag_Set();
 }
 
 void __attribute__ ((weak)) BTN1_CallBack(void)
 {
-    BTN1_Set();
+    Boton1Flag_Set();
 }
 
 void BTN2_SetInterruptHandler(void (* InterruptHandler)(void))
