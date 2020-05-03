@@ -64,13 +64,13 @@ int main(void) {
     while (1) {
         if (Boton1Flag_GetValue()) {
             LEDA_Toggle();
-            UT_delayms(2);
+            UT_delayms(2000);
             LEDA_Toggle();
             Boton1Flag_Reset();
         }
         if (Boton2Flag_GetValue()) {
             LEDB_Toggle();
-            UT_delayms(2);
+            UT_delayms(2000);
             LEDB_Toggle();
             Boton2Flag_Reset();
         }
