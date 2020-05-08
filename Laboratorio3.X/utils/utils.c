@@ -3,7 +3,8 @@
 #include "stdint.h"
 #include "stdbool.h"
 
-int global_data;
+extern int global_data;
+extern bool aux;
 int interrupciones;
 
 typedef struct
@@ -21,8 +22,19 @@ UT_TMR_DELAY_WAIT
 
 
 
-bool UT_delayms(ut_tmrDelay_t* p_timer, uint32_t p_ms)
-{
+bool UT_delayms(ut_tmrDelay_t* p_timer, uint32_t p_ms){
+    if(!aux){
+        p_timer->startValue = p_ms;
+        aux = true;
+    }
+    
+    if(ut_tmrDelay_t.startValue > 0){
+        TMR2_Start(); 
+        return false;
+    }else{
+        TMR2_Stop();
+        return true;
+    }
     
 }
 
