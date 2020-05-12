@@ -3,8 +3,12 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/estudiante.fit/OneDrive/AA%20UCU/05%20Semestre%20Cinco/Embebidos/Laboratorios/Laboratorio3.X/utils.c</file>
-            <file>file:/C:/Users/estudiante.fit/OneDrive/AA%20UCU/05%20Semestre%20Cinco/Embebidos/Laboratorios/Laboratorio3.X/main.c</file>
+            <file>file:/F:/Proyectos/MPLAB_X/Sistemas-Embebidos/Laboratorio3.X/mcc_generated_files/tmr2.h</file>
+            <file>file:/F:/Proyectos/MPLAB_X/Sistemas-Embebidos/Laboratorio3.X/utilss/utils.h</file>
+            <file>file:/F:/Proyectos/MPLAB_X/Sistemas-Embebidos/Laboratorio3.X/main.c</file>
+            <file>file:/F:/Proyectos/MPLAB_X/Sistemas-Embebidos/Laboratorio3.X/mcc_generated_files/tmr2.c</file>
+            <file>file:/F:/Proyectos/MPLAB_X/Sistemas-Embebidos/Laboratorio3.X/utils/utils.c</file>
+            <file>file:/F:/Proyectos/MPLAB_X/Sistemas-Embebidos/Laboratorio3.X/nbproject/Makefile-impl.mk</file>
         </group>
     </open-files>
 </project-private>

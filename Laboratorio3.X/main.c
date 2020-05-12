@@ -47,7 +47,10 @@
  */
 #include "mcc_generated_files/system.h"
 #include "mcc_generated_files/pin_manager.h"
+#include "mcc_generated_files/usb/usb_device_cdc.h" 
+
 #include "utilss/utils.h"
+
 /*
                          Main application
  */
@@ -55,35 +58,45 @@ int main(void) {
     // initialize the device
     SYSTEM_Initialize();
     ut_tmrDelay_t timer;
-    
+
     timer.state = UT_TMR_DELAY_INIT;
-    
+
     bool luzPrendida = false;
-    
+
     uint32_t ochociento = 800;
     uint32_t cuatrociento = 400;
-    
+    //USBDeviceInit();
     while (1) {
 
-        switch (luzPrendida){
+
+//        CDCTxService();
+//        if ((USBGetDeviceState() < CONFIGURED_STATE) ||
+//                (USBIsDeviceSuspended() == true)) {
+//            //Either the device is not configured or we are suspended
+//            //  so we don't want to do execute any application code
+//            continue; //go back to the top of the while loop
+//        } else {        
+//            if (USBUSARTIsTxTrfReady()) {
+//                char data[] = "c";
+//                putsUSBUSART(data);
+//            }
+//        }
+
+
+        switch (luzPrendida) {
             case false:
-                if (UT_delayms(&timer , ochociento)){
+                if (UT_delayms(&timer, ochociento)) {
                     luzPrendida = true;
                     LEDB_SetHigh();
                 }
                 break;
             case true:
-                if (UT_delayms(&timer , cuatrociento)){
+                if (UT_delayms(&timer, cuatrociento)) {
                     luzPrendida = false;
                     LEDB_SetLow();
                 }
                 break;
         }
-
     }
     return 1;
 }
-/**
- End of File
- */
-

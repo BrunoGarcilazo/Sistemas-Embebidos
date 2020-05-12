@@ -808,7 +808,7 @@ void putrsUSBUSART(const char *data)
         while(1)
         {
             USBDeviceTasks();
-            if((USBGetDeviceState() \< CONFIGURED_STATE) ||
+                if((USBGetDeviceState() \< CONFIGURED_STATE) ||
                (USBIsDeviceSuspended() == true))
             {
                 //Either the device is not configured or we are suspended
