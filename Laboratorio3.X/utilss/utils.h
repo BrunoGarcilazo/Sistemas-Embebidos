@@ -2,9 +2,8 @@
 #define _EXAMPLE_FILE_NAME_H
 
 #define UT_DELAY_CYCLES 50000
-
-
-
+#include "stdint.h"
+#include "stdbool.h"
 
 
 /* ************************************************************************** */
@@ -26,6 +25,15 @@ extern "C" {
 
 #define EXAMPLE_CONSTANT 0
 
+    typedef enum {
+        UT_TMR_DELAY_INIT,
+        UT_TMR_DELAY_WAIT
+    } UT_TMR_DELAY_STATE;
+
+    typedef struct {
+        uint32_t startValue;
+        UT_TMR_DELAY_STATE state;
+    } ut_tmrDelay_t;
 
     int ExampleFunction(int param1, int param2);
     /*
@@ -34,7 +42,7 @@ extern "C" {
      */
     void DecrementarContador(void);
 
-    void UT_delayms(int multiplo);
+    bool UT_delayms(ut_tmrDelay_t* p_timer, uint32_t p_ms);
 
 
 

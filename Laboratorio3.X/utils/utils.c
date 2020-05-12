@@ -1,43 +1,33 @@
 
-#include "utils.h"
+#include "../utilss/utils.h"
 #include "stdint.h"
 #include "stdbool.h"
 
-extern int global_data;
-extern bool aux;
-int interrupciones;
 
-typedef struct
-{
-uint32_t startValue;
-UT_TMR_DELAY_STATE state;
-} ut_tmrDelay_t;
+bool UT_delayms(ut_tmrDelay_t* p_timer, uint32_t p_ms) {
+    /*
+     * El delay es una maquina de estados que se representa con un switch
+     * */
 
-typedef enum
-{
-UT_TMR_DELAY_INIT,
-UT_TMR_DELAY_WAIT
-} UT_TMR_DELAY_STATE;
+    switch (p_timer->state) {
+        case UT_TMR_DELAY_INIT:
+            p_timer->startValue = TMR2_SoftwareCounterGet();
+            p_timer->state = UT_TMR_DELAY_WAIT;
+            return false;
+            break;
 
+        case UT_TMR_DELAY_WAIT:
+            if ((TMR2_SoftwareCounterGet() - (p_timer->startValue)) >= p_ms) {
+                p_timer->state = UT_TMR_DELAY_INIT;
+                return true;
+                break;
+            } else {
+                return false;
+            }
 
-
-
-bool UT_delayms(ut_tmrDelay_t* p_timer, uint32_t p_ms){
-    if(!aux){
-        p_timer->startValue = p_ms;
-        aux = true;
+        default:
+            return false;
     }
-    
-    if(ut_tmrDelay_t.startValue > 0){
-        TMR2_Start(); 
-        return false;
-    }else{
-        TMR2_Stop();
-        return true;
-    }
-    
+
 }
 
-void DecrementarContador(){
-    interrupciones = interrupciones - 1;
-}

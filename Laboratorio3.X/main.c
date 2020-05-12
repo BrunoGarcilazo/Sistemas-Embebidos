@@ -18,7 +18,7 @@
     The generated drivers are tested against the following:
         Compiler          :  XC16 v1.50
         MPLAB 	          :  MPLAB X v5.35
-*/
+ */
 
 /*
     (c) 2020 Microchip Technology Inc. and its subsidiaries. You may use this
@@ -40,27 +40,49 @@
 
     MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE OF THESE
     TERMS.
-*/
+ */
 
 /**
   Section: Included Files
-*/
+ */
 #include "mcc_generated_files/system.h"
-
+#include "mcc_generated_files/pin_manager.h"
+#include "utilss/utils.h"
 /*
                          Main application
  */
-int main(void)
-{
+int main(void) {
     // initialize the device
     SYSTEM_Initialize();
-    while (1)
-    {
-        // Add your application code
+    ut_tmrDelay_t timer;
+    ut_tmrDelay_t timer2;
+    
+    bool luzPrendida = false;
+    
+    uint32_t ochociento = 800;
+    uint32_t cuatrociento = 400;
+    
+    while (1) {
+
+        switch (luzPrendida){
+            case false:
+                if (UT_delayms(&timer , ochociento)){
+                    luzPrendida = true;
+                    LEDB_SetHigh();
+                }
+                break;
+            case true:
+                if (UT_delayms(&timer2 , cuatrociento)){
+                    luzPrendida = false;
+                    LEDB_SetLow();
+                }
+                break;
+        }
+
     }
-    return 1; 
+    return 1;
 }
 /**
  End of File
-*/
+ */
 

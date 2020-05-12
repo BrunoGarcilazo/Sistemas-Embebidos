@@ -28,6 +28,9 @@
         <itemPath>mcc_generated_files/rtcc.h</itemPath>
         <itemPath>mcc_generated_files/tmr2.h</itemPath>
       </logicalFolder>
+      <logicalFolder name="utilss" displayName="utilss" projectFiles="true">
+        <itemPath>utilss/utils.h</itemPath>
+      </logicalFolder>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -54,6 +57,9 @@
         <itemPath>mcc_generated_files/rtcc.c</itemPath>
         <itemPath>mcc_generated_files/tmr2.c</itemPath>
       </logicalFolder>
+      <logicalFolder name="utils" displayName="utils" projectFiles="true">
+        <itemPath>utils/utils.c</itemPath>
+      </logicalFolder>
       <itemPath>main.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
@@ -63,6 +69,10 @@
       <itemPath>MyConfig.mc3</itemPath>
     </logicalFolder>
   </logicalFolder>
+  <sourceRootList>
+    <Elem>utilss</Elem>
+    <Elem>utils</Elem>
+  </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
     <conf name="default" type="2">

@@ -54,6 +54,370 @@
 /**
     Section: Device Pin Macros
 */
+/**
+  @Summary
+    Sets the GPIO pin, RA7, high using LATA7.
+
+  @Description
+    Sets the GPIO pin, RA7, high using LATA7.
+
+  @Preconditions
+    The RA7 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RA7 high (1)
+    LEDA_SetHigh();
+    </code>
+
+*/
+#define LEDA_SetHigh()          ( LATASET = (1 << 7) )
+/**
+  @Summary
+    Sets the GPIO pin, RA7, low using LATA7.
+
+  @Description
+    Sets the GPIO pin, RA7, low using LATA7.
+
+  @Preconditions
+    The RA7 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RA7 low (0)
+    LEDA_SetLow();
+    </code>
+
+*/
+#define LEDA_SetLow()           ( LATACLR = (1 << 7) )
+
+/**
+  @Summary
+    Sets a value to the GPIO pin.
+
+  @Description
+    Sets or Resets the GPIO pin, RA7, low or high using LATA7.
+
+  @Preconditions
+    The RA7 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    bool value; : value to be set to the GPIO pin.
+
+  @Example
+    <code>
+    // Set RA7 to low.
+    LEDA_SetValue(false);
+    </code>
+
+*/
+inline static void LEDA_SetValue(bool value)
+{
+  if(value)
+  {
+    LEDA_SetHigh();
+  }
+  else
+  {
+    LEDA_SetLow();
+  }
+}
+
+/**
+  @Summary
+    Toggles the GPIO pin, RA7, using LATA7.
+
+  @Description
+    Toggles the GPIO pin, RA7, using LATA7.
+
+  @Preconditions
+    The RA7 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Toggle RA7
+    LEDA_Toggle();
+    </code>
+
+*/
+#define LEDA_Toggle()           ( LATAINV = (1 << 7) )
+/**
+  @Summary
+    Reads the value of the GPIO pin, RA7.
+
+  @Description
+    Reads the value of the GPIO pin, RA7.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    uint16_t portValue;
+
+    // Read RA7
+    postValue = LEDA_GetValue();
+    </code>
+
+*/
+#define LEDA_GetValue()         PORTAbits.RA7
+/**
+  @Summary
+    Configures the GPIO pin, RA7, as an input.
+
+  @Description
+    Configures the GPIO pin, RA7, as an input.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RA7 as an input
+    LEDA_SetDigitalInput();
+    </code>
+
+*/
+#define LEDA_SetDigitalInput()   ( TRISASET = (1 << 7) )
+/**
+  @Summary
+    Configures the GPIO pin, RA7, as an output.
+
+  @Description
+    Configures the GPIO pin, RA7, as an output.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RA7 as an output
+    LEDA_SetDigitalOutput();
+    </code>
+
+*/
+#define LEDA_SetDigitalOutput()   ( TRISACLR = (1 << 7) )
+/**
+  @Summary
+    Sets the GPIO pin, RB14, high using LATB14.
+
+  @Description
+    Sets the GPIO pin, RB14, high using LATB14.
+
+  @Preconditions
+    The RB14 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RB14 high (1)
+    LEDB_SetHigh();
+    </code>
+
+*/
+#define LEDB_SetHigh()          ( LATBSET = (1 << 14) )
+/**
+  @Summary
+    Sets the GPIO pin, RB14, low using LATB14.
+
+  @Description
+    Sets the GPIO pin, RB14, low using LATB14.
+
+  @Preconditions
+    The RB14 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Set RB14 low (0)
+    LEDB_SetLow();
+    </code>
+
+*/
+#define LEDB_SetLow()           ( LATBCLR = (1 << 14) )
+
+/**
+  @Summary
+    Sets a value to the GPIO pin.
+
+  @Description
+    Sets or Resets the GPIO pin, RB14, low or high using LATB14.
+
+  @Preconditions
+    The RB14 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    bool value; : value to be set to the GPIO pin.
+
+  @Example
+    <code>
+    // Set RB14 to low.
+    LEDB_SetValue(false);
+    </code>
+
+*/
+inline static void LEDB_SetValue(bool value)
+{
+  if(value)
+  {
+    LEDB_SetHigh();
+  }
+  else
+  {
+    LEDB_SetLow();
+  }
+}
+
+/**
+  @Summary
+    Toggles the GPIO pin, RB14, using LATB14.
+
+  @Description
+    Toggles the GPIO pin, RB14, using LATB14.
+
+  @Preconditions
+    The RB14 must be set to an output.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Toggle RB14
+    LEDB_Toggle();
+    </code>
+
+*/
+#define LEDB_Toggle()           ( LATBINV = (1 << 14) )
+/**
+  @Summary
+    Reads the value of the GPIO pin, RB14.
+
+  @Description
+    Reads the value of the GPIO pin, RB14.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    uint16_t portValue;
+
+    // Read RB14
+    postValue = LEDB_GetValue();
+    </code>
+
+*/
+#define LEDB_GetValue()         PORTBbits.RB14
+/**
+  @Summary
+    Configures the GPIO pin, RB14, as an input.
+
+  @Description
+    Configures the GPIO pin, RB14, as an input.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RB14 as an input
+    LEDB_SetDigitalInput();
+    </code>
+
+*/
+#define LEDB_SetDigitalInput()   ( TRISBSET = (1 << 14) )
+/**
+  @Summary
+    Configures the GPIO pin, RB14, as an output.
+
+  @Description
+    Configures the GPIO pin, RB14, as an output.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    <code>
+    // Sets the RB14 as an output
+    LEDB_SetDigitalOutput();
+    </code>
+
+*/
+#define LEDB_SetDigitalOutput()   ( TRISBCLR = (1 << 14) )
 
 /**
     Section: Function Prototypes
