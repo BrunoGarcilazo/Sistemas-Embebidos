@@ -55,7 +55,8 @@ int main(void) {
     // initialize the device
     SYSTEM_Initialize();
     ut_tmrDelay_t timer;
-    ut_tmrDelay_t timer2;
+    
+    timer.state = UT_TMR_DELAY_INIT;
     
     bool luzPrendida = false;
     
@@ -72,7 +73,7 @@ int main(void) {
                 }
                 break;
             case true:
-                if (UT_delayms(&timer2 , cuatrociento)){
+                if (UT_delayms(&timer , cuatrociento)){
                     luzPrendida = false;
                     LEDB_SetLow();
                 }
