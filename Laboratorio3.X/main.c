@@ -67,15 +67,10 @@ int main(void) {
 
     //Variables de USB
     int8_t numBytes;
-    uint8_t buffer[3];
-    buffer[1] = '\r';
-    buffer[2] = '\n';
+    uint8_t buffer[10];
 
 
-    char bienvenida[] = "Bienvenido\r\nMenu\r\nPara seleccionar una opcion envie la tecla presente a la izquierda de la funcion\r\na - Fijar hora del reloj RTC\r\nb - Consultar hora del RTC\r\nc - Agregar evento\r\nd - Quitar evento\r\ne - Consultar lista de eventos";
-
-
-
+    char bienvenida[] = "\r\nBienvenido\r\nMenu\r\nPara seleccionar una opcion envie la tecla presente a la izquierda de la funcion\r\na - Fijar hora del reloj RTC\r\nb - Consultar hora del RTC\r\nc - Agregar evento\r\nd - Quitar evento\r\ne - Consultar lista de eventos\r\n";
 
     while (1) {
 
@@ -84,23 +79,37 @@ int main(void) {
         // Agregar o quitar un evento de calendario.
         // Consultar la lista de eventos de calendario activos.
 
-
         CDCTxService();
         if ((USBGetDeviceState() < CONFIGURED_STATE) ||
                 (USBIsDeviceSuspended() == true)) {
             //Either the device is not configured or we are suspended
             //  so we don't want to do execute any application code
-            continue; //go back to the top of the while loop
+            //go back to the top of the while loop
+            continue;
         } else {
             if (USBUSARTIsTxTrfReady()) {
-                numBytes = getsUSBUSART(buffer, sizeof (buffer) - 2);
+                numBytes = getsUSBUSART(buffer, sizeof (buffer));
                 if (numBytes > 0) {
-                    putsUSBUSART(bienvenida);
+                    if (buffer[0] == 'm' & buffer[1] == 'e' & buffer[2] == 'n' & buffer[3] == 'u') {
+                        putsUSBUSART(bienvenida);
+                        cleanBuffer(buffer);
+                    } else if (buffer[0] == 'a') {
+                        putsUSBUSART(buffer);
+                        cleanBuffer(buffer);
+                    } else if (buffer[0] == 'b') {
+                        putsUSBUSART(buffer);
+                        cleanBuffer(buffer);
+                    } else if (buffer[0] == 'c') {
+                        putsUSBUSART(buffer);
+                        cleanBuffer(buffer);
+                    } else if (buffer[0] == 'd') {
+                        putsUSBUSART(buffer);
+                        cleanBuffer(buffer);
+                    }
                 }
+                
             }
         }
-
-
 
         switch (luzPrendida) {
             case false:

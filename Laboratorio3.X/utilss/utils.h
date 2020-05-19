@@ -31,6 +31,8 @@
     bool UT_delayms(ut_tmrDelay_t* p_timer, uint32_t p_ms);
 
     void iniciarMenu();
+    
+    void cleanBuffer(uint8_t buffer[]);
 
 #endif /* _EXAMPLE_FILE_NAME_H */
 
