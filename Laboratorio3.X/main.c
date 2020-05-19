@@ -58,29 +58,48 @@ int main(void) {
     // initialize the device
     SYSTEM_Initialize();
     ut_tmrDelay_t timer;
-
     timer.state = UT_TMR_DELAY_INIT;
 
+    //Variables de luces
     bool luzPrendida = false;
-
     uint32_t ochociento = 800;
     uint32_t cuatrociento = 400;
-    //USBDeviceInit();
+
+    //Variables de USB
+    int8_t numBytes;
+    uint8_t buffer[3];
+    buffer[1] = '\r';
+    buffer[2] = '\n';
+
+
+    char bienvenida[] = "Bienvenido\r\nMenu\r\nPara seleccionar una opcion envie la tecla presente a la izquierda de la funcion\r\na - Fijar hora del reloj RTC\r\nb - Consultar hora del RTC\r\nc - Agregar evento\r\nd - Quitar evento\r\ne - Consultar lista de eventos";
+
+
+
+
     while (1) {
 
+        // Fijar la hora del reloj de tiempo real (RTC) del PIC.
+        // Consultar la hora del RTC del PIC.
+        // Agregar o quitar un evento de calendario.
+        // Consultar la lista de eventos de calendario activos.
 
-//        CDCTxService();
-//        if ((USBGetDeviceState() < CONFIGURED_STATE) ||
-//                (USBIsDeviceSuspended() == true)) {
-//            //Either the device is not configured or we are suspended
-//            //  so we don't want to do execute any application code
-//            continue; //go back to the top of the while loop
-//        } else {        
-//            if (USBUSARTIsTxTrfReady()) {
-//                char data[] = "c";
-//                putsUSBUSART(data);
-//            }
-//        }
+
+        CDCTxService();
+        if ((USBGetDeviceState() < CONFIGURED_STATE) ||
+                (USBIsDeviceSuspended() == true)) {
+            //Either the device is not configured or we are suspended
+            //  so we don't want to do execute any application code
+            continue; //go back to the top of the while loop
+        } else {
+            if (USBUSARTIsTxTrfReady()) {
+                numBytes = getsUSBUSART(buffer, sizeof (buffer) - 2);
+                if (numBytes > 0) {
+                    putsUSBUSART(bienvenida);
+                }
+            }
+        }
+
 
 
         switch (luzPrendida) {

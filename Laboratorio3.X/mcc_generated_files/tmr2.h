@@ -297,7 +297,7 @@ bool TMR2_GetElapsedThenClear(void);
     Refer to the example of TMR2_Initialize();
 */
 
-int TMR2_SoftwareCounterGet(void);
+uint32_t TMR2_SoftwareCounterGet(void);
 
 /**
   @Summary
