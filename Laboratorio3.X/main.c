@@ -69,9 +69,6 @@ int main(void) {
     int8_t numBytes;
     uint8_t buffer[10];
 
-
-    char bienvenida[] = "\r\nBienvenido\r\nMenu\r\nPara seleccionar una opcion envie la tecla presente a la izquierda de la funcion\r\na - Fijar hora del reloj RTC\r\nb - Consultar hora del RTC\r\nc - Agregar evento\r\nd - Quitar evento\r\ne - Consultar lista de eventos\r\n";
-
     while (1) {
 
         // Fijar la hora del reloj de tiempo real (RTC) del PIC.
@@ -83,33 +80,44 @@ int main(void) {
         if ((USBGetDeviceState() < CONFIGURED_STATE) ||
                 (USBIsDeviceSuspended() == true)) {
             //Either the device is not configured or we are suspended
-            //  so we don't want to do execute any application code
+            //so we don't want to do execute any application code
             //go back to the top of the while loop
             continue;
         } else {
             if (USBUSARTIsTxTrfReady()) {
                 numBytes = getsUSBUSART(buffer, sizeof (buffer));
                 if (numBytes > 0) {
-                    if (buffer[0] == 'm' & buffer[1] == 'e' & buffer[2] == 'n' & buffer[3] == 'u') {
-                        putsUSBUSART(bienvenida);
-                        cleanBuffer(buffer);
-                    } else if (buffer[0] == 'a') {
-                        putsUSBUSART(buffer);
-                        cleanBuffer(buffer);
-                    } else if (buffer[0] == 'b') {
-                        putsUSBUSART(buffer);
-                        cleanBuffer(buffer);
-                    } else if (buffer[0] == 'c') {
-                        putsUSBUSART(buffer);
-                        cleanBuffer(buffer);
-                    } else if (buffer[0] == 'd') {
-                        putsUSBUSART(buffer);
-                        cleanBuffer(buffer);
+                    switch (buffer[0]) {
+                        case('m'):
+                            if (buffer[1] == 'e' & buffer[2] == 'n' & buffer[3] == 'u') {
+                                putrsUSBUSART("\r\nBienvenido\r\nMenu\r\nPara seleccionar una opcion envie la tecla presente a la izquierda de la funcion\r\n"
+                                        "a - Fijar hora del reloj RTC\r\n"
+                                        "b - Consultar hora del RTC\r\n"
+                                        "c - Agregar evento\r\nd - Quitar evento\r\n"
+                                        "e - Consultar lista de eventos\r\n");
+                            }
+                            break;
+                        case('a'):
+                            putsUSBUSART(buffer);
+                            break;
+                        case('b'):
+                            putsUSBUSART(buffer);
+                            break;
+                        case ('c'):
+                            putsUSBUSART(buffer);
+                            break;
+                        case ('d'):
+                            putsUSBUSART(buffer);
+                            break;
+                        default:
+                            break;
                     }
+                    cleanBuffer(buffer);
                 }
-                
+
             }
         }
+
 
         switch (luzPrendida) {
             case false:

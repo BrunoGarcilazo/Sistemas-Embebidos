@@ -32,7 +32,7 @@
 
     void iniciarMenu();
     
-    void cleanBuffer(uint8_t buffer[]);
+    void cleanBuffer(uint8_t* buffer);
 
 #endif /* _EXAMPLE_FILE_NAME_H */
 
