@@ -32,12 +32,10 @@
         <itemPath>platform/WS2812.h</itemPath>
         <itemPath>platform/rtcManager.h</itemPath>
         <itemPath>platform/usbManager.h</itemPath>
-        <itemPath>utilss/scheludeManager.h</itemPath>
-        <itemPath>utilss/newxc32_header.h</itemPath>
+        <itemPath>platform/scheludeManager.h</itemPath>
       </logicalFolder>
       <logicalFolder name="utilss" displayName="utils" projectFiles="true">
         <itemPath>utilss/utils.h</itemPath>
-        <itemPath>platform/scheludeManager.h</itemPath>
       </logicalFolder>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -73,7 +71,6 @@
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
         <itemPath>utils/utils.c</itemPath>
-        <itemPath>utils/scheludeManager.c</itemPath>
       </logicalFolder>
       <itemPath>main.c</itemPath>
     </logicalFolder>

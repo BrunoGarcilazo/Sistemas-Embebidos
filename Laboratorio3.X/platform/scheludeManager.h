@@ -1,75 +1,101 @@
 /* ************************************************************************** */
-/** Funciones que manejan la interaccion del usuario con la app
+/** Descriptive File Name
 
   @Company
-   UCUDAL
+    Company Name
 
   @File Name
-   scheludeManager.h
+    filename.h
 
   @Summary
-    Funciones que cumplen las tareas requeridas por el usuario
+    Brief description of the file.
 
   @Description
-    El proposito de este modulo es responder a los requerimientos de la aplicacion
+    Describe the purpose of this file.
  */
 /* ************************************************************************** */
 
-#ifndef _RTC_MANAGER_H    /* Guard against multiple inclusion */
-#define _RTC_MANAGER_H
-
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-/* Section: Included Files                                                    */
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-/* This section lists the other files that are included in this file.
- */
-
-/* TODO:  Include other files here if needed. */
-
-
-
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-/* Section: Constants                                                         */
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-/*  A brief description of a section can be given directly below the section
-    banner.
- */
-
-
-/* ************************************************************************** */
-/** Descriptive Constant Name
-
-  @Summary
-    Brief one-line summary of the constant.
+#ifndef _SCHELUDE_MANAGER_H    /* Guard against multiple inclusion */
+#define _SCHELUDE_MANAGER_H
     
-  @Description
-    Full description, explaining the purpose and usage of the constant.
-    <p>
-    Additional description in consecutive paragraphs separated by HTML 
-    paragraph breaks, as necessary.
-    <p>
-    Type "JavaDoc" in the "How Do I?" IDE toolbar for more information on tags.
     
-  @Remarks
-    Any additional remarks
+/* ************************************************************************** */
+/* Section: Include                                                           */
+/* ************************************************************************** */
+#include<stdint.h>
+
+/* ************************************************************************** */
+/* Section: Constantes                                                        */
+/* ************************************************************************** */
+
+#define EVENTOS_MAXIMOS 7
+
+
+/* ************************************************************************** */
+/* Section: Tipos de dato                                                     */
+/* ************************************************************************** */
+
+
+typedef struct {
+    /**
+     * //Accion de realizar evento. 1 prender, 0 apagar, 0xFF si no esta configurado
+     */
+    uint8_t command;
+
+    /**
+     * Led que se debe prender o apagar
+     */
+    uint8_t param;
+
+    /**
+     * De que color encender un led
+     * 0 es blanco
+     * 1 es rojo
+     * 2 es azul
+     * 3 es verde
+     */
+    uint8_t color;
+
+    /**
+     * Momento en que se tiene que disparar el evento       
+     */
+    uint32_t time;
+
+} app_event_t;
+
+/**
+ * Se usa para verificar en que estado se encuentra la aplicacion en el main
  */
+typedef enum {
+    /**
+     * Cuando se esta requiriendo al usuario que ingrese un tiempo
+     */
+    WAITING_FOR_TIME_INPUT,
+
+    /**
+     * Refiere al estado normal donde el usuario debe pedir algo.
+     */
+    MENU_STATE,
+} schelude_t;
 
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: Interface Functions
-// *****************************************************************************
-// *****************************************************************************
 
-#endif /* _RTC_MANAGER_H */
+
+/* ************************************************************************** */
+/* Section: Funciones de interfaz                                             */
+/* ************************************************************************** */
+
+/**
+ * Agrega un evento al calendario segun informacion del operador recibida por USB
+ */
+void agregarEvento();
+/**
+ * Inicializa los eventos del array para que notemos que no estan configurados
+ */
+void inicilizarEventos();
+
+
+#endif /* _SCHELUDE_MANAGER_H */
 
 /* *****************************************************************************
  End of File

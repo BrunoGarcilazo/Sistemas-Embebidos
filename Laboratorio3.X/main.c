@@ -6,13 +6,12 @@
 #include "utilss/utils.h"
 #include "platform/WS2812.h"
 #include "platform/rtcManager.h"
-#include "platform/scheludeManager.h"
 #include "platform/usbManager.h"
 #include "mcc_generated_files/system.h"
 #include "mcc_generated_files/pin_manager.h"
 #include "mcc_generated_files/usb/usb_device_cdc.h"
 #include "mcc_generated_files/rtcc.h"
-#include "utilss/scheludeManager.h" 
+#include "platform/scheludeManager.h" 
 #include <time.h>
 
 /*
@@ -22,24 +21,26 @@
 int main(void) {
     // initialize the device
     SYSTEM_Initialize();
-    ut_tmrDelay_t timer;
-    timer.state = UT_TMR_DELAY_INIT;
-    schelude_t agenda;
-
+    inicilizarEventos();
+    
     //Variables de luces
     bool luzPrendida = false;
     uint32_t ochociento = 800;
     uint32_t cuatrociento = 400;
+    ut_tmrDelay_t timer;
+    timer.state = UT_TMR_DELAY_INIT;
 
     //Variables de USB
-
     uint8_t large = 10;
     uint8_t buffer[large];
     char menu[] = "\r\nBienvenido\r\nMenu\r\nPara seleccionar una opcion envie la tecla presente a la izquierda de la funcion\r\na - Fijar hora del reloj RTC\r\nb - Consultar hora del RTC\r\nc - Agregar evento\r\nd - Quitar evento\r\ne - Consultar lista de eventos\r\n";
     uint8_t numBytes;
+    bool primeraVez;
+    primeraVez = true;
 
     //Variables para input de usuario
     struct tm tiempo;
+    
 
     while (1) {
         CDCTxService();
@@ -53,6 +54,10 @@ int main(void) {
             if (USBUSARTIsTxTrfReady()) {
                 numBytes = getsUSBUSART(buffer, large);
                 if (numBytes > 0) {
+                    if (primeraVez){
+                        tiempo = inicializarFechaYHora();
+                        primeraVez = false;
+                    }
                     switch (buffer[0]) {
                         case('m'):
                             if (buffer[1] == 'e' & buffer[2] == 'n' & buffer[3] == 'u') {
@@ -60,8 +65,8 @@ int main(void) {
                             }
                             break;
                         case('a'):
-                            putrsUSBUSART("\r\nIngrese hora en formato horas-minutos-segundos. Sin caracteres en medio porfavor\r\n");
-                            tiempo = pedirHora();
+                            putrsUSBUSART("\r\nIngrese hora en formato hh:mm:ss\r\n");
+                            pedirHora(&tiempo);
                             RTCC_TimeSet(&tiempo);
                             break;
                         case('b'):
@@ -69,9 +74,13 @@ int main(void) {
                             consultarHora();
                             break;
                         case ('c'):
-                            putsUSBUSART("\r\nIngrese en este orden la informacion\r\nComando: 1 es prender, 0 es pagar");
+                            putsUSBUSART("\r\nHa seleccionado agregar un evento");
+                            agregarEvento();
                             break;
                         case ('d'):
+                            putsUSBUSART(buffer);
+                            break;
+                        case ('e'):
                             putsUSBUSART(buffer);
                             break;
                         default:

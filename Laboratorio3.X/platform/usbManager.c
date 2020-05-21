@@ -22,6 +22,7 @@
 /* ************************************************************************** */
 #include <stdint.h>
 #include <stdbool.h>
+#include <stdio.h>
 #include "../mcc_generated_files/usb/usb_device_cdc.h" 
 
 bool buscarEntrada(uint8_t * buffer, uint8_t large) {
@@ -42,6 +43,23 @@ bool buscarEntrada(uint8_t * buffer, uint8_t large) {
         }
     }
     return false;
+}
+
+void enviarMensaje(char *mensaje){
+    bool mando;
+    mando = false;
+    while (!mando) {
+        CDCTxService();
+        if ((USBGetDeviceState() < CONFIGURED_STATE) ||
+                (USBIsDeviceSuspended() == true)) {
+            continue;
+        } else {
+            if (USBUSARTIsTxTrfReady()) {
+                putsUSBUSART(mensaje);
+                mando =true;
+            }
+        }
+    }
 }
 
 /* *****************************************************************************

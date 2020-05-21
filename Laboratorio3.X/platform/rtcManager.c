@@ -27,6 +27,7 @@
 #include "../mcc_generated_files/usb/usb_device_cdc.h"
 #include "../mcc_generated_files/rtcc.h"
 #include "../utilss/utils.h"
+#include "rtcManager.h"
 /* This section lists the other files that are included in this file.
  */
 
@@ -39,24 +40,19 @@
 /* ************************************************************************** */
 
 /* ************************************************************************** */
-struct tm pedirHora() {
+void pedirHora(struct tm *tiempo) {
     //En este objeto time vamos a poner el tiempo para pasarselo al RTC
-    struct tm tiempo;
-    uint8_t entrada[6];
+    uint8_t entrada[8];
     uint8_t horas = 25, minutos = 61, segundos = 61;
-
-
-    while (horas > 25 || horas < 0 || minutos > 61 || minutos < 0 || segundos < 0 || segundos > 25) {
-        buscarEntrada(entrada, 6); //Este metodo pone la entrada en el array pasado con el largo dado.
-        segundos = ((entrada[5]) - 48) + (10 * (entrada[4] - 48));
-        minutos = ((entrada[3]) - 48) + (10 * (entrada[2] - 48));
+    while (horas > 25 || horas < 0 || minutos > 61 || minutos < 0 || segundos < 0 || segundos > 60) {
+        buscarEntrada(entrada, 8); //Este metodo pone la entrada en el array pasado con el largo dado.
+        segundos = ((entrada[7]) - 48) + (10 * (entrada[6] - 48));
+        minutos = ((entrada[4]) - 48) + (10 * (entrada[3] - 48));
         horas = ((entrada[1]) - 48) + (10 * (entrada[0] - 48));
     }
-    tiempo.tm_hour = horas;
-    tiempo.tm_min = minutos;
-    tiempo.tm_sec = segundos;
-
-    return tiempo;
+    tiempo->tm_hour = horas;
+    tiempo->tm_min = minutos;
+    tiempo->tm_sec = segundos;
 }
 
 void consultarHora() {
@@ -69,7 +65,7 @@ void consultarHora() {
     hora[5] = RTCTIMEbits.SECONE + 48;
     hora[6] = '\r';
     hora[7] = '\n';
-    
+
     char hola[] = "hola";
     int contador;
     contador = 1;
@@ -83,12 +79,40 @@ void consultarHora() {
         } else {
             if (USBUSARTIsTxTrfReady()) {
                 putsUSBUSART(hora);
-                mando =true;
+                mando = true;
             }
         }
     }
 }
 
+struct tm inicializarFechaYHora() {
+    struct tm time;
+    enviarMensaje("\r\nIngrese fecha en formato dd/mm/aaaa\r\n");
+    pedirFecha(&time);
+
+    enviarMensaje("\r\nIngrese hora en formato hh:mm:ss\r\n");
+    pedirHora(&time);
+
+    RTCC_TimeSet(&time);
+
+    return time;
+}
+
+void pedirFecha(struct tm * tiempo) {
+    uint8_t fecha[10];
+    uint8_t dia = 32;
+    uint8_t mes = 32;
+    uint32_t year = 32;
+    while (dia > 31 || dia < 1 || mes < 1 || mes > 31 || year < 1970) {
+        buscarEntrada(fecha, 10);
+        dia = (fecha[1] - 48) + 10 * (fecha[0] - 48);
+        mes = (fecha[4] - 48) + 10 * (fecha[3] - 48);
+        year = ((fecha[6] - 48) * 1000) + (100 * (fecha[7] - 48)) + (10 * (fecha[8] - 48)) + (fecha[9] - 48);
+    }
+    tiempo->tm_year = year - 1900;
+    tiempo->tm_mon = mes;
+    tiempo->tm_mday = dia;
+}
 
 /* *****************************************************************************
  End of File
