@@ -1,131 +1,44 @@
 /* ************************************************************************** */
-/** Descriptive File Name
+/** En este archivo hay funciones que manejan el RTC en base a interaccion via USB
 
   @Company
-    Company Name
+    UCUDAL
 
   @File Name
-    filename.h
+    rtcManager.h
 
   @Summary
-    Brief description of the file.
+    Funciones que usan el RTC y USB
 
   @Description
-    Describe the purpose of this file.
+    Procesar input del usuario e interactuar con el USB
  */
 /* ************************************************************************** */
 
-#ifndef _EXAMPLE_FILE_NAME_H    /* Guard against multiple inclusion */
-#define _EXAMPLE_FILE_NAME_H
-
+#ifndef _RTC_MANAGER_H    /* Guard against multiple inclusion */
+#define _RTC_MANAGER_H
 
 /* ************************************************************************** */
+/* Section: Include                                                           */
 /* ************************************************************************** */
-/* Section: Included Files                                                    */
+#include <time.h>
+
 /* ************************************************************************** */
+/* Section: Funciones de interfaz                                             */
 /* ************************************************************************** */
 
-/* This section lists the other files that are included in this file.
- */
-
-/* TODO:  Include other files here if needed. */
-
-
-/* Provide C++ Compatibility */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-    /* ************************************************************************** */
-    /* ************************************************************************** */
-    /* Section: Constants                                                         */
-    /* ************************************************************************** */
-    /* ************************************************************************** */
-
-    /*  A brief description of a section can be given directly below the section
-        banner.
+    /**
+     * Le pide hora al operador via USB y la coloca en el RTC
+     * El formato de hora debe ser Hora-Minutos-Segundos (sin caracteres en medio)
      */
-
-
-    /* ************************************************************************** */
-    /** Descriptive Constant Name
-
-      @Summary
-        Brief one-line summary of the constant.
+    struct tm pedirHora(void);
     
-      @Description
-        Full description, explaining the purpose and usage of the constant.
-        <p>
-        Additional description in consecutive paragraphs separated by HTML 
-        paragraph breaks, as necessary.
-        <p>
-        Type "JavaDoc" in the "How Do I?" IDE toolbar for more information on tags.
-    
-      @Remarks
-        Any additional remarks
+    /**
+     * Imprime en la consola el tiempo actual via USB
      */
-#define EXAMPLE_CONSTANT 0
-
-
-    // *****************************************************************************
-    // *****************************************************************************
-    // Section: Data Types
-    // *****************************************************************************
-    // *****************************************************************************
-
-    /*  A brief description of a section can be given directly below the section
-        banner.
-     */
-
-
-    // *****************************************************************************
-
-    /** Descriptive Data Type Name
-
-      @Summary
-        Brief one-line summary of the data type.
-    
-      @Description
-        Full description, explaining the purpose and usage of the data type.
-        <p>
-        Additional description in consecutive paragraphs separated by HTML 
-        paragraph breaks, as necessary.
-        <p>
-        Type "JavaDoc" in the "How Do I?" IDE toolbar for more information on tags.
-
-      @Remarks
-        Any additional remarks
-        <p>
-        Describe enumeration elements and structure and union members above each 
-        element or member.
-     */
-    typedef struct _example_struct_t {
-        /* Describe structure member. */
-        int some_number;
-
-        /* Describe structure member. */
-        bool some_flag;
-
-    } example_struct_t;
-
-
-    // *****************************************************************************
-    // *****************************************************************************
-    // Section: Interface Functions
-    // *****************************************************************************
-    // *****************************************************************************
-
-    void pedirHora(void);
     void consultarHora(void);
-
-
-    /* Provide C++ Compatibility */
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* _EXAMPLE_FILE_NAME_H */
+    
+#endif /* _RTC_MANAGER_H */
 
 /* *****************************************************************************
  End of File

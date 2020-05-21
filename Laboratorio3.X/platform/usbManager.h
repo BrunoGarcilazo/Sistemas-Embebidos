@@ -9,44 +9,38 @@
     usbManager.h
 
   @Summary
-    Brief description of the file.
+    Manejo del IO del USB
 
   @Description
-    Describe the purpose of this file.
+    Implementar funciones que permitar el envio y recibimiento de packetes via USB
  */
 /* ************************************************************************** */
 
 #ifndef _USB_MANAGER_H    /* Guard against multiple inclusion */
 #define _USB_MANAGER_H
-#include <stdint.h>
 
-/* ************************************************************************** */
+
 /* ************************************************************************** */
 /* Section: Included Files                                                    */
 /* ************************************************************************** */
+#include <stdint.h>
+#include <stdbool.h>
+
+/* ************************************************************************** */
+/* Section: Funciones de interfaz                                             */
 /* ************************************************************************** */
 
-/* This section lists the other files that are included in this file.
+
+/**
+ * Devuelve true cuando se ha recibido algo. El bloqueante
+ * @param buffer Buffer al cual se carga el input
+ * @param large Largo del  input requerido
+ * @return True cuando se ha recibido algo
  */
-
-/* TODO:  Include other files here if needed. */
-
-
-/* Provide C++ Compatibility */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-    bool buscarEntrada(uint8_t *  buffer, uint8_t large);
+bool buscarEntrada(uint8_t * buffer, uint8_t large);
 
 
-    /* Provide C++ Compatibility */
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* _EXAMPLE_FILE_NAME_H */
-
+#endif /* _USB_MANAGER_H */
 /* *****************************************************************************
  End of File
  */

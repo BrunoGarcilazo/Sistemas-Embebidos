@@ -32,6 +32,8 @@
         <itemPath>platform/WS2812.h</itemPath>
         <itemPath>platform/rtcManager.h</itemPath>
         <itemPath>platform/usbManager.h</itemPath>
+        <itemPath>utilss/scheludeManager.h</itemPath>
+        <itemPath>utilss/newxc32_header.h</itemPath>
       </logicalFolder>
       <logicalFolder name="utilss" displayName="utils" projectFiles="true">
         <itemPath>utilss/utils.h</itemPath>
@@ -67,6 +69,7 @@
         <itemPath>platform/WS2812.c</itemPath>
         <itemPath>platform/usbManager.c</itemPath>
         <itemPath>platform/rtcManager.c</itemPath>
+        <itemPath>platform/scheludeManager.c</itemPath>
       </logicalFolder>
       <logicalFolder name="utils" displayName="utils" projectFiles="true">
         <itemPath>utils/utils.c</itemPath>
@@ -198,7 +201,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value=""/>
+        <property key="heap-size" value="0"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>
@@ -209,7 +212,7 @@
         <property key="oXC32ld-extra-opts" value=""/>
         <property key="optimization-level" value=""/>
         <property key="preprocessor-macros" value=""/>
-        <property key="remove-unused-sections" value="false"/>
+        <property key="remove-unused-sections" value="true"/>
         <property key="report-memory-usage" value="false"/>
         <property key="serial-length" value=""/>
         <property key="serial-origin" value=""/>
@@ -311,6 +314,8 @@
                   value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="1d000000-1d03ffff"/>
+        <property key="programmerToGoFilePath"
+                  value="C:/Users/estudiante.fit/OneDrive/AA UCU/05 Semestre Cinco/Embebidos/Laboratorios/Laboratorio3.X/debug/default/Laboratorio3_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.pgmentry.voltage" value="low"/>
