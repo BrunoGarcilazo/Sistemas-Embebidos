@@ -15,6 +15,7 @@
             <sourceRootList>
                 <sourceRootElem>utilss</sourceRootElem>
                 <sourceRootElem>utils</sourceRootElem>
+                <sourceRootElem>platform</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

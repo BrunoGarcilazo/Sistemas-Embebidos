@@ -17,22 +17,21 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+typedef enum {
+    UT_TMR_DELAY_INIT,
+    UT_TMR_DELAY_WAIT
+} UT_TMR_DELAY_STATE;
 
-    typedef enum {
-        UT_TMR_DELAY_INIT,
-        UT_TMR_DELAY_WAIT
-    } UT_TMR_DELAY_STATE;
+typedef struct {
+    uint32_t startValue;
+    UT_TMR_DELAY_STATE state;
+} ut_tmrDelay_t;
 
-    typedef struct {
-        uint32_t startValue;
-        UT_TMR_DELAY_STATE state;
-    } ut_tmrDelay_t;
+bool UT_delayms(ut_tmrDelay_t* p_timer, uint32_t p_ms);
 
-    bool UT_delayms(ut_tmrDelay_t* p_timer, uint32_t p_ms);
+void iniciarMenu();
 
-    void iniciarMenu();
-    
-    void cleanBuffer(uint8_t* buffer);
+void cleanBuffer(uint8_t buffer[]);
 
 #endif /* _EXAMPLE_FILE_NAME_H */
 

@@ -6,7 +6,7 @@
 #include "../mcc_generated_files/pin_manager.h"
 #include "../mcc_generated_files/usb/usb_device_cdc.h" 
 
-void cleanBuffer(uint8_t* buffer) {
+void cleanBuffer(uint8_t buffer[]) {
     int i;
     for (i = 0; i < 10; i++) {
         buffer[i] = 0x00;

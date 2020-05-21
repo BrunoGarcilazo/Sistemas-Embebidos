@@ -85,8 +85,8 @@
 #include "system.h"
 #include "interrupt_manager.h"
 #include "exceptions.h"
-#include "rtcc.h"
 #include "usb/usb.h"
+#include "rtcc.h"
 #include "tmr2.h"
 
 void SYSTEM_Initialize(void)
