@@ -60,7 +60,7 @@ struct tm pedirHora() {
 }
 
 void consultarHora() {
-    uint8_t hora[8];
+    char hora[8];
     hora[0] = RTCTIMEbits.HRTEN + 48;
     hora[1] = RTCTIMEbits.HRONE + 48;
     hora[2] = RTCTIMEbits.MINTEN + 48;
@@ -70,6 +70,7 @@ void consultarHora() {
     hora[6] = '\r';
     hora[7] = '\n';
     
+    char hola[] = "hola";
     int contador;
     contador = 1;
     bool mando;
@@ -81,7 +82,7 @@ void consultarHora() {
             continue;
         } else {
             if (USBUSARTIsTxTrfReady()) {
-                putUSBUSART(hora,12);
+                putsUSBUSART(hora);
                 mando =true;
             }
         }
