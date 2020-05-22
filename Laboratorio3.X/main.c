@@ -45,6 +45,10 @@ int main(void) {
     uint32_t cuatrociento = 400;
     ut_tmrDelay_t timer;
     timer.state = UT_TMR_DELAY_INIT;
+    ws2812_t BLACK; // struct de RGB que voy a modificar
+    BLACK.r = 0;
+    BLACK.g = 0; // Asigno el codigo que quiero
+    BLACK.b = 0;
 
     //Variables de USB
     uint8_t large = 10;
@@ -63,16 +67,16 @@ int main(void) {
 
     manager_de_pedidos_t manager;
     manager.estado = PEDIDO_INVALIDO;
-    
+
     eventAdder_t adder;
     adder.estado = ENVIANDO_MENSAJE_DE_COMAND;
     uint8_t entradaDeEventos[3];
-          
+
 
     struct tm tiempoParaAplicaciones;
 
 
-    while (1) {    
+    while (1) {
         //Maquina de estado UNO
         switch (estado.status) {
             case(EN_ESPERA):
@@ -121,9 +125,12 @@ int main(void) {
                         }
                     }
                 }
+
                 break;
             case(NO_INICIALIZADA):
                 if (inicializarFechaYHora(&init, &manager)) {
+                    //inicializarLedsRGB();
+
                     manager.estado = PEDIDO_INVALIDO;
                     estado.status = EN_MENU;
                 }
@@ -150,7 +157,7 @@ int main(void) {
                 }
                 break;
             case(EN_AGREGAR_EVENTO):
-                if (agregarEvento(&adder,entradaDeEventos,&manager)){
+                if (agregarEvento(&adder, entradaDeEventos, &manager)) {
                     adder.estado = ENVIANDO_MENSAJE_DE_COMAND;
                     estado.status = EN_MENU;
                 }
@@ -176,7 +183,7 @@ int main(void) {
             case true:
                 if (UT_delayms(&timer, cuatrociento)) {
                     luzPrendida = false;
-                    LEDB_SetLow();                 
+                    LEDB_SetLow();
                 }
                 break;
         }
@@ -191,22 +198,29 @@ int main(void) {
                 RTCC_TimeGet(&tiempoActual);
                 uint32_t tiempoActualPlano = mktime(&tiempoActual);
                 if (eventos[i].time >= tiempoActualPlano) {
-                    switch (eventos[i].color) {
-                        case 0:
-                            ledsRGB[eventos[i].param] = WHITE;
-                            break;
-                        case 1:
-                            ledsRGB[eventos[i].param] = RED;
-                            break;
-                        case 2:
-                            ledsRGB[eventos[i].param] = BLUE;
-                            break;
-                        case 3:
-                            ledsRGB[eventos[i].param] = GREEN;
-                        default:
-                            break;
+                    if (eventos[i].command == 0) {
+                        ledsRGB[eventos[i].param] = BLACK;
+                    } else {
+                        switch (eventos[i].color) {
+                            case 0:
+                                ledsRGB[eventos[i].param] = WHITE;
+                                WS2812_send(ledsRGB, 8);
+                                break;
+                            case 1:
+                                ledsRGB[eventos[i].param] = RED;
+                                WS2812_send(ledsRGB, 8);
+                                break;
+                            case 2:
+                                ledsRGB[eventos[i].param] = BLUE;
+                                WS2812_send(ledsRGB, 8);
+                                break;
+                            case 3:
+                                ledsRGB[eventos[i].param] = GREEN;
+                                WS2812_send(ledsRGB, 8);
+                            default:
+                                break;
+                        }
                     }
-                    WS2812_send(ledsRGB, 8);
                 }
             }
         }
