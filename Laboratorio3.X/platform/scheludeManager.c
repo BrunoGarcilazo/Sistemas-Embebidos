@@ -118,13 +118,7 @@ bool agregarEvento(eventAdder_t *adder, uint8_t * entrada, manager_de_pedidos_t 
             evento.param = adder -> led;
             evento.time = tiempoFinal;
 
-            int i;
-            for (i = 0; i < EVENTOS_MAXIMOS; i++) {
-                if (eventos[i].command == 0xFF) {
-                    eventos[i] = evento;
-                    break;
-                }
-            }
+            eventos[evento.param] = evento;
             return true;
         }
 
@@ -134,7 +128,7 @@ bool agregarEvento(eventAdder_t *adder, uint8_t * entrada, manager_de_pedidos_t 
 
 void inicilizarEventos() {
     int i;
-    for (i = 0; i < EVENTOS_MAXIMOS; i++) {
+    for (i = 0; i < EVENTOS_MAXIMOS - 1; i++) {
         eventos[i].command = 0xFF;
     }
 }
@@ -148,7 +142,7 @@ bool quitarEvento(event_kicker_t *kicker, uint8_t *entrada) {
             break;
         case(RECIBIENDO_ENTRADA):
             if (buscarEntrada(entrada, 2)) {
-                if (entrada[0] < '7' && entrada [0] >= '0' && entrada[1] == '.') {
+                if (entrada[0] < '8' && entrada [0] >= '0' && entrada[1] == '.') {
                     kicker -> estado = BORRANDO_EVENTO;
                     kicker -> posicion = (entrada[0] - 48);
                 }
@@ -156,10 +150,10 @@ bool quitarEvento(event_kicker_t *kicker, uint8_t *entrada) {
             break;
         case(BORRANDO_EVENTO):
         {
-            app_event_t eventoABorrar;
-            eventoABorrar = eventos[kicker -> posicion];
-            if (eventoABorrar.command != 0xFF) {
-                eventoABorrar.command = 0xFF;
+            app_event_t *eventoABorrar;
+            eventoABorrar = &eventos[kicker -> posicion];
+            if (eventoABorrar->command != 0xFF) {
+                eventoABorrar->command = 0xFF;
             }
             kicker -> estado = COMUNICANDO;
             break;
@@ -171,57 +165,84 @@ bool quitarEvento(event_kicker_t *kicker, uint8_t *entrada) {
     return false;
 }
 
-bool consultarListaDeEventos() {
-    int i;
-
-    struct tm *horaDeActivacion;
-
-    for (i = 0; i < EVENTOS_MAXIMOS - 1; i++) {
-        if (eventos[i].command != 0xFF) {
-            char posicion[1];
-            char param[1];
-            char color[1];
-            char dias[1];
-            char minutos[1];
-            char segundos[1];
-            time_t horaDeFinalizacion = eventos[i].time;
-            horaDeActivacion = gmtime(&horaDeFinalizacion);
-
-            //Enviar Posicion
-            enviarMensaje("\r\nPosicion: ");
-            posicion[0] = i + 48;
-            enviarMensaje(posicion);
-
-            //Enviar Numero de Led
-            enviarMensaje(" \r\n");
-            enviarMensaje("Led: ");
-            param[0] = (eventos[i].param + 48);
-            enviarMensaje(param);
-
-
-            //Enviar Color
-            enviarMensaje("\r\n");
-            enviarMensaje("Color: ");
-            color[0] = (eventos[i].color + 48);
-            enviarMensaje(color);
-
-            //Enviar Tiempo
-            enviarMensaje("\r\n");
-            enviarMensaje("Momento de activacion: ");
-            dias[0] = (horaDeActivacion->tm_mday + 48);
-            enviarMensaje(dias);
-            enviarMensaje(":");
-            minutos[0] = (horaDeActivacion->tm_min + 48);
-            enviarMensaje(minutos);
-            enviarMensaje(":");
-            segundos[0] = (horaDeActivacion->tm_sec + 48);
-            enviarMensaje(segundos);
-            enviarMensaje("\r\n");
+bool consultarListaDeEventos(event_voicer_t * voicer, char * salida) {
+    switch (voicer -> estado) {
+        case(SUMAR_CONTADOR):
+            if (voicer -> contador >= EVENTOS_MAXIMOS) {
+                return true;
+            } else {
+                (voicer -> contador)++;
+                if (eventos[(voicer -> contador)].command == 0xFF) {
+                    voicer -> estado = SUMAR_CONTADOR;
+                } else {
+                    voicer -> estado = ENVIANDO_POSICION;
+                }
+            }
+            return false;
+        case(ENVIANDO_FORMATO):
+            if (enviarMensaje(FORMATO_DE_AGENDA)) {
+                if (eventos[voicer -> contador].command == 0xFF) {
+                    voicer -> estado = SUMAR_CONTADOR;
+                } else {
+                    voicer -> estado = ENVIANDO_POSICION;
+                }
+            }
+            return false;
+        case(ENVIANDO_POSICION):
+            salida[0] = voicer -> contador + 48;
+            salida[1] = ',';
+            salida[2] = ' ';
+            if (enviarMensaje(salida)) {
+                voicer -> estado = ENVIANDO_COLOR;
+            }
+            return false;
+        case(ENVIANDO_COLOR):
+        {
+            switch (eventos[voicer -> contador].color) {
+                case(0):
+                    salida = "BLANCO, ";
+                    break;
+                case(1):
+                    salida = "ROJO, ";
+                    break;
+                case(2):
+                    salida = "AZUL, ";
+                    break;
+                case(3):
+                    salida = "VERDE, ";
+                    break;
+                default:
+                    salida = "....";
+                    break;
+            }
+            if (enviarMensaje(salida)) {
+                voicer -> estado = ENVIANDO_TIEMPO;
+            }
+            return false;
         }
-    }
-    return true;
+        case(ENVIANDO_TIEMPO):
+        {
+            struct tm *tiempoFormateado;
+            
+            char tiempo[7];
+            time_t tiempoPlano;
+            
+            tiempoPlano = eventos[voicer -> contador].time;
+            tiempoFormateado = gmtime(&tiempoPlano);
+            
+            strftime(tiempo, 7, "%H:%M\r\n",tiempoFormateado);
+            if (enviarMensaje(tiempo)) {
+                voicer -> estado = SUMAR_CONTADOR;
+            }
+            break;
+        }
 
+        default:
+            return false;
+    }
+    return false;
 }
+
 
 
 /* *****************************************************************************

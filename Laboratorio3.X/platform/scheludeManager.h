@@ -151,6 +151,20 @@ typedef struct {
     ERASE_EVENT_KICKER_STATUS estado;
 } event_kicker_t;
 
+typedef enum {
+    ENVIANDO_FORMATO,
+    ENVIANDO_POSICION,
+    ENVIANDO_NUMERO_DE_LED,
+    ENVIANDO_COLOR,
+    ENVIANDO_TIEMPO,
+    SUMAR_CONTADOR,
+}CONSULTAR_EVENTOS_STATE;
+
+typedef struct{
+    CONSULTAR_EVENTOS_STATE estado;
+    uint8_t contador;
+    struct tm tiempo;    
+} event_voicer_t;
 /* ************************************************************************** */
 /* Section: Constantes                                                        */
 /* ************************************************************************** */
@@ -165,7 +179,7 @@ typedef struct {
 #define FORMATO_QUITAR_EVENTO "\n\rIngrese la posicion del evento que desea quitar con este formato\n\r poscion.\r\nLas posiciones van de 0 a 7\r\n"
 #define ELEMENTO_BORRADO "\r\nElemento Borrado Satisfactoriamente\r\n"
 #define MENU "\r\nBienvenido\r\nMenu\r\nPara seleccionar una opcion envie la tecla presente a la izquierda de la funcion\r\na - Fijar hora del reloj RTC\r\nb - Consultar hora del RTC\r\nc - Agregar evento\r\nd - Quitar evento\r\ne - Consultar lista de eventos\r\n"
-    
+#define FORMATO_DE_AGENDA "\r\nCada linea representa un evento y tiene el siguiente formato: posicion, color, hora de ejecuccion\r\n"
 
 #define EVENTOS_MAXIMOS 8
 app_event_t eventos[EVENTOS_MAXIMOS];
@@ -189,12 +203,12 @@ void inicilizarEventos();
  * Quita un evento de la posicion indicada por el operador
  * Esta posicion se obtiene dentro de la funcion
  */
-bool quitarEvento(event_kicker_t *kicker, uint8_t *entrada) ;
+bool quitarEvento(event_kicker_t *kicker, uint8_t *entrada);
 
 /**
  * Escribe en el menu la lista de eventos activos
  */
-bool consultarListaDeEventos();
+bool consultarListaDeEventos(event_voicer_t * voicer, char * salida);
 
 
 #endif /* _SCHELUDE_MANAGER_H */

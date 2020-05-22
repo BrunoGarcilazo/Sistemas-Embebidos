@@ -19,7 +19,7 @@
  */
 bool inicializarLedsRGB(ws2812_t *leds) {
     int i;
-    for (i = 0; i < EVENTOS_MAXIMOS; i++) {
+    for (i = 0; i < EVENTOS_MAXIMOS - 1; i++) {
         leds[i] = BLACK; // Asigno el color apagado a los 8 lugares del Array
     }
     WS2812_send(leds, 8); // Envio los colores a los LEDs
@@ -66,6 +66,12 @@ int main(void) {
 
     event_kicker_t kicker;
     kicker.estado = ENVIANDO_INSTRUCCIONES;
+
+    event_voicer_t voicer;
+    voicer.estado = ENVIANDO_FORMATO;
+    voicer.contador = 0;
+    
+    char salida[10];
 
     struct tm tiempoParaAplicaciones;
 
@@ -165,7 +171,9 @@ int main(void) {
                 }
                 break;
             case(EN_CONSULTAR_LISTA_DE_EVENTOS):
-                if (consultarListaDeEventos()) {
+                if (consultarListaDeEventos(&voicer,salida)) {
+                    voicer.estado = ENVIANDO_FORMATO;
+                    voicer.contador = 0;
                     estado.status = EN_MENU;
                 }
                 break;
@@ -193,7 +201,7 @@ int main(void) {
         struct tm tiempoActual;
         int i;
 
-        for (i = 0; i < EVENTOS_MAXIMOS; i++) {
+        for (i = 0; i < EVENTOS_MAXIMOS - 1; i++) {
             if (eventos[i].command != 0xFF) {
                 RTCC_TimeGet(&tiempoActual);
                 uint32_t tiempoActualPlano = mktime(&tiempoActual);
@@ -217,12 +225,13 @@ int main(void) {
                             default:
                                 break;
                         }
+                        WS2812_send(ledsRGB, 8);
                     }
                 }
             } else {
                 ledsRGB[eventos[i].param] = BLACK;
+                WS2812_send(ledsRGB, 8);
             }
-            WS2812_send(ledsRGB, 8);
         }
     }
 }
