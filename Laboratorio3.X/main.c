@@ -70,7 +70,7 @@ int main(void) {
     event_voicer_t voicer;
     voicer.estado = ENVIANDO_FORMATO;
     voicer.contador = 0;
-    
+
     char salida[10];
 
     struct tm tiempoParaAplicaciones;
@@ -171,7 +171,7 @@ int main(void) {
                 }
                 break;
             case(EN_CONSULTAR_LISTA_DE_EVENTOS):
-                if (consultarListaDeEventos(&voicer,salida)) {
+                if (consultarListaDeEventos(&voicer, salida)) {
                     voicer.estado = ENVIANDO_FORMATO;
                     voicer.contador = 0;
                     estado.status = EN_MENU;
@@ -225,14 +225,13 @@ int main(void) {
                             default:
                                 break;
                         }
-                        WS2812_send(ledsRGB, 8);
                     }
                 }
             } else {
                 ledsRGB[eventos[i].param] = BLACK;
-                WS2812_send(ledsRGB, 8);
             }
         }
+        WS2812_send(ledsRGB, 8);
     }
 }
 
