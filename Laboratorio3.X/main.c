@@ -17,6 +17,20 @@
 /*
                          Main application
  */
+bool inicializarLedsRGB() {
+    ws2812_t leds[8]; // Array que luego voy a mandar con los colores que quiero
+    ws2812_t amarillo; // struct de RGB que voy a modificar
+    amarillo.r = 255;
+    amarillo.g = 255; // Asigno el codigo que quiero
+    amarillo.b = 0;
+    int i;
+    for (i = 0; i < 8; i++) {
+        leds[i] = amarillo; // Asigno el color amarillo a los 8 lugares del Array
+    }
+    WS2812_send(leds, 8); // Envio los colores a los LEDs
+
+    return true;
+}
 
 int main(void) {
     // initialize the device
@@ -53,8 +67,7 @@ int main(void) {
     struct tm tiempoParaAplicaciones;
 
 
-    while (1) {
-
+    while (1) {    
         //Maquina de estado UNO
         switch (estado.status) {
             case(EN_ESPERA):
@@ -156,7 +169,7 @@ int main(void) {
             case true:
                 if (UT_delayms(&timer, cuatrociento)) {
                     luzPrendida = false;
-                    LEDB_SetLow();
+                    LEDB_SetLow();                 
                 }
                 break;
         }
@@ -191,25 +204,11 @@ int main(void) {
                 }
             }
         }
-        WS2812_send(&ledsRGB, 8);
+        WS2812_send(ledsRGB, 8);
 
 
 
     }
 }
 
-bool inicializarLedsRGB() {
-    ws2812_t leds[8]; // Array que luego voy a mandar con los colores que quiero
-    ws2812_t amarillo; // struct de RGB que voy a modificar
-    amarillo.r = 255;
-    amarillo.g = 255; // Asigno el codigo que quiero
-    amarillo.b = 0;
-    int i;
-    for (i = 0; i < 8; i++) {
-        leds[i] = amarillo; // Asigno el color amarillo a los 8 lugares del Array
-    }
-    WS2812_send(&leds, 8); // Envio los colores a los LEDs
-
-    return true;
-}
 

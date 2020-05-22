@@ -22,7 +22,7 @@
 /* Section: Include                                                           */
 /* ************************************************************************** */
 #include <time.h>
-#include "scheludeManager.h"
+//#include "scheludeManager.h"
 
 /* ************************************************************************** */
 /* Section: Tipos de dato                                                     */

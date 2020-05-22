@@ -181,7 +181,7 @@ static void WS2812_sendSingle( ws2812_t* p_led )
   @Remarks
     Refer to the example_file.h interface header for function usage details.
  */
-void WS2812_send( ws2812_t *p_leds, uint8_t p_length )
+void WS2812_send(ws2812_t *p_leds, uint8_t p_length )
 {
     uint8_t i;
     
