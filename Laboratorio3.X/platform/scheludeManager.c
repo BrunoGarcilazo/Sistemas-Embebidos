@@ -128,7 +128,7 @@ bool agregarEvento(eventAdder_t *adder, uint8_t * entrada, manager_de_pedidos_t 
 
 void inicilizarEventos() {
     int i;
-    for (i = 0; i < EVENTOS_MAXIMOS - 1; i++) {
+    for (i = 0; i < EVENTOS_MAXIMOS; i++) {
         eventos[i].command = 0xFF;
     }
 }

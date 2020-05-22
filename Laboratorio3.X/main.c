@@ -19,7 +19,7 @@
  */
 bool inicializarLedsRGB(ws2812_t *leds) {
     int i;
-    for (i = 0; i < EVENTOS_MAXIMOS - 1; i++) {
+    for (i = 0; i < EVENTOS_MAXIMOS; i++) {
         leds[i] = BLACK; // Asigno el color apagado a los 8 lugares del Array
     }
     WS2812_send(leds, 8); // Envio los colores a los LEDs
