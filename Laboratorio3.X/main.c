@@ -41,8 +41,10 @@ int main(void) {
     //Variables para input de usuario
     struct tm tiempo;
     
+    inicializarLedsRGB(); // Funcion que deja todos los LEDs RGB en color Amarillo (255 255 0)
 
     while (1) {
+        
         //Maquina de estado uno
         CDCTxService();
         if ((USBGetDeviceState() < CONFIGURED_STATE) ||
@@ -98,6 +100,7 @@ int main(void) {
                 if (UT_delayms(&timer, ochociento)) {
                     luzPrendida = true;
                     LEDB_SetHigh();
+                    
                 }
                 break;
             case true:
@@ -111,18 +114,52 @@ int main(void) {
         //Maquina de estado tres
         struct tm tiempoActual;
         int i;
-        for (i = 0; i < EVENTOS_MAXIMOS - 1; i++) {
+        ws2812_t ledsRGB[8];
+        for (i = 0; i < EVENTOS_MAXIMOS - 1; i++){
             if (eventos[i].command != 0xFF){
                 RTCC_TimeGet(&tiempoActual);
                 uint32_t tiempoActualPlano = mktime(&tiempoActual);
-                /*if (eventos[i].time >= tiempoActualPlano ){
+                if (eventos[i].time >= tiempoActualPlano){
                     
-                }*/
+                    switch(eventos[i].color){
+                        case 0:
+                          ledsRGB[eventos[i].param] =  WHITE;
+                          break;
+                        case 1:
+                            ledsRGB[eventos[i].param] = RED;
+                            break;
+                        case 2:
+                            ledsRGB[eventos[i].param] = BLUE;
+                            break;
+                        case 3:
+                            ledsRGB[eventos[i].param] = GREEN;
+                        default:
+                            break;
+                    }
+                    
+                }
             }
         }
+        WS2812_send(&ledsRGB,8);
 
         
     }
     return 1;
+}
+
+void inicializarLedsRGB(){
+    ws2812_t leds[8]; // Array que luego voy a mandar con los colores que quiero
+    ws2812_t amarillo; // struct de RGB que voy a modificar
+    amarillo.r = 255;
+    amarillo.g = 255;  // Asigno el codigo que quiero
+    amarillo.b = 0;
+    int i;
+    for(i = 0 ; i < 8 ; i++){
+        leds[i] = amarillo;    // Asigno el color amarillo a los 8 lugares del Array
+    }
+    
+    WS2812_send(&leds,8);       // Envio los colores a los LEDs
+    
+    
 }
 
