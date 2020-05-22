@@ -26,7 +26,7 @@
 #include "../platform/usbManager.h"
 #include "../platform/scheludeManager.h"
 
-app_event_t eventos[EVENTOS_MAXIMOS];
+
 
 void agregarEvento() {
     uint8_t command;

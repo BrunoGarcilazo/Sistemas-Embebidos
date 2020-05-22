@@ -109,6 +109,18 @@ int main(void) {
         }
         
         //Maquina de estado tres
+        struct tm tiempoActual;
+        int i;
+        for (i = 0; i < EVENTOS_MAXIMOS - 1; i++) {
+            if (eventos[i].command != 0xFF){
+                RTCC_TimeGet(&tiempoActual);
+                uint32_t tiempoActualPlano = mktime(&tiempoActual);
+                /*if (eventos[i].time >= tiempoActualPlano ){
+                    
+                }*/
+            }
+        }
+
         
     }
     return 1;
