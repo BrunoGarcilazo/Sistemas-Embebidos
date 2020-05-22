@@ -94,6 +94,17 @@ void agregarEvento();
  */
 void inicilizarEventos();
 
+/**
+ * Quita un evento de la posicion indicada por el operador
+ * Esta posicion se obtiene dentro de la funcion
+ */
+void quitarEvento();
+
+/**
+ * Escribe en el menu la lista de eventos activos
+ */
+void consultarListaDeEventos();
+
 
 #endif /* _SCHELUDE_MANAGER_H */
 

@@ -43,6 +43,7 @@ int main(void) {
     
 
     while (1) {
+        //Maquina de estado uno
         CDCTxService();
         if ((USBGetDeviceState() < CONFIGURED_STATE) ||
                 (USBIsDeviceSuspended() == true)) {
@@ -54,11 +55,11 @@ int main(void) {
             if (USBUSARTIsTxTrfReady()) {
                 numBytes = getsUSBUSART(buffer, large);
                 if (numBytes > 0) {
-                    if (primeraVez){
+                    if (primeraVez){ //Inicio
                         tiempo = inicializarFechaYHora();
                         primeraVez = false;
                     }
-                    switch (buffer[0]) {
+                    switch (buffer[0]) { //Menu
                         case('m'):
                             if (buffer[1] == 'e' & buffer[2] == 'n' & buffer[3] == 'u') {
                                 putrsUSBUSART(menu);
@@ -78,10 +79,10 @@ int main(void) {
                             agregarEvento();
                             break;
                         case ('d'):
-                            putsUSBUSART(buffer);
+                            quitarEvento();
                             break;
                         case ('e'):
-                            putsUSBUSART(buffer);
+                            consultarListaDeEventos();
                             break;
                         default:
                             break;
@@ -106,6 +107,9 @@ int main(void) {
                 }
                 break;
         }
+        
+        //Maquina de estado tres
+        
     }
     return 1;
 }
