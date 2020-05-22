@@ -102,7 +102,7 @@ void pedirFecha(struct tm * tiempo) {
     uint8_t fecha[10];
     uint8_t dia = 32;
     uint8_t mes = 32;
-    uint32_t year = 32;
+    uint16_t year = 32;
     while (dia > 31 || dia < 1 || mes < 1 || mes > 31 || year < 1970) {
         buscarEntrada(fecha, 10);
         dia = (fecha[1] - 48) + 10 * (fecha[0] - 48);
