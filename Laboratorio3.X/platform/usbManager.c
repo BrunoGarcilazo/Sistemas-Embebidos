@@ -45,21 +45,18 @@ bool buscarEntrada(uint8_t * buffer, uint8_t large) {
     return false;
 }
 
-void enviarMensaje(char *mensaje){
-    bool mando;
-    mando = false;
-    while (!mando) {
-        CDCTxService();
-        if ((USBGetDeviceState() < CONFIGURED_STATE) ||
-                (USBIsDeviceSuspended() == true)) {
-            continue;
-        } else {
-            if (USBUSARTIsTxTrfReady()) {
-                putsUSBUSART(mensaje);
-                mando =true;
-            }
+bool enviarMensaje(char *mensaje) {
+    CDCTxService();
+    if ((USBGetDeviceState() < CONFIGURED_STATE) ||
+            (USBIsDeviceSuspended() == true)) {
+        return false;
+    } else {
+        if (USBUSARTIsTxTrfReady()) {
+            putsUSBUSART(mensaje);
+            return true;
         }
     }
+    return false;
 }
 
 /* *****************************************************************************

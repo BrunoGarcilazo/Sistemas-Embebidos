@@ -32,10 +32,10 @@
 
 
 /**
- * Devuelve true cuando se ha recibido algo. El bloqueante
+ * Devuelve true cuando se ha recibido algo.
  * @param buffer Buffer al cual se carga el input
  * @param large Largo del  input requerido
- * @return True cuando se ha recibido algo
+ * @return True cuando se ha recibido. Falso de lo contrario
  */
 bool buscarEntrada(uint8_t * buffer, uint8_t large);
 
@@ -43,7 +43,7 @@ bool buscarEntrada(uint8_t * buffer, uint8_t large);
  * Este metodo envia un mensaje una vez por el usb
  * @param mensaje Array de chars a enviar
  */
-void enviarMensaje(char *mensaje);
+bool enviarMensaje(char *mensaje);
 
 #endif /* _USB_MANAGER_H */
 /* *****************************************************************************

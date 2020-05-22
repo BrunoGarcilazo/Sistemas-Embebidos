@@ -25,77 +25,94 @@
 #include <proc/PIC32MM-GPM-0XX/p32mm0256gpm064.h>
 #include "../platform/usbManager.h"
 #include "../platform/scheludeManager.h"
+#include "rtcManager.h"
 
+bool agregarEvento(eventAdder_t *adder, uint8_t * entrada, manager_de_pedidos_t *manager) {
+    switch (adder -> estado) {
+        case(ENVIANDO_MENSAJE_DE_COMAND):
+            if (enviarMensaje("\r\nIngrese 0 si desea prender 1 si desea apagar un LED\r\n")) {
+                adder -> estado = RECIBIENDO_COMAND;
+            }
 
+        case(RECIBIENDO_COMAND):
+            if (buscarEntrada(entrada, 1)) {
+                if (!(entrada[0] != '1' && entrada[0] != '0')) {
+                    adder -> color = entrada[0] - 48;
+                    adder -> estado = ENVIANDO_MENSAJE_DE_COLOR;
+                }
+            }
+            return false;
+        case(ENVIANDO_MENSAJE_DE_COLOR):
+            if (enviarMensaje("\r\n¿De que color desea encender el Led?\r\n0- Blanco\r\n1- Rojo\r\n2- Azul\r\n3- Verde\r\n")) {
+                adder -> estado = RECIBIENDO_COLOR;
+            }
+        case(RECIBIENDO_COLOR):
+            if (buscarEntrada(entrada, 1)) {
+                if (!(entrada[0] < '0' || entrada[0] > '3')) {
+                    adder -> color = entrada[0] - 48;
+                    adder -> estado = ENVIANDO_MENSAJE_DE_PARAM;
+                }
+            }
+            return false;
+        case(ENVIANDO_MENSAJE_DE_PARAM):
+            if (enviarMensaje("\r\n¿Que Led del 0 al 7 desea accionar?\r\n")) {
+                adder -> estado = RECIBIENDO_PARAM;
+            }
+        case(RECIBIENDO_PARAM):
+            if (buscarEntrada(entrada, 1)) {
+                if (!(entrada[0] > '1' || entrada[0] != '0')) {
+                    adder -> led = entrada[0] - 48;
+                    adder -> estado = ENVIANDO_MENSAJE_DE_HORA;
+                }
+            }
+            return false;
+        case(ENVIANDO_MENSAJE_DE_HORA):
+            if (enviarMensaje("\r\nIngrese hora en formato hh:mm:ss\r\n")) {
+                adder -> estado = RECIBIENDO_HORA;
+            }
 
-void agregarEvento() {
-    uint8_t command;
-    uint8_t led;
-    uint8_t color;
-    time_t tiempoFinal;
-    uint8_t valorNumericoDeEntrada;
+        case(RECIBIENDO_HORA):
+            if (pedirHora(&(adder -> tiempo), manager)) {
+                adder -> estado = ENVIANDO_MENSAJE_DE_FECHA;
+            }
+            return false;
+        case(ENVIANDO_MENSAJE_DE_FECHA):
+            if (enviarMensaje("\r\nIngrese fecha en formato dd/mm/aaaa\r\n")) {
+                adder -> estado = RECIBIENDO_FECHA;
+            }
+        case(RECIBIENDO_FECHA):
+            if (pedirFecha(&(adder -> tiempo), manager)) {
+                adder -> estado = CREANDO_EVENTO;
+            }
+        case(CREANDO_EVENTO):
+        {
+            app_event_t evento;
+            uint32_t tiempoFinal;
+            tiempoFinal = mktime(&(adder -> tiempo));
+            evento.color = adder -> color;
+            evento.command = adder -> command;
+            evento.param = adder -> led;
+            evento.time = tiempoFinal;
 
-    enviarMensaje("\r\nIngrese 0 si desea prender 1 si desea apagar un LED\r\n");
-    uint8_t entrada[1];
-    valorNumericoDeEntrada = 2;
-    while (valorNumericoDeEntrada != 1 && valorNumericoDeEntrada != 0) { //Si selecciona una opcion valida
-        buscarEntrada(entrada, 1);
-        valorNumericoDeEntrada = entrada[0] - 48;
-    }
-    command = valorNumericoDeEntrada;
-    entrada[0] = 200;
-
-    if (command == 1) { //Si se selecciono prender
-        enviarMensaje("\r\n¿De que color desea encender el Led?\r\n0- Blanco\r\n1- Rojo\r\n2- Azul\r\n3- Verde\r\n");
-        valorNumericoDeEntrada = 5;
-        while (valorNumericoDeEntrada > 3 || valorNumericoDeEntrada < 0) { //Si selecciona algo no entre 0 y 3
-            buscarEntrada(entrada, 1);
-            valorNumericoDeEntrada = entrada[0] - 48;
+            int i;
+            for (i = 0; i < EVENTOS_MAXIMOS - 1; i++) {
+                if (eventos[i].command == 0xFF) {
+                    eventos[i] = evento;
+                    enviarMensaje("\r\nSu tarea se puso en la posición" + (i + 48));
+                    break;
+                }
+            }
+            return true;
         }
-        color = valorNumericoDeEntrada;
-        entrada[0] = 200;
 
-        enviarMensaje("\r\n¿Que Led del 0 al 7 Desea Prender?\r\n");
-    } else { //Si se selecciono apagar
-        enviarMensaje("\r\n¿Que Led del 0 al 7 desea apagar?\r\n");
     }
-
-    valorNumericoDeEntrada = 10;
-    while (valorNumericoDeEntrada > 7 || valorNumericoDeEntrada < 0) {
-        buscarEntrada(entrada, 1);
-        valorNumericoDeEntrada = entrada[0] - 48;
-    }
-    led = valorNumericoDeEntrada;
-    entrada[0] = 200;
-
-    enviarMensaje("\r\nIngrese hora en formato hh:mm:ss\r\n");
-    struct tm tiempo;
-    pedirHora(&tiempo);
-
-    enviarMensaje("\r\nIngrese fecha en formato dd/mm/aaaa\r\n");
-    pedirFecha(&tiempo);
-
-    tiempoFinal = mktime(&tiempo);
-
-    app_event_t evento;
-    evento.color = color;
-    evento.command = command;
-    evento.param = led;
-    evento.time = tiempoFinal;
-
-    int i;
-    for (i = 0; i < EVENTOS_MAXIMOS - 1; i++) {
-        if (eventos[i].command == 0xFF) {
-            eventos[i] = evento;
-            enviarMensaje("\r\nSu tarea se puso en la posición" + (i + 48));
-            break;
-        }
-    }
+    return false;
 }
 
 void inicilizarEventos() {
     int i;
     for (i = 0; i < EVENTOS_MAXIMOS - 1; i++) {
+
         eventos[i].command = 0xFF;
     }
 }
@@ -115,6 +132,7 @@ void quitarEvento() {
     app_event_t eventoABorrar;
     eventoABorrar = eventos[valorNumerico];
     if (eventoABorrar.command != 0xFF) {
+
         eventoABorrar.command = 0xFF;
         enviarMensaje("\r\nElemento Borrado Satisfactoriamente");
     }
@@ -124,7 +142,7 @@ void consultarListaDeEventos() {
     int i;
 
     struct tm *horaDeActivacion;
-    
+
     for (i = 0; i < EVENTOS_MAXIMOS - 1; i++) {
         if (eventos[i].command != 0xFF) {
             char posicion[1];
@@ -135,25 +153,25 @@ void consultarListaDeEventos() {
             char segundos[1];
             time_t horaDeFinalizacion = eventos[i].time;
             horaDeActivacion = gmtime(&horaDeFinalizacion);
-            
+
             //Enviar Posicion
             enviarMensaje("\r\nPosicion: ");
             posicion[0] = i + 48;
             enviarMensaje(posicion);
-            
+
             //Enviar Numero de Led
             enviarMensaje(" \r\n");
             enviarMensaje("Led: ");
             param[0] = (eventos[i].param + 48);
             enviarMensaje(param);
-            
-            
+
+
             //Enviar Color
             enviarMensaje("\r\n");
             enviarMensaje("Color: ");
             color[0] = (eventos[i].color + 48);
             enviarMensaje(color);
-            
+
             //Enviar Tiempo
             enviarMensaje("\r\n");
             enviarMensaje("Momento de activacion: ");

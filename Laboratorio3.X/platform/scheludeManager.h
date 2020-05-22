@@ -17,18 +17,19 @@
 
 #ifndef _SCHELUDE_MANAGER_H    /* Guard against multiple inclusion */
 #define _SCHELUDE_MANAGER_H
-    
-    
+
+
 /* ************************************************************************** */
 /* Section: Include                                                           */
 /* ************************************************************************** */
-#include<stdint.h>
-
+#include <stdint.h>
+#include "../platform/rtcManager.h"
 
 
 
 /* ************************************************************************** */
 /* Section: Tipos de dato                                                     */
+
 /* ************************************************************************** */
 
 
@@ -64,16 +65,76 @@ typedef struct {
  */
 typedef enum {
     /**
-     * Cuando se esta requiriendo al usuario que ingrese un tiempo
+     * Indica si la fecha y hora fueron inicializadas
      */
-    WAITING_FOR_TIME_INPUT,
+    NO_INICIALIZADA,
 
     /**
      * Refiere al estado normal donde el usuario debe pedir algo.
      */
-    MENU_STATE,
-} schelude_t;
+    EN_MENU,
 
+    /**
+     * 
+     */
+    EN_MOSTRAR_HORA,
+
+    /**
+     * Cuando se esta requiriendo al usuario que ingrese un tiempo
+     */
+    EN_INGRESAR_HORA,
+
+    /**
+     * Cuando el usuario esta agregando un evento
+     */
+    EN_AGREGAR_EVENTO,
+
+    /**
+     * Cuando el usuario este quitando un evento
+     */
+    EN_QUITAR_EVENTO,
+
+    /**
+     * Cuando el usuario este consultando la lista de eventos
+     */
+    EN_CONSULTAR_LISTA_DE_EVENTOS,
+
+    /**
+     * Cuando el sistema no ha recibido nada
+     */
+    EN_ESPERA,
+
+} APP_STATUS;
+
+typedef struct {
+    APP_STATUS status;
+
+} aplicacion_t;
+
+typedef enum {
+    ENVIANDO_MENSAJE_DE_COMAND,
+    RECIBIENDO_COMAND,
+    ENVIANDO_MENSAJE_DE_COLOR,
+    RECIBIENDO_COLOR,
+    ENVIANDO_MENSAJE_DE_PARAM,
+    RECIBIENDO_PARAM,
+    ENVIANDO_MENSAJE_DE_HORA,
+    RECIBIENDO_HORA,
+    ENVIANDO_MENSAJE_DE_FECHA,
+    RECIBIENDO_FECHA,
+    CREANDO_EVENTO,
+    COLOCANDO_EN_LISTA,
+} ADD_EVENT_ADDER_STATUS;
+
+typedef struct {
+    ADD_EVENT_ADDER_STATUS estado;
+    struct tm tiempo;
+    uint8_t command;
+    uint8_t led;
+    uint8_t color;
+    time_t tiempoFinal;
+    uint8_t valorNumericoDeEntrada;
+} eventAdder_t;
 
 /* ************************************************************************** */
 /* Section: Constantes                                                        */
@@ -90,7 +151,8 @@ app_event_t eventos[EVENTOS_MAXIMOS];
 /**
  * Agrega un evento al calendario segun informacion del operador recibida por USB
  */
-void agregarEvento();
+bool agregarEvento(eventAdder_t *adder, uint8_t * entrada, manager_de_pedidos_t *manager);
+
 /**
  * Inicializa los eventos del array para que notemos que no estan configurados
  */
