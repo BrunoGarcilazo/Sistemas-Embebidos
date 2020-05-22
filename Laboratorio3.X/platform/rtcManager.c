@@ -69,7 +69,7 @@ bool pedirHora(struct tm *tiempo, manager_de_pedidos_t *estado_de_pedido) {
 }
 
 bool consultarHora() {
-    char hora[12];
+    uint8_t hora[12];
     hora[0] = '\r';
     hora[1] = '\n';
     hora[2] = RTCTIMEbits.HRTEN + 48;

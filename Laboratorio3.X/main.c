@@ -29,7 +29,7 @@ bool inicializarLedsRGB() {
     }
     WS2812_send(leds, 8); // Envio los colores a los LEDs
 
-    return true;
+    return leds;
 }
 
 int main(void) {
@@ -56,13 +56,18 @@ int main(void) {
     bool primeraVezMensajes;
     primeraVezMensajes = true;
 
-    //Variables para input de usuario
+    //Variables para ejecutar tareas
 
     inicializador_t init;
     init.estado = MENSAJE_DE_FECHA_NO_ENVIADO;
 
     manager_de_pedidos_t manager;
     manager.estado = PEDIDO_INVALIDO;
+    
+    eventAdder_t adder;
+    adder.estado = ENVIANDO_MENSAJE_DE_COMAND;
+    uint8_t entradaDeEventos[3];
+          
 
     struct tm tiempoParaAplicaciones;
 
@@ -116,6 +121,7 @@ int main(void) {
                         }
                     }
                 }
+                break;
             case(NO_INICIALIZADA):
                 if (inicializarFechaYHora(&init, &manager)) {
                     manager.estado = PEDIDO_INVALIDO;
@@ -144,6 +150,10 @@ int main(void) {
                 }
                 break;
             case(EN_AGREGAR_EVENTO):
+                if (agregarEvento(&adder,entradaDeEventos,&manager)){
+                    adder.estado = ENVIANDO_MENSAJE_DE_COMAND;
+                    estado.status = EN_MENU;
+                }
                 break;
             case(EN_QUITAR_EVENTO):
                 quitarEvento();
@@ -154,10 +164,7 @@ int main(void) {
             default:
                 break;
         }
-
-
-
-
+        //Maquina de estado dos
         switch (luzPrendida) {
             case false:
                 if (UT_delayms(&timer, ochociento)) {
@@ -184,7 +191,6 @@ int main(void) {
                 RTCC_TimeGet(&tiempoActual);
                 uint32_t tiempoActualPlano = mktime(&tiempoActual);
                 if (eventos[i].time >= tiempoActualPlano) {
-
                     switch (eventos[i].color) {
                         case 0:
                             ledsRGB[eventos[i].param] = WHITE;
@@ -200,14 +206,10 @@ int main(void) {
                         default:
                             break;
                     }
-
+                    WS2812_send(ledsRGB, 8);
                 }
             }
         }
-        WS2812_send(ledsRGB, 8);
-
-
-
     }
 }
 
