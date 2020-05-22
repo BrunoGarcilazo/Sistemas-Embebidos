@@ -17,25 +17,19 @@
 /*
                          Main application
  */
-bool inicializarLedsRGB() {
-    ws2812_t leds[8]; // Array que luego voy a mandar con los colores que quiero
-    ws2812_t amarillo; // struct de RGB que voy a modificar
-    amarillo.r = 255;
-    amarillo.g = 255; // Asigno el codigo que quiero
-    amarillo.b = 0;
+bool inicializarLedsRGB(ws2812_t *leds) {
     int i;
-    for (i = 0; i < 8; i++) {
-        leds[i] = amarillo; // Asigno el color amarillo a los 8 lugares del Array
+    for (i = 0; i < EVENTOS_MAXIMOS; i++) {
+        leds[i] = BLACK; // Asigno el color apagado a los 8 lugares del Array
     }
     WS2812_send(leds, 8); // Envio los colores a los LEDs
 
-    return leds;
+    return true;
 }
 
 int main(void) {
     // initialize the device
     SYSTEM_Initialize();
-    inicilizarEventos();
     aplicacion_t estado;
     estado.status = EN_ESPERA;
 
@@ -45,22 +39,20 @@ int main(void) {
     uint32_t cuatrociento = 400;
     ut_tmrDelay_t timer;
     timer.state = UT_TMR_DELAY_INIT;
-    ws2812_t BLACK; // struct de RGB que voy a modificar
-    BLACK.r = 0;
-    BLACK.g = 0; // Asigno el codigo que quiero
-    BLACK.b = 0;
+    ws2812_t ledsRGB[EVENTOS_MAXIMOS];
 
     //Variables de USB
     uint8_t large = 10;
     uint8_t buffer[large];
-    char menu[] = "\r\nBienvenido\r\nMenu\r\nPara seleccionar una opcion envie la tecla presente a la izquierda de la funcion\r\na - Fijar hora del reloj RTC\r\nb - Consultar hora del RTC\r\nc - Agregar evento\r\nd - Quitar evento\r\ne - Consultar lista de eventos\r\n";
     uint8_t numBytes;
-    bool primeraVez;
-    primeraVez = true;
-    bool primeraVezMensajes;
-    primeraVezMensajes = true;
 
     //Variables para ejecutar tareas
+
+    bool primeraVez;
+    primeraVez = true;
+
+    bool primeraVezMensajes;
+    primeraVezMensajes = true;
 
     inicializador_t init;
     init.estado = MENSAJE_DE_FECHA_NO_ENVIADO;
@@ -72,8 +64,14 @@ int main(void) {
     adder.estado = ENVIANDO_MENSAJE_DE_COMAND;
     uint8_t entradaDeEventos[3];
 
+    event_kicker_t kicker;
+    kicker.estado = ENVIANDO_INSTRUCCIONES;
 
     struct tm tiempoParaAplicaciones;
+
+    //Inicializo estructuras
+    inicilizarEventos();
+    inicializarLedsRGB(ledsRGB);
 
 
     while (1) {
@@ -125,34 +123,32 @@ int main(void) {
                         }
                     }
                 }
-
                 break;
             case(NO_INICIALIZADA):
                 if (inicializarFechaYHora(&init, &manager)) {
-                    //inicializarLedsRGB();
-
                     manager.estado = PEDIDO_INVALIDO;
                     estado.status = EN_MENU;
                 }
                 break;
             case(EN_MENU):
-                if (enviarMensaje(menu)) {
+                if (enviarMensaje(MENU)) {
                     estado.status = EN_ESPERA;
                 }
                 break;
             case(EN_INGRESAR_HORA):
                 if (primeraVezMensajes == true) {
-                    if (enviarMensaje("\r\nIngrese hora en formato hh:mm:ss\r\n")) {
+                    if (enviarMensaje(FORMATO_DE_HORA)) {
                         primeraVezMensajes = false;
                     }
                 }
                 if (pedirHora(&tiempoParaAplicaciones, &manager)) {
                     RTCC_TimeSet(&tiempoParaAplicaciones);
+                    primeraVezMensajes = true;
                     estado.status = EN_MENU;
                 }
                 break;
             case(EN_MOSTRAR_HORA):
-                if (consultarHora()) {
+                if (consultarHora(&tiempoParaAplicaciones)) {
                     estado.status = EN_MENU;
                 }
                 break;
@@ -163,10 +159,15 @@ int main(void) {
                 }
                 break;
             case(EN_QUITAR_EVENTO):
-                quitarEvento();
+                if (quitarEvento(&kicker, entradaDeEventos)) {
+                    kicker.estado = ENVIANDO_INSTRUCCIONES;
+                    estado.status = EN_MENU;
+                }
                 break;
             case(EN_CONSULTAR_LISTA_DE_EVENTOS):
-                consultarListaDeEventos();
+                if (consultarListaDeEventos()) {
+                    estado.status = EN_MENU;
+                }
                 break;
             default:
                 break;
@@ -192,37 +193,36 @@ int main(void) {
         struct tm tiempoActual;
         int i;
 
-        ws2812_t ledsRGB[8];
-        for (i = 0; i < EVENTOS_MAXIMOS - 1; i++) {
+        for (i = 0; i < EVENTOS_MAXIMOS; i++) {
             if (eventos[i].command != 0xFF) {
                 RTCC_TimeGet(&tiempoActual);
                 uint32_t tiempoActualPlano = mktime(&tiempoActual);
-                if (eventos[i].time >= tiempoActualPlano) {
+                if (tiempoActualPlano >= eventos[i].time) {
                     if (eventos[i].command == 0) {
                         ledsRGB[eventos[i].param] = BLACK;
                     } else {
                         switch (eventos[i].color) {
                             case 0:
                                 ledsRGB[eventos[i].param] = WHITE;
-                                WS2812_send(ledsRGB, 8);
                                 break;
                             case 1:
                                 ledsRGB[eventos[i].param] = RED;
-                                WS2812_send(ledsRGB, 8);
                                 break;
                             case 2:
                                 ledsRGB[eventos[i].param] = BLUE;
-                                WS2812_send(ledsRGB, 8);
                                 break;
                             case 3:
                                 ledsRGB[eventos[i].param] = GREEN;
-                                WS2812_send(ledsRGB, 8);
+
                             default:
                                 break;
                         }
                     }
                 }
+            } else {
+                ledsRGB[eventos[i].param] = BLACK;
             }
+            WS2812_send(ledsRGB, 8);
         }
     }
 }

@@ -139,11 +139,35 @@ typedef struct {
     uint8_t valorNumericoDeEntrada;
 } eventAdder_t;
 
+typedef enum {
+    ENVIANDO_INSTRUCCIONES,
+    RECIBIENDO_ENTRADA,
+    BORRANDO_EVENTO,
+    COMUNICANDO,
+} ERASE_EVENT_KICKER_STATUS;
+
+typedef struct {
+    uint8_t posicion;
+    ERASE_EVENT_KICKER_STATUS estado;
+} event_kicker_t;
+
 /* ************************************************************************** */
 /* Section: Constantes                                                        */
 /* ************************************************************************** */
 
-#define EVENTOS_MAXIMOS 7
+#define SELECCION_DE_LED "\r\n¿Que Led del 0 al 7 desea accionar?\r\n"
+#define FORMATO_DE_PRENDER "\r\nIngrese la informacion en el siguiente formato\r\nNumeroDeLED;\r\n"
+#define PREGUNTA_POR_COLOR_DE_LED "\r\n¿De que color desea encender el Led?\r\n0- Blanco\r\n1- Rojo\r\n2- Azul\r\n3- Verde\r\n"
+#define FORMATO_PARA_PRENDER "\r\nIngrese la informacion en el siguiente formato\r\nColor,NumeroDeLED\r\n"
+#define PREGUNTA_DE_COMAND "\r\nIngrese 1 si desea prender 0 si desea apagar un LED\r\n"
+#define FORMATO_DE_HORA "\r\nIngrese hora en formato hh:mm:ss\r\n"
+#define FORMATO_DE_FECHA "\r\nIngrese fecha en formato dd/mm/aaaa\r\n"
+#define FORMATO_QUITAR_EVENTO "\n\rIngrese la posicion del evento que desea quitar con este formato\n\r poscion.\r\nLas posiciones van de 0 a 7\r\n"
+#define ELEMENTO_BORRADO "\r\nElemento Borrado Satisfactoriamente\r\n"
+#define MENU "\r\nBienvenido\r\nMenu\r\nPara seleccionar una opcion envie la tecla presente a la izquierda de la funcion\r\na - Fijar hora del reloj RTC\r\nb - Consultar hora del RTC\r\nc - Agregar evento\r\nd - Quitar evento\r\ne - Consultar lista de eventos\r\n"
+    
+
+#define EVENTOS_MAXIMOS 8
 app_event_t eventos[EVENTOS_MAXIMOS];
 
 
@@ -165,12 +189,12 @@ void inicilizarEventos();
  * Quita un evento de la posicion indicada por el operador
  * Esta posicion se obtiene dentro de la funcion
  */
-void quitarEvento();
+bool quitarEvento(event_kicker_t *kicker, uint8_t *entrada) ;
 
 /**
  * Escribe en el menu la lista de eventos activos
  */
-void consultarListaDeEventos();
+bool consultarListaDeEventos();
 
 
 #endif /* _SCHELUDE_MANAGER_H */

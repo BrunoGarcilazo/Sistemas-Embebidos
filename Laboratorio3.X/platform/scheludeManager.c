@@ -30,7 +30,7 @@
 bool agregarEvento(eventAdder_t *adder, uint8_t * entrada, manager_de_pedidos_t *manager) {
     switch (adder -> estado) {
         case(ENVIANDO_MENSAJE_DE_COMAND):
-            if (enviarMensaje("\r\nIngrese 0 si desea prender 1 si desea apagar un LED\r\n")) {
+            if (enviarMensaje(PREGUNTA_DE_COMAND)) {
                 adder -> estado = RECIBIENDO_COMAND;
             }
             break;
@@ -38,7 +38,7 @@ bool agregarEvento(eventAdder_t *adder, uint8_t * entrada, manager_de_pedidos_t 
             if (buscarEntrada(entrada, 1)) {
                 if (entrada[0] == '1' || entrada[0] == '0') {
                     adder -> command = entrada[0] - 48;
-                    if (adder -> command == 1) {
+                    if (adder -> command == 0) {
                         adder -> estado = ENVIANDO_MENSAJE_PARA_APAGAR_INSTRUCCIONES;
                     } else {
                         adder -> estado = ENVIANDO_MENSAJE_PARA_PRENDER_INSTRUCCIONES;
@@ -47,18 +47,18 @@ bool agregarEvento(eventAdder_t *adder, uint8_t * entrada, manager_de_pedidos_t 
             }
             break;
         case(ENVIANDO_MENSAJE_PARA_PRENDER_INSTRUCCIONES):
-            if (enviarMensaje("\r\nIngrese la informacion en el siguiente formato\r\nColor,NumeroDeLED\r\n")) {
+            if (enviarMensaje(FORMATO_PARA_PRENDER)) {
                 adder -> estado = ENVIANDO_MENSAJE_PARA_PRENDER_COLORES;
             }
             break;
         case (ENVIANDO_MENSAJE_PARA_PRENDER_COLORES):
-            if (enviarMensaje("\r\n¿De que color desea encender el Led?\r\n0- Blanco\r\n1- Rojo\r\n2- Azul\r\n3- Verde\r\n")) {
+            if (enviarMensaje(PREGUNTA_POR_COLOR_DE_LED)) {
                 adder -> estado = ENVIANDO_MENSAJE_DE_PARAM;
             }
             break;
         case(ENVIANDO_MENSAJE_DE_PARAM):
-            if (enviarMensaje("\r\n¿Que Led del 0 al 7 desea accionar?\r\n")) {
-                if (adder -> command == 0) {
+            if (enviarMensaje(SELECCION_DE_LED)) {
+                if (adder -> command == 1) {
                     adder -> estado = RECIBIENDO_INFORMACION_DE_PRENDER;
                 } else {
                     adder -> estado = RECIBIENDO_INFORMACION_DE_APAGAR;
@@ -76,20 +76,20 @@ bool agregarEvento(eventAdder_t *adder, uint8_t * entrada, manager_de_pedidos_t 
             }
             break;
         case(ENVIANDO_MENSAJE_PARA_APAGAR_INSTRUCCIONES):
-            if (enviarMensaje("\r\nIngrese la informacion en el siguiente formato\r\nNumeroDeLED;\r\n")) {
+            if (enviarMensaje(FORMATO_DE_PRENDER)) {
                 adder -> estado = ENVIANDO_MENSAJE_DE_PARAM;
             }
             break;
         case(RECIBIENDO_INFORMACION_DE_APAGAR):
             if (buscarEntrada(entrada, 2)) {
                 if ((entrada[0] < '8' && entrada[0] >= '0') && entrada[1] == ';') {
-                    adder -> led = (entrada[2] - 48);
+                    adder -> led = (entrada[0] - 48);
                     adder -> estado = ENVIANDO_MENSAJE_DE_HORA;
                 }
             }
             break;
         case(ENVIANDO_MENSAJE_DE_HORA):
-            if (enviarMensaje("\r\nIngrese hora en formato hh:mm:ss\r\n")) {
+            if (enviarMensaje(FORMATO_DE_HORA)) {
                 adder -> estado = RECIBIENDO_HORA;
             }
             break;
@@ -99,7 +99,7 @@ bool agregarEvento(eventAdder_t *adder, uint8_t * entrada, manager_de_pedidos_t 
             }
             break;
         case(ENVIANDO_MENSAJE_DE_FECHA):
-            if (enviarMensaje("\r\nIngrese fecha en formato dd/mm/aaaa\r\n")) {
+            if (enviarMensaje(FORMATO_DE_FECHA)) {
                 adder -> estado = RECIBIENDO_FECHA;
             }
             break;
@@ -119,7 +119,7 @@ bool agregarEvento(eventAdder_t *adder, uint8_t * entrada, manager_de_pedidos_t 
             evento.time = tiempoFinal;
 
             int i;
-            for (i = 0; i < EVENTOS_MAXIMOS - 1; i++) {
+            for (i = 0; i < EVENTOS_MAXIMOS; i++) {
                 if (eventos[i].command == 0xFF) {
                     eventos[i] = evento;
                     break;
@@ -134,34 +134,44 @@ bool agregarEvento(eventAdder_t *adder, uint8_t * entrada, manager_de_pedidos_t 
 
 void inicilizarEventos() {
     int i;
-    for (i = 0; i < EVENTOS_MAXIMOS - 1; i++) {
-
+    for (i = 0; i < EVENTOS_MAXIMOS; i++) {
         eventos[i].command = 0xFF;
     }
 }
 
-void quitarEvento() {
-    enviarMensaje("\n\rSeleccione la posicion del evento que desea quitar\r\n");
-    enviarMensaje("\n\rLas posiciones van de 1 a 7\r\n");
-    uint8_t entrada[1];
-    entrada[1] = 8;
-    uint8_t valorNumerico;
-    valorNumerico = 97;
-    while (valorNumerico > 7 || valorNumerico < 1) {
-        buscarEntrada(entrada, 1);
-        valorNumerico = entrada[0] - 48;
+bool quitarEvento(event_kicker_t *kicker, uint8_t *entrada) {
+    switch (kicker -> estado) {
+        case(ENVIANDO_INSTRUCCIONES):
+            if (enviarMensaje(FORMATO_QUITAR_EVENTO)) {
+                kicker -> estado = RECIBIENDO_ENTRADA;
+            }
+            break;
+        case(RECIBIENDO_ENTRADA):
+            if (buscarEntrada(entrada, 2)) {
+                if (entrada[0] < '7' && entrada [0] >= '0' && entrada[1] == '.') {
+                    kicker -> estado = BORRANDO_EVENTO;
+                    kicker -> posicion = (entrada[0] - 48);
+                }
+            }
+            break;
+        case(BORRANDO_EVENTO):
+        {
+            app_event_t eventoABorrar;
+            eventoABorrar = eventos[kicker -> posicion];
+            if (eventoABorrar.command != 0xFF) {
+                eventoABorrar.command = 0xFF;
+            }
+            kicker -> estado = COMUNICANDO;
+            break;
+        }
+        case (COMUNICANDO):
+            enviarMensaje(ELEMENTO_BORRADO);
+            return true;
     }
-    valorNumerico--;
-    app_event_t eventoABorrar;
-    eventoABorrar = eventos[valorNumerico];
-    if (eventoABorrar.command != 0xFF) {
-
-        eventoABorrar.command = 0xFF;
-        enviarMensaje("\r\nElemento Borrado Satisfactoriamente");
-    }
+    return false;
 }
 
-void consultarListaDeEventos() {
+bool consultarListaDeEventos() {
     int i;
 
     struct tm *horaDeActivacion;
@@ -209,6 +219,7 @@ void consultarListaDeEventos() {
             enviarMensaje("\r\n");
         }
     }
+    return true;
 
 }
 

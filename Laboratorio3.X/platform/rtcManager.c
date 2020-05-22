@@ -26,6 +26,8 @@
 #include "../mcc_generated_files/rtcc.h"
 #include "../utilss/utils.h"
 #include "rtcManager.h"
+#include "scheludeManager.h"
+#include "usbManager.h"
 /* This section lists the other files that are included in this file.
  */
 
@@ -68,38 +70,17 @@ bool pedirHora(struct tm *tiempo, manager_de_pedidos_t *estado_de_pedido) {
     }
 }
 
-bool consultarHora() {
-    uint8_t hora[12];
-    hora[0] = '\r';
-    hora[1] = '\n';
-    hora[2] = RTCTIMEbits.HRTEN + 48;
-    hora[3] = RTCTIMEbits.HRONE + 48;
-    hora[4] = ':';
-    hora[5] = RTCTIMEbits.MINTEN + 48;
-    hora[6] = RTCTIMEbits.MINONE + 48;
-    hora[7] = ':';
-    hora[8] = RTCTIMEbits.SECTEN + 48;
-    hora[9] = RTCTIMEbits.SECONE + 48;
-    hora[10] = '\r';
-    hora[11] = '\n';
-
-    CDCTxService();
-    if ((USBGetDeviceState() < CONFIGURED_STATE) ||
-            (USBIsDeviceSuspended() == true)) {
-        return false;
-    } else {
-        if (USBUSARTIsTxTrfReady()) {
-            putsUSBUSART(hora);
-            return true;
-        }
-    }
-    return false;
+bool consultarHora(struct tm * tiempo) {
+    RTCC_TimeGet(tiempo);
+    char hora[12];
+    strftime(hora, 12,"%H:%M",tiempo);
+    return enviarMensaje(hora);
 }
 
 bool inicializarFechaYHora(inicializador_t * inicializador, manager_de_pedidos_t *managerDePedidos) {
     switch (inicializador -> estado) {
         case(MENSAJE_DE_FECHA_NO_ENVIADO):
-            if (enviarMensaje("\r\nIngrese fecha en formato dd/mm/aaaa\r\n")) {
+            if (enviarMensaje(FORMATO_DE_FECHA)) {
                 inicializador -> estado = ESPERANDO_FECHA;
             }
             break;
@@ -109,7 +90,7 @@ bool inicializarFechaYHora(inicializador_t * inicializador, manager_de_pedidos_t
             }
             break;
         case(MENSAJE_DE_HORA_NO_ENVIADO):
-            if (enviarMensaje("\r\nIngrese hora en formato hh:mm:ss\r\n")) {
+            if (enviarMensaje(FORMATO_DE_HORA)) {
                 inicializador -> estado = ESPERANDO_HORA;
             }
             break;

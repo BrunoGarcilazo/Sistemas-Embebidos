@@ -69,7 +69,7 @@ bool pedirFecha(struct tm * tiempo, manager_de_pedidos_t *estado_de_pedido);
 /**
  * Imprime en la consola el tiempo actual via USB
  */
-bool consultarHora(void);
+bool consultarHora(struct tm * tiempo);
 
 /**
  * Esta funcion pide al usuario que ingrese la fecha que sera usada para usar el RTC
