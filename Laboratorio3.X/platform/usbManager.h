@@ -39,9 +39,11 @@
  */
 bool buscarEntrada(uint8_t * buffer, uint8_t large);
 
+
 /**
  * Este metodo envia un mensaje una vez por el usb
  * @param mensaje Array de chars a enviar
+ * @return true cuando la operacion fue un exito
  */
 bool enviarMensaje(char *mensaje);
 

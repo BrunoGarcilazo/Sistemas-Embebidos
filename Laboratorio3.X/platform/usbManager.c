@@ -1,17 +1,18 @@
 /* ************************************************************************** */
-/** Descriptive File Name
+/** En este archivo estan algunas funciones para el manejo de las entradas
+ * y salidas del usb.
 
   @Company
-    Company Name
+    UCUDAL
 
   @File Name
-    filename.c
+    usbManager.c
 
   @Summary
-    Brief description of the file.
+    Manejo del IO del USB
 
   @Description
-    Describe the purpose of this file.
+    Implementar funciones que permitar el envio y recibimiento de packetes via USB
  */
 /* ************************************************************************** */
 
@@ -36,9 +37,9 @@ bool buscarEntrada(uint8_t * buffer, uint8_t large) {
         return false;
     } else {
         if (USBUSARTIsTxTrfReady()) {
-            numBytes = getsUSBUSART(buffer, large);
+            numBytes = getsUSBUSART(buffer, large); //El mensaje se guardara en buffer
             if (numBytes > 0) {
-                return true;
+                return true; //Si llego un mensaje devuelve true
             }
         }
     }
@@ -52,7 +53,7 @@ bool enviarMensaje(char *mensaje) {
         return false;
     } else {
         if (USBUSARTIsTxTrfReady()) {
-            putsUSBUSART(mensaje);
+            putsUSBUSART(mensaje); //Si pudo enviar el mensaje devuelve 
             return true;
         }
     }
