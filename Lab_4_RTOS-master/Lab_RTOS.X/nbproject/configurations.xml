@@ -37,6 +37,11 @@
         <itemPath>mcc_generated_files/mcc.h</itemPath>
         <itemPath>mcc_generated_files/system.h</itemPath>
         <itemPath>mcc_generated_files/rtcc.h</itemPath>
+        <itemPath>mcc_generated_files/tmr2.h</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="System" projectFiles="true">
+        <itemPath>newxc32_header.h</itemPath>
+        <itemPath>System/Menu.h</itemPath>
       </logicalFolder>
       <itemPath>FreeRTOSConfig.h</itemPath>
     </logicalFolder>
@@ -66,6 +71,7 @@
           <itemPath>mcc_generated_files/usb/usb_device.c</itemPath>
           <itemPath>mcc_generated_files/usb/usb_descriptors.c</itemPath>
           <itemPath>mcc_generated_files/usb/usb_device_cdc.c</itemPath>
+          <itemPath>mcc_generated_files/usb/example_mcc_usb_cdc.c</itemPath>
         </logicalFolder>
         <itemPath>mcc_generated_files/system.c</itemPath>
         <itemPath>mcc_generated_files/clock.c</itemPath>
@@ -74,6 +80,10 @@
         <itemPath>mcc_generated_files/mcc.c</itemPath>
         <itemPath>mcc_generated_files/pin_manager.c</itemPath>
         <itemPath>mcc_generated_files/rtcc.c</itemPath>
+        <itemPath>mcc_generated_files/tmr2.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="System" projectFiles="true">
+        <itemPath>System/Menu.c</itemPath>
       </logicalFolder>
       <itemPath>main.c</itemPath>
     </logicalFolder>
@@ -101,7 +111,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC32MM-GPM-0XX_DFP" vendor="Microchip" version="1.2.31"/>
+        <pack name="PIC32MM-GPM-0XX_DFP" vendor="Microchip" version="1.0.14"/>
       </packs>
       <compileType>
         <linkerTool>

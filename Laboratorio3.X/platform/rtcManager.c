@@ -69,8 +69,8 @@ bool pedirHora(struct tm *tiempo, manager_de_pedidos_t *estado_de_pedido) {
 
 bool consultarHora(struct tm * tiempo) {
     RTCC_TimeGet(tiempo); //Se toma el tiempo actual
-    char hora[5];
-    strftime(hora, 5,"%H:%M",tiempo); //Esta funcion da formato a un struct tm
+    char hora[8];
+    strftime(hora, 8,"\r\n%H:%M",tiempo); //Esta funcion da formato a un struct tm
     return enviarMensaje(hora); //Retorna si se pudo enviar
 }
 
