@@ -1,0 +1,4 @@
+Para ejecutarlo se debe dar run con la placa conectada obviamente.
+Para empezar el usuario debe enviar cualquier cosa por usb.
+A continuacion se debe desplegar el menu. Es bastante intuitivo
+Solo hay que estar atento y respetar los formatos de ingreso de datos
