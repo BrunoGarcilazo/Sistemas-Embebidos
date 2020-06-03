@@ -39,8 +39,11 @@
         <itemPath>mcc_generated_files/rtcc.h</itemPath>
         <itemPath>mcc_generated_files/tmr2.h</itemPath>
       </logicalFolder>
+      <logicalFolder name="f3" displayName="Platform" projectFiles="true">
+        <itemPath>Platform/usbManager.h</itemPath>
+        <itemPath>Platform/rtcManager.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="f2" displayName="System" projectFiles="true">
-        <itemPath>newxc32_header.h</itemPath>
         <itemPath>System/Menu.h</itemPath>
       </logicalFolder>
       <itemPath>FreeRTOSConfig.h</itemPath>
@@ -81,6 +84,10 @@
         <itemPath>mcc_generated_files/pin_manager.c</itemPath>
         <itemPath>mcc_generated_files/rtcc.c</itemPath>
         <itemPath>mcc_generated_files/tmr2.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="Platform" projectFiles="true">
+        <itemPath>Platform/usbManager.c</itemPath>
+        <itemPath>Platform/rtcManager.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="System" projectFiles="true">
         <itemPath>System/Menu.c</itemPath>

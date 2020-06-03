@@ -52,6 +52,7 @@
 #include <stdbool.h>
 #include "mcc_generated_files/system.h"
 #include "mcc_generated_files/pin_manager.h"
+#include "System/Menu.h"
 
 void blinkLED(void *p_param);
 
@@ -62,8 +63,11 @@ int main(void) {
     // initialize the device
     SYSTEM_Initialize();
 
-    /* Create the tasks defined within this file. */
-    xTaskCreate(blinkLED, "task1", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
+    /* Se crea la funcion que hace prender y apagar las luces*/
+    xTaskCreate(blinkLED, "LedBlink", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
+
+    /*Se crea el menu*/
+    xTaskCreate(menu, "Menu", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL);
 
     /* Finally start the scheduler. */
     vTaskStartScheduler();
@@ -74,13 +78,14 @@ int main(void) {
     to be created.  See the memory management section on the FreeRTOS web site
     for more details. */
     for (;;);
+    return 1;
 }
 
 void blinkLED(void *p_param) {
     while (true) {
         LEDB_SetHigh();
         vTaskDelay(pdMS_TO_TICKS(400)); //Este delay localmente actua como un bloqueante
-        LEDB_SetLow();                  //Pero libera el procesador
+        LEDB_SetLow(); //Pero libera el procesador
         vTaskDelay(pdMS_TO_TICKS(800));
     }
 }
