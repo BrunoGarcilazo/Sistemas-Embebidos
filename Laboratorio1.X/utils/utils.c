@@ -57,7 +57,6 @@
     Any additional remarks
  */
 int global_data;
-int interrupciones;
 
 
 /* ************************************************************************** */
@@ -146,21 +145,11 @@ int ExampleInterfaceFunction(int param1, int param2) {
     return 0;
 }
 
-void UT_delayms(int multiplo) {
-    if (multiplo > 0) {
-        TMR2_Start();
-        interrupciones = multiplo;
-        while (interrupciones != 0) {
-            continue;
-        }
-        TMR2_Stop();
-        return;
+void UT_delay(void){
+    int n = UT_DELAY_CYCLES;
+    while(n>0){
+        n--;
     }
-    return;
-}
-
-void DecrementarContador(){
-    interrupciones = interrupciones - 1;
 }
 
 
