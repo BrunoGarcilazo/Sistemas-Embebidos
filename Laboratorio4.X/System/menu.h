@@ -25,7 +25,7 @@
 #define FORMATO_DE_APAGAR "\r\nIngrese la informacion en el siguiente formato\r\nNumeroDeLED;\r\n"
 #define FORMATO_PARA_PRENDER "\r\nIngrese la informacion en el siguiente formato\r\nColor,NumeroDeLED\r\n"
 #define FORMATO_DE_AGENDA "\r\nCada linea representa un evento y tiene el siguiente formato:\r\n posicion, color, hora de ejecuccion\r\n"
-#define FORMATO_QUITAR_EVENTO "\n\rIngrese la posicion del evento que desea quitar con este formato\n\rPoscion.\r\nLas posiciones van de 0 a 7\r\n"
+#define FORMATO_QUITAR_EVENTO "\n\rIngrese la posicion del evento que desea quitar con este formato:\n\rPoscion.\r\nLas posiciones van de 0 a 7\r\n"
 
 
 

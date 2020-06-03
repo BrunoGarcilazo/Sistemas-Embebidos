@@ -33,10 +33,10 @@
 void consultarHora(void *p_params);
 
 /**
- * Esta tarea pide al usuario que ingrese la fecha que sera usada para usar el RTC
+ * Esta funcion pide al usuario que ingrese la fecha que sera usada para usar el RTC
  * Junto con la hora inicial.
  */
-void inicializar(void *p_params);
+void inicializar(void);
 
 /* ************************************************************************** */
 /* Seccion: Funciones de interfaz                                             */

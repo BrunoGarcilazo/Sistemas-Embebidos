@@ -25,7 +25,7 @@
 #include "../mcc_generated_files/rtcc.h"
 #include "rtcManager.h"
 #include "usbManager.h"
-#include "../System/Menu.h"
+#include "../System/menu.h"
 
 /* ************************************************************************** */
 /* ************************************************************************** */
@@ -33,12 +33,11 @@
 /* ************************************************************************** */
 
 /* ************************************************************************** */
-void inicializar(void *p_params) {
+void inicializar() {
     struct tm tiempo;
     pedirHora(&tiempo);
     pedirFecha(&tiempo);
     RTCC_TimeSet(&tiempo);
-    vTaskDelete(NULL);
 }
 
 void pedirHora(struct tm* tiempo) {

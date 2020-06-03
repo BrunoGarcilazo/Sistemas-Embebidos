@@ -52,7 +52,8 @@
 #include <stdbool.h>
 #include "mcc_generated_files/system.h"
 #include "mcc_generated_files/pin_manager.h"
-#include "System/Menu.h"
+#include "System/scheludeManager.h"
+#include "System/menu.h"
 
 void blinkLED(void *p_param);
 
@@ -62,12 +63,16 @@ void blinkLED(void *p_param);
 int main(void) {
     // initialize the device
     SYSTEM_Initialize();
+    inicilizarEventos();
 
     /* Se crea la funcion que hace prender y apagar las luces*/
     xTaskCreate(blinkLED, "LedBlink", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
 
     /*Se crea el menu*/
     xTaskCreate(menu, "Menu", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL);
+
+    /*Se crea la tarea que verifica los eventos*/
+    xTaskCreate(verificarEventos, "CheckearEventos", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
 
     /* Finally start the scheduler. */
     vTaskStartScheduler();

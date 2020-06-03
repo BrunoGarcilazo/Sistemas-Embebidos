@@ -17,18 +17,21 @@
 
 #ifndef _SCHELUDE_MANAGER_H    /* Guard against multiple inclusion */
 #define _SCHELUDE_MANAGER_H
-    
-    
+
+
 /* ************************************************************************** */
 /* Section: Include                                                           */
 /* ************************************************************************** */
 #include<stdint.h>
+#include<time.h>
+#include"../Platform/WS2812.h"
 
 
 
 
 /* ************************************************************************** */
 /* Section: Tipos de dato                                                     */
+
 /* ************************************************************************** */
 
 
@@ -59,21 +62,6 @@ typedef struct {
 
 } app_event_t;
 
-/**
- * Se usa para verificar en que estado se encuentra la aplicacion en el main
- */
-typedef enum {
-    /**
-     * Cuando se esta requiriendo al usuario que ingrese un tiempo
-     */
-    WAITING_FOR_TIME_INPUT,
-
-    /**
-     * Refiere al estado normal donde el usuario debe pedir algo.
-     */
-    MENU_STATE,
-} schelude_t;
-
 
 /* ************************************************************************** */
 /* Section: Constantes                                                        */
@@ -81,6 +69,8 @@ typedef enum {
 
 #define EVENTOS_MAXIMOS 7
 app_event_t eventos[EVENTOS_MAXIMOS];
+static struct tm tiempoDelSistema;
+static ws2812_t ledsRGB[8];
 
 
 /* ************************************************************************** */
@@ -107,6 +97,16 @@ void quitarEvento();
  */
 void consultarListaDeEventos();
 
+/**
+ * Esta tarea se encarga de verificar cada un segundo si llego el tiempo de ejecutar un evento
+ * @param p_param
+ */
+void verificarEventos(void *p_param);
+
+/**
+ * Muestra la hora actual del sistema
+ */
+void mostrarHora();
 
 #endif /* _SCHELUDE_MANAGER_H */
 
