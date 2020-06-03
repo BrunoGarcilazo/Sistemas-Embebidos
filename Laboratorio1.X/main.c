@@ -1,210 +1,83 @@
-/* ************************************************************************** */
-/** Descriptive File Name
+/**
+  Generated main.c file from MPLAB Code Configurator
 
   @Company
-    Company Name
+    Microchip Technology Inc.
 
   @File Name
-    filename.c
+    main.c
 
   @Summary
-    Brief description of the file.
+    This is the generated main.c using PIC24 / dsPIC33 / PIC32MM MCUs.
 
   @Description
-    Describe the purpose of this file.
- */
-/* ************************************************************************** */
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-/* Section: Included Files                                                    */
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-// PIC32MM0256GPM064 Configuration Bit Settings
-
-// 'C' source line config statements
-
-// FDEVOPT
-#pragma config SOSCHP = OFF             // Secondary Oscillator High Power Enable bit (SOSC oprerates in normal power mode.)
-#pragma config ALTI2C = OFF             // Alternate I2C1 Pins Location Enable bit (Primary I2C1 pins are used)
-#pragma config FUSBIDIO = OFF           // USBID pin control (USBID pin is controlled by the USB module)
-#pragma config FVBUSIO = ON             // VBUS Pin Control (VBUS pin is controlled by port function)
-#pragma config USERID = 0xFFFF          // User ID bits (Enter Hexadecimal value)
-
-// FICD
-#pragma config JTAGEN = OFF             // JTAG Enable bit (JTAG is disabled)
-#pragma config ICS = PGx1               // ICE/ICD Communication Channel Selection bits (Communicate on PGEC1/PGED1)
-
-// FPOR
-#pragma config BOREN = BOR3             // Brown-out Reset Enable bits (Brown-out Reset enabled in hardware; SBOREN bit disabled)
-#pragma config RETVR = OFF              // Retention Voltage Regulator Enable bit (Retention regulator is disabled)
-#pragma config LPBOREN = ON             // Downside Voltage Protection Enable bit (Low power BOR is enabled, when main BOR is disabled)
-
-// FWDT
-#pragma config SWDTPS = PS1048576       // Sleep Mode Watchdog Timer Postscale Selection bits (1:1048576)
-#pragma config FWDTWINSZ = PS25_0       // Watchdog Timer Window Size bits (Watchdog timer window size is 25%)
-#pragma config WINDIS = OFF             // Windowed Watchdog Timer Disable bit (Watchdog timer is in non-window mode)
-#pragma config RWDTPS = PS1048576       // Run Mode Watchdog Timer Postscale Selection bits (1:1048576)
-#pragma config RCLKSEL = LPRC           // Run Mode Watchdog Timer Clock Source Selection bits (Clock source is LPRC (same as for sleep mode))
-#pragma config FWDTEN = OFF             // Watchdog Timer Enable bit (WDT is disabled)
-
-// FOSCSEL
-#pragma config FNOSC = FRCDIV           // Oscillator Selection bits (Fast RC oscillator (FRC) with divide-by-N)
-#pragma config PLLSRC = PRI             // System PLL Input Clock Selection bit (Primary oscillator is selected as PLL reference input on device reset)
-#pragma config SOSCEN = OFF             // Secondary Oscillator Enable bit (Secondary oscillator is disabled)
-#pragma config IESO = ON                // Two Speed Startup Enable bit (Two speed startup is enabled)
-#pragma config POSCMOD = XT             // Primary Oscillator Selection bit (XT oscillator mode is selected)
-#pragma config OSCIOFNC = ON            // System Clock on CLKO Pin Enable bit (System clock is connected to CLKO/OSC2 pin)
-#pragma config SOSCSEL = OFF            // Secondary Oscillator External Clock Enable bit (SOSC pins configured for Crystal mode)
-#pragma config FCKSM = CSECME           // Clock Switching and Fail-Safe Clock Monitor Enable bits (Clock switching is enabled; Fail-safe clock monitor is enabled)
-
-// FSEC
-#pragma config CP = OFF                 // Code Protection Enable bit (Code protection is disabled)
-
-// #pragma config statements should precede project file includes.
-// Use project enums instead of #define for ON and OFF.
-
-/* This section lists the other files that are included in this file.
+    This source file provides main entry point for system initialization and application code development.
+    Generation Information :
+        Product Revision  :  PIC24 / dsPIC33 / PIC32MM MCUs - 1.167.0
+        Device            :  PIC32MM0256GPM064
+    The generated drivers are tested against the following:
+        Compiler          :  XC16 v1.50
+        MPLAB 	          :  MPLAB X v5.35
  */
 
-/* TODO:  Include other files here if needed. */
-#include <xc.h>
-#include "platform/HardwareProfile.h"
+/*
+    (c) 2020 Microchip Technology Inc. and its subsidiaries. You may use this
+    software and any derivatives exclusively with Microchip products.
+
+    THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+    EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+    WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+    PARTICULAR PURPOSE, OR ITS INTERACTION WITH MICROCHIP PRODUCTS, COMBINATION
+    WITH ANY OTHER PRODUCTS, OR USE IN ANY APPLICATION.
+
+    IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+    INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+    WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+    BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+    FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+    ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+    THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+
+    MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE OF THESE
+    TERMS.
+ */
+
+/**
+  Section: Included Files
+ */
+#include "mcc_generated_files/system.h"
+#include "mcc_generated_files/pin_manager.h"
+#include "buttons.h"
 #include "utils/utils.h"
+#include "mcc_generated_files/tmr2.h"
 
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-/* Section: File Scope or Global Data                                         */
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-/*  A brief description of a section can be given directly below the section
-    banner.
+/*
+                         Main application
  */
+int main(void) {
+    // initialize the device
+    SYSTEM_Initialize();
+    TMR2_Stop();
+    Boton1Flag_Reset();
+    Boton2Flag_Reset();
 
-/* ************************************************************************** */
-/** Descriptive Data Item Name
-
-  @Summary
-    Brief one-line summary of the data item.
-    
-  @Description
-    Full description, explaining the purpose and usage of data item.
-    <p>
-    Additional description in consecutive paragraphs separated by HTML 
-    paragraph breaks, as necessary.
-    <p>
-    Type "JavaDoc" in the "How Do I?" IDE toolbar for more information on tags.
-    
-  @Remarks
-    Any additional remarks
- */
-int global_data;
-
-#define ARRAY_SIZE 10
-int exampleData;
-char exampleArray[ARRAY_SIZE];
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-// Section: Local Functions                                                   */
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-/*  A brief description of a section can be given directly below the section
-    banner.
- */
-
-/* ************************************************************************** */
-
-/** 
-  @Function
-    int ExampleLocalFunctionName ( int param1, int param2 ) 
-
-  @Summary
-    Brief one-line description of the function.
-
-  @Description
-    Full description, explaining the purpose and usage of the function.
-    <p>
-    Additional description in consecutive paragraphs separated by HTML 
-    paragraph breaks, as necessary.
-    <p>
-    Type "JavaDoc" in the "How Do I?" IDE toolbar for more information on tags.
-
-  @Precondition
-    List and describe any required preconditions. If there are no preconditions,
-    enter "None."
-
-  @Parameters
-    @param param1 Describe the first parameter to the function.
-    
-    @param param2 Describe the second parameter to the function.
-
-  @Returns
-    List (if feasible) and describe the return values of the function.
-    <ul>
-      <li>1   Indicates an error occurred
-      <li>0   Indicates an error did not occur
-    </ul>
-
-  @Remarks
-    Describe any special behavior not described above.
-    <p>
-    Any additional remarks.
-
-  @Example
-    @code
-    if(ExampleFunctionName(1, 2) == 0)
-    {
-        return 3;
+    while (1) {
+        if (Boton1Flag_GetValue()) {
+            LEDA_Toggle();
+            UT_delayms(2000);
+            LEDA_Toggle();
+            Boton1Flag_Reset();
+        }
+        if (Boton2Flag_GetValue()) {
+            LEDB_Toggle();
+            UT_delayms(2000);
+            LEDB_Toggle();
+            Boton2Flag_Reset();
+        }
     }
- */
-static int ExampleLocalFunction(int param1, int param2) {
-    return 0;
-}
 
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-// Section: Interface Functions                                               */
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-/*  A brief description of a section can be given directly below the section
-    banner.
- */
-
-// *****************************************************************************
-
-
-/** 
-  @Function
-    int ExampleInterfaceFunctionName ( int param1, int param2 ) 
-
-  @Summary
-    Brief one-line description of the function.
-
-  @Remarks
-    Refer to the example_file.h interface header for function usage details.
- */
-int main( void ){
-    LEDA_SetDigitalOutput();
-    LEDB_SetDigitalOutput();
-    LEDA_SetHigh();
-    LEDB_SetHigh();
-    while (1){
-        LEDA_Toggle();
-        LEDB_Toggle();
-        UT_delay();
-    }
-    return 0;
-}
-
-
-
-/* *****************************************************************************
+/**
  End of File
  */
+
+

@@ -18,7 +18,7 @@
 #ifndef _EXAMPLE_FILE_NAME_H    /* Guard against multiple inclusion */
 #define _EXAMPLE_FILE_NAME_H
 
-#define UT_DELAY_CYCLES 500
+#define UT_DELAY_CYCLES 50000
 
 
 
@@ -165,7 +165,13 @@ extern "C" {
         }
      */
     int ExampleFunction(int param1, int param2);
-    void UT_delay( void );
+    /*
+     * Esta funcion decrementa un contador de interrupciones del timer dos.
+     * De esta forma contamos milisegundos.
+     */
+    void DecrementarContador( void );
+    
+    void UT_delayms( int multiplo );
     
     
 
