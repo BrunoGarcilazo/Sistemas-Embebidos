@@ -51,8 +51,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "watchdog.h"
 #include "rtcc.h"
+#include "watchdog.h"
 #include "usb/usb.h"
 #include "tmr2.h"
 #include "interrupt_manager.h"
