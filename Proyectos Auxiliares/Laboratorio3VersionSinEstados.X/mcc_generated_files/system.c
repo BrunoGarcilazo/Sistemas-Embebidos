@@ -47,7 +47,7 @@
 // FDEVOPT
 #pragma config SOSCHP = OFF    //Secondary Oscillator High Power Enable bit->SOSC oprerates in normal power mode.
 #pragma config ALTI2C = OFF    //Alternate I2C1 Pins Location Enable bit->Primary I2C1 pins are used
-#pragma config FUSBIDIO = ON    //USBID pin control->USBID pin is controlled by the port function
+#pragma config FUSBIDIO = OFF    //USBID pin control->USBID pin is controlled by the USB module
 #pragma config FVBUSIO = ON    //VBUS Pin Control->VBUS pin is controlled by port function
 
 // FICD
@@ -83,17 +83,17 @@
 #include "pin_manager.h"
 #include "clock.h"
 #include "system.h"
-#include "rtcc.h"
-#include "usb/usb.h"
-#include "tmr2.h"
 #include "interrupt_manager.h"
 #include "exceptions.h"
+#include "usb/usb.h"
+#include "rtcc.h"
+#include "tmr2.h"
 
 void SYSTEM_Initialize(void)
 {
     PIN_MANAGER_Initialize();
-    CLOCK_Initialize();
     INTERRUPT_Initialize();
+    CLOCK_Initialize();
     USBDeviceInit();
     USBDeviceAttach();
     TMR2_Initialize();

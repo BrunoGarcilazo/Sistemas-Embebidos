@@ -1,17 +1,17 @@
 /**
-  @Generated PIC24 / dsPIC33 / PIC32MM MCUs Header File
+  @Generated PIC24 / dsPIC33 / PIC32MM MCUs Source File
 
   @Company:
     Microchip Technology Inc.
 
   @File Name:
-    mcc.h
+    mcc.c
 
   @Summary:
-    This is the mcc.h file generated using PIC24 / dsPIC33 / PIC32MM MCUs
+    This is the mcc.c file generated using PIC24 / dsPIC33 / PIC32MM MCUs
 
   @Description:
-    This file will be removed in future MCC releases. Use system.h instead.
+    The configuration contents of this file are moved to system.c and this file will be removed in future MCC releases. 
     Generation Information :
         Product Revision  :  PIC24 / dsPIC33 / PIC32MM MCUs - 1.167.0
         Device            :  PIC32MM0256GPM064
@@ -42,25 +42,6 @@
     TERMS.
 */
 
-#ifndef MCC_H
-#define	MCC_H
-#include <xc.h>
-#include "system.h"
-#include "clock.h"
-#include "pin_manager.h"
-#include <stdint.h>
-#include <stdbool.h>
-
-#include "watchdog.h"
-#include "rtcc.h"
-#include "usb/usb.h"
-#include "tmr2.h"
-#include "interrupt_manager.h"
-#include "exceptions.h"
-
-#warning "This file will be removed in future MCC releases. Use system.h instead."
-
-#endif	/* MCC_H */
 /**
  End of File
 */

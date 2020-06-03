@@ -1,25 +1,25 @@
 /**
-  @Generated PIC24 / dsPIC33 / PIC32MM MCUs Header File
+  System Exceptions Generated Driver File 
 
   @Company:
     Microchip Technology Inc.
 
   @File Name:
-    mcc.h
+    exceptions.h
 
   @Summary:
-    This is the mcc.h file generated using PIC24 / dsPIC33 / PIC32MM MCUs
+    This is the generated driver implementation file for handling traps
+    using PIC24 / dsPIC33 / PIC32MM MCUs
 
   @Description:
-    This file will be removed in future MCC releases. Use system.h instead.
-    Generation Information :
+    This source file provides implementations for PIC24 / dsPIC33 / PIC32MM MCUs traps.
+    Generation Information : 
         Product Revision  :  PIC24 / dsPIC33 / PIC32MM MCUs - 1.167.0
         Device            :  PIC32MM0256GPM064
     The generated drivers are tested against the following:
         Compiler          :  XC16 v1.50
         MPLAB             :  MPLAB X v5.35
 */
-
 /*
     (c) 2020 Microchip Technology Inc. and its subsidiaries. You may use this
     software and any derivatives exclusively with Microchip products.
@@ -42,25 +42,30 @@
     TERMS.
 */
 
-#ifndef MCC_H
-#define	MCC_H
-#include <xc.h>
-#include "system.h"
-#include "clock.h"
-#include "pin_manager.h"
+#ifndef _EXCEPTIONS_H
+#define _EXCEPTIONS_H
+
 #include <stdint.h>
-#include <stdbool.h>
 
-#include "watchdog.h"
-#include "rtcc.h"
-#include "usb/usb.h"
-#include "tmr2.h"
-#include "interrupt_manager.h"
-#include "exceptions.h"
-
-#warning "This file will be removed in future MCC releases. Use system.h instead."
-
-#endif	/* MCC_H */
 /**
- End of File
+  @Summary
+    Generic exception handler.
+
+  @Description
+    This function overrides the XC32 default _weak_ _generic_exception_handler.
+
+  @Preconditions
+    None.
+
+  @Returns
+    None.
+
+  @Param
+    None.
+
+  @Example
+    None.
+
 */
+void _general_exception_handler ( void );
+#endif

@@ -1,24 +1,24 @@
 /**
-  @Generated PIC24 / dsPIC33 / PIC32MM MCUs Header File
+  Generated main.c file from MPLAB Code Configurator
 
-  @Company:
+  @Company
     Microchip Technology Inc.
 
-  @File Name:
-    mcc.h
+  @File Name
+    main.c
 
-  @Summary:
-    This is the mcc.h file generated using PIC24 / dsPIC33 / PIC32MM MCUs
+  @Summary
+    This is the generated main.c using PIC24 / dsPIC33 / PIC32MM MCUs.
 
-  @Description:
-    This file will be removed in future MCC releases. Use system.h instead.
+  @Description
+    This source file provides main entry point for system initialization and application code development.
     Generation Information :
         Product Revision  :  PIC24 / dsPIC33 / PIC32MM MCUs - 1.167.0
         Device            :  PIC32MM0256GPM064
     The generated drivers are tested against the following:
         Compiler          :  XC16 v1.50
-        MPLAB             :  MPLAB X v5.35
-*/
+        MPLAB 	          :  MPLAB X v5.35
+ */
 
 /*
     (c) 2020 Microchip Technology Inc. and its subsidiaries. You may use this
@@ -40,27 +40,48 @@
 
     MICROCHIP PROVIDES THIS SOFTWARE CONDITIONALLY UPON YOUR ACCEPTANCE OF THESE
     TERMS.
-*/
+ */
 
-#ifndef MCC_H
-#define	MCC_H
-#include <xc.h>
-#include "system.h"
-#include "clock.h"
-#include "pin_manager.h"
-#include <stdint.h>
-#include <stdbool.h>
+/**
+  Section: Included Files
+ */
+#include "mcc_generated_files/system.h"
+#include "mcc_generated_files/pin_manager.h"
+#include "utils/utils.h"
+#include "platform/buttons/buttons.h"
+#include "system/Events/events.h"
+#include "system/app.h"
+#include "framework/USB/USB_fwk.h"
 
-#include "watchdog.h"
-#include "rtcc.h"
-#include "usb/usb.h"
-#include "tmr2.h"
-#include "interrupt_manager.h"
-#include "exceptions.h"
+/*
+                         Main application
+ */
+int main( void ) {
+    // initialize the device
+    SYSTEM_Initialize();
 
-#warning "This file will be removed in future MCC releases. Use system.h instead."
+    TMR2_SetInterruptHandler(&UT_incrementCounter);
+    BTN1_SetInterruptHandler(&BTN_1_set);
+    BTN2_SetInterruptHandler(&BTN_2_set);
 
-#endif	/* MCC_H */
+    LEDA_SetHigh();
+
+    while( 1 ) {
+        // Tarea que está constantemente chequeando si el USB está conectado o no
+        USB_checkStatus();
+        // Tarea que sincroniza la hora del sistema con la del RTC cada 1 seg.
+        APP_updateTime();
+
+        // Tarea que deja el LED A parpadeando indefinidamente
+        LEDS_blinkLEDA();
+        // Tarea que está constantemente chequeando si hay eventos para ejecutar
+        EVT_checkAndExecute();
+        // Tarea que implementa la interfaz de usuario
+        UI_showMenu();
+    }
+    return 1;
+}
 /**
  End of File
-*/
+ */
+

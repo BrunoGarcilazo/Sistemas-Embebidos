@@ -69,7 +69,7 @@ void menu(void *p_params) {
                 if (USBUSARTIsTxTrfReady()) {
                     numBytes = getsUSBUSART(buffer, sizeof buffer);
                     if (numBytes > 0) {
-                        if (primeraVez){
+                        if (primeraVez) {
                             status = NO_INICIALIZADA;
                             primeraVez = false;
                         }
@@ -106,11 +106,13 @@ void menu(void *p_params) {
                 status = EN_MENU;
                 break;
             case(EN_INGRESAR_HORA):
+            {
                 struct tm tiempo;
                 pedirHora(&tiempo);
                 RTCC_TimeSet(&tiempo);
                 status = EN_MENU;
                 break;
+            }
             case(EN_AGREGAR_EVENTO):
                 //To do
                 //Crear tarea agregar evento

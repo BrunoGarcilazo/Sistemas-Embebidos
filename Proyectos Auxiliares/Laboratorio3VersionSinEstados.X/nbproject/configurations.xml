@@ -4,17 +4,6 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="f1" displayName="freeRTOS" projectFiles="true">
-        <itemPath>freeRTOS/include/FreeRTOS.h</itemPath>
-        <itemPath>freeRTOS/include/croutine.h</itemPath>
-        <itemPath>freeRTOS/include/list.h</itemPath>
-        <itemPath>freeRTOS/include/portable.h</itemPath>
-        <itemPath>freeRTOS/include/queue.h</itemPath>
-        <itemPath>freeRTOS/include/semphr.h</itemPath>
-        <itemPath>freeRTOS/include/task.h</itemPath>
-        <itemPath>freeRTOS/include/timers.h</itemPath>
-        <itemPath>freeRTOS/include/projdefs.h</itemPath>
-      </logicalFolder>
       <logicalFolder name="MCC Generated Files"
                      displayName="MCC Generated Files"
                      projectFiles="true">
@@ -30,25 +19,24 @@
           <itemPath>mcc_generated_files/usb/usb_hal.h</itemPath>
         </logicalFolder>
         <itemPath>mcc_generated_files/interrupt_manager.h</itemPath>
-        <itemPath>mcc_generated_files/watchdog.h</itemPath>
-        <itemPath>mcc_generated_files/pin_manager.h</itemPath>
         <itemPath>mcc_generated_files/exceptions.h</itemPath>
         <itemPath>mcc_generated_files/clock.h</itemPath>
         <itemPath>mcc_generated_files/mcc.h</itemPath>
+        <itemPath>mcc_generated_files/watchdog.h</itemPath>
+        <itemPath>mcc_generated_files/pin_manager.h</itemPath>
         <itemPath>mcc_generated_files/system.h</itemPath>
         <itemPath>mcc_generated_files/rtcc.h</itemPath>
         <itemPath>mcc_generated_files/tmr2.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f3" displayName="Platform" projectFiles="true">
-        <itemPath>Platform/usbManager.h</itemPath>
-        <itemPath>Platform/rtcManager.h</itemPath>
-        <itemPath>Platform/WS2812.h</itemPath>
+      <logicalFolder name="f1" displayName="platform" projectFiles="true">
+        <itemPath>platform/WS2812.h</itemPath>
+        <itemPath>platform/rtcManager.h</itemPath>
+        <itemPath>platform/usbManager.h</itemPath>
+        <itemPath>platform/scheludeManager.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="System" projectFiles="true">
-        <itemPath>System/Menu.h</itemPath>
-        <itemPath>System/scheludeManager.h</itemPath>
+      <logicalFolder name="utilss" displayName="utils" projectFiles="true">
+        <itemPath>utilss/utils.h</itemPath>
       </logicalFolder>
-      <itemPath>FreeRTOSConfig.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -57,17 +45,6 @@
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
-      <logicalFolder name="f1" displayName="freeRTOS" projectFiles="true">
-        <itemPath>freeRTOS/croutine.c</itemPath>
-        <itemPath>freeRTOS/event_groups.c</itemPath>
-        <itemPath>freeRTOS/list.c</itemPath>
-        <itemPath>freeRTOS/queue.c</itemPath>
-        <itemPath>freeRTOS/tasks.c</itemPath>
-        <itemPath>freeRTOS/timers.c</itemPath>
-        <itemPath>freeRTOS/portable/MemMang/heap_4.c</itemPath>
-        <itemPath>freeRTOS/portable/MPLAB/PIC32MM/port.c</itemPath>
-        <itemPath>freeRTOS/portable/MPLAB/PIC32MM/port_asm.S</itemPath>
-      </logicalFolder>
       <logicalFolder name="MCC Generated Files"
                      displayName="MCC Generated Files"
                      projectFiles="true">
@@ -76,7 +53,6 @@
           <itemPath>mcc_generated_files/usb/usb_device.c</itemPath>
           <itemPath>mcc_generated_files/usb/usb_descriptors.c</itemPath>
           <itemPath>mcc_generated_files/usb/usb_device_cdc.c</itemPath>
-          <itemPath>mcc_generated_files/usb/example_mcc_usb_cdc.c</itemPath>
         </logicalFolder>
         <itemPath>mcc_generated_files/system.c</itemPath>
         <itemPath>mcc_generated_files/clock.c</itemPath>
@@ -87,14 +63,14 @@
         <itemPath>mcc_generated_files/rtcc.c</itemPath>
         <itemPath>mcc_generated_files/tmr2.c</itemPath>
       </logicalFolder>
-      <logicalFolder name="f3" displayName="Platform" projectFiles="true">
-        <itemPath>Platform/usbManager.c</itemPath>
-        <itemPath>Platform/WS2812.c</itemPath>
-        <itemPath>Platform/rtcManager.c</itemPath>
+      <logicalFolder name="f1" displayName="platform" projectFiles="true">
+        <itemPath>platform/WS2812.c</itemPath>
+        <itemPath>platform/usbManager.c</itemPath>
+        <itemPath>platform/rtcManager.c</itemPath>
+        <itemPath>platform/scheludeManager.c</itemPath>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="System" projectFiles="true">
-        <itemPath>System/Menu.c</itemPath>
-        <itemPath>System/scheludeManager.c</itemPath>
+      <logicalFolder name="utils" displayName="utils" projectFiles="true">
+        <itemPath>utils/utils.c</itemPath>
       </logicalFolder>
       <itemPath>main.c</itemPath>
     </logicalFolder>
@@ -106,7 +82,9 @@
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
-    <Elem>.</Elem>
+    <Elem>utilss</Elem>
+    <Elem>utils</Elem>
+    <Elem>platform</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
@@ -156,8 +134,7 @@
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
-        <property key="extra-include-directories"
-                  value="freeRTOS\include;freeRTOS\portable\MPLAB\PIC32MM"/>
+        <property key="extra-include-directories" value=""/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="false"/>
@@ -174,7 +151,6 @@
         <property key="use-cci" value="false"/>
         <property key="use-iar" value="false"/>
         <property key="use-indirect-calls" value="false"/>
-        <appendMe value="-I freeRTOS/include -I freeRTOS/portable/MPLAB/PIC32MM -I .."/>
       </C32>
       <C32-AR>
         <property key="additional-options-chop-files" value="false"/>
@@ -222,7 +198,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value=""/>
+        <property key="heap-size" value="0"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>
@@ -233,7 +209,7 @@
         <property key="oXC32ld-extra-opts" value=""/>
         <property key="optimization-level" value=""/>
         <property key="preprocessor-macros" value=""/>
-        <property key="remove-unused-sections" value="false"/>
+        <property key="remove-unused-sections" value="true"/>
         <property key="report-memory-usage" value="false"/>
         <property key="serial-length" value=""/>
         <property key="serial-origin" value=""/>
@@ -278,7 +254,6 @@
         <property key="mdtcm" value=""/>
         <property key="mitcm" value=""/>
         <property key="mstacktcm" value="false"/>
-        <property key="omit-pack-options" value="1"/>
         <property key="relaxed-math" value="false"/>
         <property key="save-temps" value="false"/>
         <property key="wpo-lto" value="false"/>
@@ -316,14 +291,11 @@
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UpdateOptions"
                   value="ToolFirmwareOption.UseLatest"/>
-        <property key="ToolFirmwareToolPack"
-                  value="Press to select which tool pack to use"/>
         <property key="UART1" value="true"/>
         <property key="UART2" value="true"/>
         <property key="UART3" value="true"/>
         <property key="communication.interface"
                   value="${communication.interface.default}"/>
-        <property key="communication.interface.jtag" value="2wire"/>
         <property key="communication.speed" value="${communication.speed.default}"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
         <property key="memories.aux" value="false"/>
@@ -339,25 +311,21 @@
                   value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="1d000000-1d03ffff"/>
+        <property key="programmerToGoFilePath"
+                  value="C:/Users/estudiante.fit/OneDrive/AA UCU/05 Semestre Cinco/Embebidos/Laboratorios/Laboratorio3.X/debug/default/Laboratorio3_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.pgmentry.voltage" value="low"/>
         <property key="programoptions.pgmspeed" value="Med"/>
         <property key="programoptions.preservedataflash" value="false"/>
-        <property key="programoptions.preservedataflash.ranges"
-                  value="${memories.dataflash.default}"/>
         <property key="programoptions.preserveeeprom" value="false"/>
         <property key="programoptions.preserveeeprom.ranges" value=""/>
         <property key="programoptions.preserveprogram.ranges" value=""/>
         <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveuserid" value="false"/>
         <property key="programoptions.programcalmem" value="false"/>
         <property key="programoptions.programuserotp" value="false"/>
         <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
-        <property key="programoptionsedbg.eraseb4program" value="true"/>
-        <property key="toolpack.updateoptions"
-                  value="toolpack.updateoptions.uselatestoolpack"/>
-        <property key="toolpack.updateoptions.packversion"
-                  value="Press to select which tool pack to use"/>
       </snap>
     </conf>
   </confs>
