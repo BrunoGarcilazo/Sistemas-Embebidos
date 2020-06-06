@@ -23,14 +23,18 @@
 /* ************************************************************************** */
 #include <time.h>
 
+
 /* ************************************************************************** */
-/* Seccion: Tareas                                                            */
+/* Section: Constantes                                                        */
+/* ************************************************************************** */
+#define FORMATO_DE_HORA "\r\nIngrese hora en formato hh:mm:ss\r\n"
+#define FORMATO_DE_FECHA "\r\nIngrese fecha en formato dd/mm/aaaa\r\n"
+
+
+/* ************************************************************************** */
+/* Seccion: Funciones de interfaz                                             */
 /* ************************************************************************** */
 
-/**
- * Tarea que imprime en la consola el tiempo actual via USB
- */
-void consultarHora(void *p_params);
 
 /**
  * Esta funcion pide al usuario que ingrese la fecha que sera usada para usar el RTC

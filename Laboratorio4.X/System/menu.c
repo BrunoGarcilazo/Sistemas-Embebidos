@@ -42,62 +42,63 @@
 void menu(void *p_params) {
     bool primeraVez = true;
     MENU_STATUS status;
-    status = EN_MENU;
     uint8_t buffer[4];
     uint8_t numBytes;
-    while (true) {
+    struct tm tiempoASetear;
+    
+    status = EN_MENU;
 
+    while (true) {
+        CDCTxService();
         switch (status) {
             case(EN_MENU):
-                CDCTxService(); //Revisar si no se puede poner afuera
-                if ((USBGetDeviceState() < CONFIGURED_STATE) || //Probar si se puede sacar
+                if ((USBGetDeviceState() < CONFIGURED_STATE) ||
                         (USBIsDeviceSuspended() == true)) {
 
                 } else {
                     if (USBUSARTIsTxTrfReady()) {
-                        putsUSBUSART(MENU); //Si pudo enviar el mensaje devuelve 
-                        status = EN_ESPERA;
+                        putsUSBUSART(MENU); //Si se pudo enviar el menu 
+                        status = EN_ESPERA; //Se espera un input
                     }
                 }
                 break;
             case(EN_ESPERA):
-                CDCTxService(); //Revisar si no se puede poner afuera 
                 if (USBUSARTIsTxTrfReady()) {
-                    numBytes = getsUSBUSART(buffer, sizeof buffer);
-                    if (numBytes > 0) {
-                        if (primeraVez) {
+                    numBytes = getsUSBUSART(buffer, sizeof (buffer));
+                    if (numBytes > 0) { // Si recibimos un input
+                        if (primeraVez) { //La primera vez inicializamos fecha y hora
                             inicializar();
                             primeraVez = false;
-                            status = EN_MENU;
+                            status = EN_MENU; //Luego imprimimos el menu
                         } else {
                             switch (buffer[0]) {
                                 case('m'): //Los estados indican que significa cada opcion
                                     if (buffer[1] == 'e' & buffer[2] == 'n' & buffer[3] == 'u') {
-                                        status = EN_MENU;
+                                        status = EN_MENU; //Imprimimos menu
                                     }
                                     break;
                                 case('a'):
                                 {
-                                    struct tm tiempoASetear;
-                                    pedirHora(&tiempoASetear);
-                                    RTCC_TimeSet(&tiempoASetear);
-                                    status = EN_MENU;
+                                    pedirHora(&tiempoASetear); //Pedimos que se ingrese una hora
+                                    pedirFecha(&tiempoASetear); //Pedimos que se ingrese una fecha
+                                    RTCC_TimeSet(&tiempoASetear); //Seteamos el RTC a esa hora
+                                    status = EN_MENU; //Pasamos al menu
                                     break;
                                 }
                                 case('b'):
-                                    mostrarHora();
-                                    status = EN_MENU;
+                                    mostrarHora(); //Muestra la hora del sistema
+                                    status = EN_MENU; 
                                     break;
                                 case ('c'):
-                                    agregarEvento();
-                                    status = EN_MENU;
+                                    agregarEvento(); //Agrega un evento al array de eventos
+                                    status = EN_MENU; 
                                     break;
                                 case ('d'):
-                                    quitarEvento();
+                                    quitarEvento(); //Quita un evento del array de eventos
                                     status = EN_MENU;
                                     break;
                                 case ('e'):
-                                    consultarListaDeEventos();
+                                    consultarListaDeEventos(); //Imprime todos los eventos
                                     status = EN_MENU;
                                     break;
                                 default:
