@@ -45,8 +45,8 @@
         <itemPath>Platform/WS2812.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="System" projectFiles="true">
-        <itemPath>System/Menu.h</itemPath>
         <itemPath>System/scheludeManager.h</itemPath>
+        <itemPath>System/menu.h</itemPath>
       </logicalFolder>
       <itemPath>FreeRTOSConfig.h</itemPath>
     </logicalFolder>
@@ -93,8 +93,8 @@
         <itemPath>Platform/rtcManager.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="System" projectFiles="true">
-        <itemPath>System/Menu.c</itemPath>
         <itemPath>System/scheludeManager.c</itemPath>
+        <itemPath>System/menu.c</itemPath>
       </logicalFolder>
       <itemPath>main.c</itemPath>
     </logicalFolder>
@@ -335,6 +335,8 @@
                   value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="1d000000-1d03ffff"/>
+        <property key="programmerToGoFilePath"
+                  value="C:/Users/estudiante.fit/OneDrive/AA UCU/05 Semestre Cinco/Embebidos/Laboratorios/Laboratorio4.X/debug/default/Laboratorio4_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.pgmentry.voltage" value="low"/>

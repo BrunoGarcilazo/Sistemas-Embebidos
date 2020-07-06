@@ -21,26 +21,26 @@
 /* Section: Included Files                                                    */
 /* ************************************************************************** */
 /* ************************************************************************** */
+
+/*Libraries*/
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
+
+/*MCC Includes*/
 #include "../mcc_generated_files/usb/usb_device_cdc.h" 
 
-
 void buscarEntrada(uint8_t * buffer, uint8_t large) {
-    int8_t numBytes;
+    int8_t numBytes; //Numero de bytes recibidos
     while (true) {
         CDCTxService();
         if ((USBGetDeviceState() < CONFIGURED_STATE) ||
                 (USBIsDeviceSuspended() == true)) {
-            //Either the device is not configured or we are suspended
-            //so we don't want to do execute any application code
-            //go back to the top of the while loop
         } else {
             if (USBUSARTIsTxTrfReady()) {
                 numBytes = getsUSBUSART(buffer, large);
-                if (numBytes > 0) {
-                    return;
+                if (numBytes > 0) { // Si se recibio una entrada
+                    return; //Retorna
                 }
             }
         }
@@ -49,7 +49,7 @@ void buscarEntrada(uint8_t * buffer, uint8_t large) {
 
 void enviarMensaje(char *mensaje) {
     bool enviado = false;
-    while (!enviado) {
+    do {
         CDCTxService();
         if ((USBGetDeviceState() < CONFIGURED_STATE) ||
                 (USBIsDeviceSuspended() == true)) {
@@ -59,8 +59,7 @@ void enviarMensaje(char *mensaje) {
                 enviado = true;
             }
         }
-    }
-
+    } while (!enviado);
 }
 
 
