@@ -4,6 +4,10 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <logicalFolder name="f4" displayName="Communications" projectFiles="true">
+        <itemPath>Communications/GPS.h</itemPath>
+        <itemPath>Communications/SIM808.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="f1" displayName="freeRTOS" projectFiles="true">
         <itemPath>freeRTOS/include/FreeRTOS.h</itemPath>
         <itemPath>freeRTOS/include/croutine.h</itemPath>
@@ -18,6 +22,10 @@
       <logicalFolder name="MCC Generated Files"
                      displayName="MCC Generated Files"
                      projectFiles="true">
+        <logicalFolder name="memory" displayName="memory" projectFiles="true">
+          <itemPath>mcc_generated_files/memory/flash_demo.h</itemPath>
+          <itemPath>mcc_generated_files/memory/flash.h</itemPath>
+        </logicalFolder>
         <logicalFolder name="usb" displayName="usb" projectFiles="true">
           <itemPath>mcc_generated_files/usb/usb_hal_pic32mm.h</itemPath>
           <itemPath>mcc_generated_files/usb/usb_ch9.h</itemPath>
@@ -38,6 +46,9 @@
         <itemPath>mcc_generated_files/system.h</itemPath>
         <itemPath>mcc_generated_files/rtcc.h</itemPath>
         <itemPath>mcc_generated_files/tmr2.h</itemPath>
+        <itemPath>mcc_generated_files/uart1.h</itemPath>
+        <itemPath>mcc_generated_files/adc1.h</itemPath>
+        <itemPath>mcc_generated_files/adc_module_features.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="Platform" projectFiles="true">
         <itemPath>Platform/usbManager.h</itemPath>
@@ -54,9 +65,15 @@
                    displayName="Linker Files"
                    projectFiles="true">
     </logicalFolder>
+    <logicalFolder name="f1" displayName="New Folder 1" projectFiles="true">
+    </logicalFolder>
     <logicalFolder name="SourceFiles"
                    displayName="Source Files"
                    projectFiles="true">
+      <logicalFolder name="f4" displayName="Communications" projectFiles="true">
+        <itemPath>Communications/GPS.c</itemPath>
+        <itemPath>Communications/SIM808.c</itemPath>
+      </logicalFolder>
       <logicalFolder name="f1" displayName="freeRTOS" projectFiles="true">
         <itemPath>freeRTOS/croutine.c</itemPath>
         <itemPath>freeRTOS/event_groups.c</itemPath>
@@ -71,6 +88,10 @@
       <logicalFolder name="MCC Generated Files"
                      displayName="MCC Generated Files"
                      projectFiles="true">
+        <logicalFolder name="memory" displayName="memory" projectFiles="true">
+          <itemPath>mcc_generated_files/memory/flash.c</itemPath>
+          <itemPath>mcc_generated_files/memory/flash_demo.c</itemPath>
+        </logicalFolder>
         <logicalFolder name="usb" displayName="usb" projectFiles="true">
           <itemPath>mcc_generated_files/usb/usb_device_events.c</itemPath>
           <itemPath>mcc_generated_files/usb/usb_device.c</itemPath>
@@ -86,6 +107,8 @@
         <itemPath>mcc_generated_files/pin_manager.c</itemPath>
         <itemPath>mcc_generated_files/rtcc.c</itemPath>
         <itemPath>mcc_generated_files/tmr2.c</itemPath>
+        <itemPath>mcc_generated_files/adc1.c</itemPath>
+        <itemPath>mcc_generated_files/uart1.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="Platform" projectFiles="true">
         <itemPath>Platform/usbManager.c</itemPath>

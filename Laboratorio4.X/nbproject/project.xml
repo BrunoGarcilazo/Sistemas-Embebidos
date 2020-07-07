@@ -3,7 +3,7 @@
     <type>com.microchip.mplab.nbide.embedded.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>ObligatorioFinal</name>
+            <name>Laboratorio4</name>
             <creation-uuid>abca67ef-a1a1-4b0a-a80b-316598939c2d</creation-uuid>
             <make-project-type>0</make-project-type>
             <c-extensions>c</c-extensions>
@@ -14,6 +14,7 @@
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>.</sourceRootElem>
+                <sourceRootElem>../../../../Downloads/Modulos_para_modem</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>

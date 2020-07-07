@@ -1,25 +1,25 @@
 /**
-  System Interrupts Generated Driver File 
+  @Generated PIC24 / dsPIC33 / PIC32MM MCUs Header File
 
   @Company:
     Microchip Technology Inc.
 
   @File Name:
-    interrupt_manager.h
+    mcc.h
 
   @Summary:
-    This is the generated driver implementation file for setting up the
-    interrupts using PIC24 / dsPIC33 / PIC32MM MCUs
+    This is the mcc.h file generated using PIC24 / dsPIC33 / PIC32MM MCUs
 
   @Description:
-    This source file provides implementations for PIC24 / dsPIC33 / PIC32MM MCUs interrupts.
-    Generation Information : 
+    This file will be removed in future MCC releases. Use system.h instead.
+    Generation Information :
         Product Revision  :  PIC24 / dsPIC33 / PIC32MM MCUs - 1.167.0
         Device            :  PIC32MM0256GPM064
     The generated drivers are tested against the following:
-        Compiler          :  XC32 v2.40
+        Compiler          :  XC16 v1.50
         MPLAB             :  MPLAB X v5.35
 */
+
 /*
     (c) 2020 Microchip Technology Inc. and its subsidiaries. You may use this
     software and any derivatives exclusively with Microchip products.
@@ -42,37 +42,28 @@
     TERMS.
 */
 
-/**
-    Section: Includes
-*/
+#ifndef MCC_H
+#define	MCC_H
 #include <xc.h>
+#include "system.h"
+#include "clock.h"
+#include "pin_manager.h"
+#include <stdint.h>
+#include <stdbool.h>
 
+#include "watchdog.h"
+#include "usb/usb.h"
+#include "tmr2.h"
+#include "interrupt_manager.h"
+#include "exceptions.h"
+#include "memory/flash.h"
+#include "rtcc.h"
+#include "uart1.h"
+#include "adc1.h"
+
+#warning "This file will be removed in future MCC releases. Use system.h instead."
+
+#endif	/* MCC_H */
 /**
-    void INTERRUPT_Initialize (void)
+ End of File
 */
-void INTERRUPT_Initialize (void)
-{
-    // Enable Multi Vector Configuration
-    INTCONbits.MVEC = 1;
-    
-    //    USBI: USB
-    //    Priority: 1
-        IPC7bits.USBIP = 1;
-    //    Sub Priority: 0
-        IPC7bits.USBIS = 0;
-    //    CNAI: PORT A Change Notification
-    //    Priority: 2
-        IPC2bits.CNAIP = 2;
-    //    Sub Priority: 0
-        IPC2bits.CNAIS = 0;
-    //    CNBI: PORT B Change Notification
-    //    Priority: 2
-        IPC2bits.CNBIP = 2;
-    //    Sub Priority: 0
-        IPC2bits.CNBIS = 0;
-    //    TI: Timer 2
-    //    Priority: 1
-        IPC4bits.T2IP = 1;
-    //    Sub Priority: 0
-        IPC4bits.T2IS = 0;
-}
