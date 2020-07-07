@@ -72,7 +72,7 @@ void pedirFecha(struct tm* tiempo) {
     uint8_t mes;
     uint16_t year;
     do {
-        memset(fecha, 0, sizeof(fecha) ); //Se limpia la entrada
+        memset(fecha, 0, sizeof (fecha)); //Se limpia la entrada
         buscarEntrada(fecha, sizeof (fecha)); //Se busca una nueva entrada
         dia = (fecha[1] - ASCCI_TO_INT_DIFFERENCE) + 10 * (fecha[0] - ASCCI_TO_INT_DIFFERENCE);
         mes = (fecha[4] - ASCCI_TO_INT_DIFFERENCE) + 10 * (fecha[3] - ASCCI_TO_INT_DIFFERENCE);
