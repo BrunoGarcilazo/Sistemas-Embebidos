@@ -43,10 +43,12 @@
         <itemPath>Platform/usbManager.h</itemPath>
         <itemPath>Platform/rtcManager.h</itemPath>
         <itemPath>Platform/WS2812.h</itemPath>
+        <itemPath>../../../../Downloads/Modulos_para_modem/SIM808/SIM808.h</itemPath>
+        <itemPath>../../../../Downloads/Modulos_para_modem/GPS/GPS.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="System" projectFiles="true">
-        <itemPath>System/scheludeManager.h</itemPath>
         <itemPath>System/menu.h</itemPath>
+        <itemPath>deviceManager.h</itemPath>
       </logicalFolder>
       <itemPath>FreeRTOSConfig.h</itemPath>
     </logicalFolder>
@@ -91,10 +93,12 @@
         <itemPath>Platform/usbManager.c</itemPath>
         <itemPath>Platform/WS2812.c</itemPath>
         <itemPath>Platform/rtcManager.c</itemPath>
+        <itemPath>../../../../Downloads/Modulos_para_modem/GPS/GPS.c</itemPath>
+        <itemPath>../../../../Downloads/Modulos_para_modem/SIM808/SIM808.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="System" projectFiles="true">
-        <itemPath>System/scheludeManager.c</itemPath>
         <itemPath>System/menu.c</itemPath>
+        <itemPath>deviceManager.c</itemPath>
       </logicalFolder>
       <itemPath>main.c</itemPath>
     </logicalFolder>
@@ -107,6 +111,7 @@
   </logicalFolder>
   <sourceRootList>
     <Elem>.</Elem>
+    <Elem>../../../../Downloads/Modulos_para_modem</Elem>
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>

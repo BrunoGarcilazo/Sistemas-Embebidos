@@ -31,7 +31,6 @@
 #include "../mcc_generated_files/usb/usb_device_cdc.h"
 #include "../Platform/usbManager.h"
 #include "../Platform/rtcManager.h"
-#include "scheludeManager.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -45,6 +44,7 @@ void menu(void *p_params) {
     uint8_t buffer[4];
     uint8_t numBytes;
     struct tm tiempoASetear;
+    uint8_t idDispositivo;
     
     status = EN_MENU;
 
@@ -82,6 +82,7 @@ void menu(void *p_params) {
                                     pedirHora(&tiempoASetear); //Pedimos que se ingrese una hora
                                     pedirFecha(&tiempoASetear); //Pedimos que se ingrese una fecha
                                     RTCC_TimeSet(&tiempoASetear); //Seteamos el RTC a esa hora
+                                    obtenerID(&idDispositivo);
                                     status = EN_MENU; //Pasamos al menu
                                     break;
                                 }
@@ -90,15 +91,12 @@ void menu(void *p_params) {
                                     status = EN_MENU; 
                                     break;
                                 case ('c'):
-                                    agregarEvento(); //Agrega un evento al array de eventos
                                     status = EN_MENU; 
                                     break;
                                 case ('d'):
-                                    quitarEvento(); //Quita un evento del array de eventos
                                     status = EN_MENU;
                                     break;
                                 case ('e'):
-                                    consultarListaDeEventos(); //Imprime todos los eventos
                                     status = EN_MENU;
                                     break;
                                 default:

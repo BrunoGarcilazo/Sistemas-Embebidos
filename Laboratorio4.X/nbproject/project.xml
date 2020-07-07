@@ -14,6 +14,7 @@
             <make-dep-projects/>
             <sourceRootList>
                 <sourceRootElem>.</sourceRootElem>
+                <sourceRootElem>../../../../Downloads/Modulos_para_modem</sourceRootElem>
             </sourceRootList>
             <confList>
                 <confElem>
