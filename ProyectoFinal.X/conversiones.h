@@ -18,7 +18,7 @@
 #ifndef _CONVERSIONES_H    /* Guard against multiple inclusion */
 #define _CONVERSIONES_H
 
-uint16_t samplesConversiones[10];
+
 
 
 /* ************************************************************************** */
@@ -26,9 +26,17 @@ uint16_t samplesConversiones[10];
 /* Section: Included Files                                                    */
 /* ************************************************************************** */
 /* ************************************************************************** */
+#include <stdint.h>
 
-/* This section lists the other files that are included in this file.
- */
+typedef struct{
+    uint8_t dispositivoID;
+    uint8_t numeroDeContacto;
+    uint8_t umbralDeTemperatura;
+    bool midiendo;
+} termometro_t;
+
+uint16_t samplesConversiones[10];
+extern const termometro_t dispositivo; 
 
 void conversiones(void *p_params);
 

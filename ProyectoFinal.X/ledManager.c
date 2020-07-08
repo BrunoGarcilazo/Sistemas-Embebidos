@@ -30,17 +30,17 @@
 void invertirLedsMedicion(){
     uint8_t i;
     if(coloresLeds[0].b == 0){
-        for( i = 0; i < sizeof (coloresLeds); i++ ){
+        for( i = 0; i < 8; i++ ){ //PREGUNTAR PORQUE NO ANDA SIZEOF
             coloresLeds[i] = BLUE;
         
         }        
     }else{
-        for( i=0; i < sizeof (coloresLeds); i++ ){
+        for( i=0; i < 8; i++ ){
             coloresLeds[i] = BLACK;   
         }  
         
     }
-    WS2812_send(coloresLeds,sizeof (coloresLeds));   
+    WS2812_send(coloresLeds,8);   
 }
 
 

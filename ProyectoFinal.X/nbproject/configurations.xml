@@ -59,6 +59,9 @@
         <itemPath>System/menu.h</itemPath>
         <itemPath>conversiones.h</itemPath>
       </logicalFolder>
+      <logicalFolder name="f5" displayName="UI" projectFiles="true">
+        <itemPath>UI/interfazPrincipal.h</itemPath>
+      </logicalFolder>
       <itemPath>FreeRTOSConfig.h</itemPath>
       <itemPath>ledManager.h</itemPath>
     </logicalFolder>
@@ -119,6 +122,9 @@
         <itemPath>System/scheludeManager.c</itemPath>
         <itemPath>System/menu.c</itemPath>
         <itemPath>conversiones.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f5" displayName="UI" projectFiles="true">
+        <itemPath>UI/interfazPrincipal.c</itemPath>
       </logicalFolder>
       <itemPath>main.c</itemPath>
     </logicalFolder>

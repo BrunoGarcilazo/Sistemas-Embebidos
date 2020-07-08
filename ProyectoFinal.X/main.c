@@ -77,7 +77,7 @@ int main(void) {
     //xTaskCreate(menu, "Menu", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL);
 
     /*Se crea la tarea que verifica los eventos*/
-    xTaskCreate(verificarEventos, "CheckearEventos", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
+    //xTaskCreate(verificarEventos, "CheckearEventos", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
 
     /* Finally start the scheduler. */
     vTaskStartScheduler();

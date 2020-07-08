@@ -1,5 +1,5 @@
 /* ************************************************************************** */
-/** Descriptive File Name
+/**
 
   @Company
     Company Name
@@ -15,29 +15,31 @@
  */
 /* ************************************************************************** */
 
-#ifndef _LED_MANAGER_H    /* Guard against multiple inclusion */
-#define _LED_MANAGER_H
-        
-        
+#ifndef _INTERFAZ_PRINCIPAL_H    /* Guard against multiple inclusion */
+#define _INTERFAZ_PRINCIPAL_H
+
+
 /* ************************************************************************** */
 /* ************************************************************************** */
 /* Section: Included Files                                                    */
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-#include "Platform/WS2812.h"
-
 /* This section lists the other files that are included in this file.
  */
 
-/* TODO:  Include other files here if needed. */
+typedef struct{
+    uint8_t dispositivoID;
+    uint8_t numeroDeContacto;
+    uint8_t umbralDeTemperatura;
+    bool midiendo;
+} termometro_t;
 
-void invertirLedsMedicion();
+extern const termometro_t dispositivo; 
 
-ws2812_t coloresLeds[8];
+void interfazPrincipal();
 
-
-#endif /* _EXAMPLE_FILE_NAME_H */
+#endif /* _INTERFAZ_PRINCIPAL_H */
 
 /* *****************************************************************************
  End of File
