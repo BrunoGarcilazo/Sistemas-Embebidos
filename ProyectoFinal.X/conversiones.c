@@ -50,6 +50,7 @@ void conversiones(void *p_params){
         while(!ADC1_IsConversionComplete());
         
         muestra = ADC1_ConversionResultGet();
+        enviarMensaje();
         samplesConversiones[contador] = muestra;
         contador = contador + 1;
         invertirLedsMedicion();

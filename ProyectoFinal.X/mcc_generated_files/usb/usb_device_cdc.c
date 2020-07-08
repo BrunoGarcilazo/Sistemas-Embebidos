@@ -1,4 +1,4 @@
-// DOM-IGNORE-BEGIN
+ // DOM-IGNORE-BEGIN
 /*******************************************************************************
 Copyright 2015 Microchip Technology Inc. (www.microchip.com)
 

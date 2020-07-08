@@ -65,9 +65,12 @@ int main(void) {
     // initialize the device
     SYSTEM_Initialize();
 
-    xTaskCreate(SIM808_taskCheck, "modemTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
     
-    xTaskCreate(SIM808_initModule, "modemIni", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, &modemInitHandle);
+    xTaskCreate(conversiones, "conversiones", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
+    
+    //xTaskCreate(SIM808_taskCheck, "modemTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
+    
+    //xTaskCreate(SIM808_initModule, "modemIni", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, &modemInitHandle);
 
     /*Se crea el menu*/
     xTaskCreate(menu, "Menu", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL);
