@@ -21,7 +21,7 @@
 /* ************************************************************************** */
 /* ************************************************************************** */
 #include "Platform/WS2812.h"
-#include "ledManager.h"
+#include "../ProyectoFinal.X/ledManager.h"
 
 
 /** Metodo llamado cuando se realiza una Medicion
