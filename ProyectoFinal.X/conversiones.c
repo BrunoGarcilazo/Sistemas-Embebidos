@@ -31,8 +31,8 @@
 #include "../ProyectoFinal.X/mcc_generated_files/usb/usb_device_cdc.h"
 #include "../ProyectoFinal.X/Platform/usbManager.h"
 #include "../ProyectoFinal.X/Platform/rtcManager.h"
-#include "../ProyectoFinal.X/ledManager.h"
-#include "../ProyectoFinal.X/conversiones.h"
+#include "ledManager.h"
+#include "conversiones.h"
 
 
 

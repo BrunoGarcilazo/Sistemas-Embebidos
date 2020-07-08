@@ -74,7 +74,7 @@ int main(void) {
     //xTaskCreate(SIM808_initModule, "modemIni", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, &modemInitHandle);
 
     /*Se crea el menu*/
-    xTaskCreate(menu, "Menu", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL);
+    //xTaskCreate(menu, "Menu", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL);
 
     /*Se crea la tarea que verifica los eventos*/
     xTaskCreate(verificarEventos, "CheckearEventos", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);

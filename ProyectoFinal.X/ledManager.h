@@ -17,13 +17,6 @@
 
 #ifndef _LED_MANAGER_H    /* Guard against multiple inclusion */
 #define _LED_MANAGER_H
-
-#include "../ProyectoFinal.X/Platform/WS2812.h"
-
-void invertirLedsMedicion(void);
-
-
-ws2812_t coloresLeds[10];
         
         
 /* ************************************************************************** */
@@ -32,12 +25,16 @@ ws2812_t coloresLeds[10];
 /* ************************************************************************** */
 /* ************************************************************************** */
 
+#include "Platform/WS2812.h"
+
 /* This section lists the other files that are included in this file.
  */
 
 /* TODO:  Include other files here if needed. */
 
+void invertirLedsMedicion();
 
+ws2812_t coloresLeds[10];
 
 
 #endif /* _EXAMPLE_FILE_NAME_H */
