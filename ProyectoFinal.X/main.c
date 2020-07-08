@@ -56,6 +56,7 @@
 #include "mcc_generated_files/pin_manager.h"
 #include "System/scheludeManager.h"
 #include "System/menu.h"
+#include "conversiones.h"
 
 
 /*

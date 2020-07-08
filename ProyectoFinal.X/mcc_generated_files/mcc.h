@@ -54,12 +54,12 @@
 #include "interrupt_manager.h"
 #include "exceptions.h"
 #include "rtcc.h"
-#include "tmr2.h"
 #include "watchdog.h"
+#include "adc1.h"
+#include "usb/usb.h"
+#include "tmr2.h"
 #include "uart1.h"
 #include "memory/flash.h"
-#include "usb/usb.h"
-#include "adc1.h"
 
 #warning "This file will be removed in future MCC releases. Use system.h instead."
 

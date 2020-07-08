@@ -84,21 +84,21 @@ void ADC1_Initialize (void)
 
    AD1CON1 = 0x8074;
 
-    // CSCNA disabled; BUFM disabled; SMPI Generates interrupt after completion of every sample/conversion operation; OFFCAL disabled; VCFG AVDD/AVSS; BUFREGEN disabled; 
+    // CSCNA enabled; BUFM disabled; SMPI Generates interrupt after completion of every sample/conversion operation; OFFCAL disabled; VCFG AVDD/AVSS; BUFREGEN disabled; 
 
-   AD1CON2 = 0x0;
+   AD1CON2 = 0x400;
 
-    // SAMC 31; EXTSAM disabled; ADRC PBCLK; ADCS 0; 
+    // SAMC 4; EXTSAM disabled; ADRC PBCLK; ADCS 0; 
 
-   AD1CON3 = 0x1F00;
+   AD1CON3 = 0x400;
 
     // CH0SA AN0; CH0NA AVSS; 
 
    AD1CHS = 0x0;
 
-    // CSS9 disabled; CSS8 disabled; CSS7 disabled; CSS6 disabled; CSS5 disabled; CSS4 disabled; CSS3 disabled; CSS2 disabled; CSS15 disabled; CSS1 disabled; CSS14 disabled; CSS0 disabled; CSS13 disabled; CSS12 disabled; CSS11 disabled; CSS10 disabled; CSS30 disabled; CSS19 disabled; CSS18 disabled; CSS29 disabled; CSS17 disabled; CSS28 disabled; CSS16 disabled; CSS27 disabled; 
+    // CSS9 disabled; CSS8 disabled; CSS7 disabled; CSS6 disabled; CSS5 disabled; CSS4 disabled; CSS3 disabled; CSS2 disabled; CSS15 enabled; CSS1 disabled; CSS14 disabled; CSS0 disabled; CSS13 disabled; CSS12 disabled; CSS11 disabled; CSS10 disabled; CSS30 disabled; CSS19 disabled; CSS18 disabled; CSS29 disabled; CSS17 disabled; CSS28 disabled; CSS16 disabled; CSS27 disabled; 
 
-   AD1CSS = 0x0;
+   AD1CSS = 0x8000;
 
     // CHH9 disabled; CHH8 disabled; CHH7 disabled; CHH6 disabled; CHH5 disabled; CHH4 disabled; CHH3 disabled; CHH2 disabled; CHH1 disabled; CHH0 disabled; CHH11 disabled; CHH10 disabled; CHH13 disabled; CHH12 disabled; CHH15 disabled; CHH14 disabled; CHH17 disabled; CHH16 disabled; CHH19 disabled; CHH18 disabled; 
 

@@ -33,6 +33,7 @@
 #include "../Platform/rtcManager.h"
 #include "scheludeManager.h"
 
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Funciones de interfaz
@@ -87,7 +88,7 @@ void menu(void *p_params) {
                                 }
                                 case('b'):
                                     mostrarHora(); //Muestra la hora del sistema
-                                    status = EN_MENU; 
+                                    status = EN_MENU;
                                     break;
                                 case ('c'):
                                     agregarEvento(); //Agrega un evento al array de eventos
@@ -111,6 +112,7 @@ void menu(void *p_params) {
             default:
                 break;
         }
+//        vTaskDelay(pdMS_TO_TICKS(10));
     }
 }
 

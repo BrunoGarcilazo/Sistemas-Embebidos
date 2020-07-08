@@ -40,6 +40,8 @@
 #include "../Platform/usbManager.h"
 #include "scheludeManager.h"
 
+
+
 void verificarEventos(void *p_param) {
     uint8_t q;
     uint32_t tiempoActualPlano;
@@ -103,7 +105,7 @@ void agregarEvento() {
     enviarMensaje(PREGUNTA_DE_COMAND); //Se pregunta al usuario si quiere prender o apagar un led
     do {
         buscarEntrada(entrada, sizeof (entrada)); //Se actualiza la entrada
-        valorNumericoDeEntrada = entrada[0] - ASCCI_TO_INT_DIFFERENCE; //Se cambia al valor numerico
+        valorNumericoDeEntrada = entrada[0] - '0'; //Se cambia al valor numerico
     } while (valorNumericoDeEntrada != 1 && valorNumericoDeEntrada != 0); //Si no se selecciona una opcion valida
 
     command = valorNumericoDeEntrada;
@@ -112,7 +114,7 @@ void agregarEvento() {
         enviarMensaje(PREGUNTA_POR_COLOR_DE_LED); //Se pregunta de que color se desea prender el led
         do {
             buscarEntrada(entrada, sizeof (entrada)); //Actualizamos la entrada
-            valorNumericoDeEntrada = entrada[0] - ASCCI_TO_INT_DIFFERENCE; //Se pone en valor numerico
+            valorNumericoDeEntrada = entrada[0] - '0'; //Se pone en valor numerico
         } while (valorNumericoDeEntrada > 3 || valorNumericoDeEntrada < 0); //Si no selecciona algo fuera de 0 y 3
 
         color = valorNumericoDeEntrada;
@@ -123,7 +125,7 @@ void agregarEvento() {
 
     do {
         buscarEntrada(entrada, sizeof (entrada));
-        valorNumericoDeEntrada = entrada[0] - ASCCI_TO_INT_DIFFERENCE;
+        valorNumericoDeEntrada = entrada[0] - '0';
     } while (valorNumericoDeEntrada > 7 || valorNumericoDeEntrada < 0);
 
     led = valorNumericoDeEntrada;
@@ -167,7 +169,7 @@ void quitarEvento() {
 
     do {
         buscarEntrada(entrada, sizeof (entrada));
-        valorNumerico = entrada[0] - ASCCI_TO_INT_DIFFERENCE;
+        valorNumerico = entrada[0] - '0';
 
     } while (valorNumerico > 7 || valorNumerico < 0); //Si el numero es valido
 
@@ -183,11 +185,10 @@ void quitarEvento() {
 void consultarListaDeEventos() {
     int i;
     struct tm *horaDeActivacion;
-    char datos[28];
-    char salida[189];
+    char datos[25];
+    memset(datos, 0, sizeof (datos));
     time_t horaDeFinalizacion;
 
-    memset(salida, 0, sizeof (salida));
     enviarMensaje(FORMATO_DE_LISTA_DE_EVENTOS); //Se comunica el formato de las lineas a imprimir
 
     //Para cada evento se imprime: momento de activacion,posicion,Led,Color,accion
@@ -201,32 +202,28 @@ void consultarListaDeEventos() {
             //Setear Tiempo
             strftime(datos, 19, "%d/%m/%Y - %H:%M,", horaDeActivacion);
 
-            //Setear posicion. Poner 48 en define.
-            datos[19] = i + ASCCI_TO_INT_DIFFERENCE;
-            datos[20] = ',';
-
             //Setear Numero de Led
-            datos[21] = (eventos[i].param + ASCCI_TO_INT_DIFFERENCE);
-            datos[22] = ',';
-
-            //Setear accion
-            datos[25] = (eventos[i].command + ASCCI_TO_INT_DIFFERENCE);
-            datos[26] = '\r';
-            datos[27] = '\n';
-
+            datos[19] = (eventos[i].param + '0');
+            datos[20] = ',';
+            
             //Setear Color
             if (eventos[i].command == 1) {
-                datos[23] = (eventos[i].color + ASCCI_TO_INT_DIFFERENCE);
+                datos[21] = (eventos[i].color + '0');
             } else {
-                datos[23] = '_';
+                datos[21] = '_';
             }
 
-            datos[24] = ',';
+            datos[22] = ',';
+            
+            //Setear accion
+            datos[23] = (eventos[i].command + '0');
 
-            strcat(salida, datos);
+            datos[24] = '\n';
+
+            enviarMensaje(datos);
+            memset(datos, 0, sizeof (datos));
         }
     }
-    enviarMensaje(salida);
 }
 
 void mostrarHora() {

@@ -52,10 +52,14 @@
 #include <stdbool.h>
 #include "mcc_generated_files/system.h"
 #include "mcc_generated_files/pin_manager.h"
+#include "mcc_generated_files/usb/usb_device.h"
 #include "System/scheludeManager.h"
 #include "System/menu.h"
 
+bool usb_connected = false;
+
 void blinkLED(void *p_param);
+void checkUSB(void *p_param);
 
 /*
                          Main application
@@ -94,6 +98,7 @@ void blinkLED(void *p_param) {
         vTaskDelay(pdMS_TO_TICKS(800));
     }
 }
+
 
 void vApplicationMallocFailedHook(void) {
     /* vApplicationMallocFailedHook() will only be called if

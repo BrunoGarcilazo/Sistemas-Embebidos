@@ -71,8 +71,8 @@ typedef struct {
 #define FORMATO_DE_APAGAR "\r\nIngrese la informacion en el siguiente formato\r\nNumeroDeLED;\r\n"
 #define FORMATO_PARA_PRENDER "\r\nIngrese la informacion en el siguiente formato\r\nColor,NumeroDeLED\r\n"
 #define FORMATO_DE_AGENDA "\r\nCada linea representa un evento y tiene el siguiente formato:\r\n posicion, color, hora de ejecuccion\r\n"
-#define FORMATO_QUITAR_EVENTO "\n\rIngrese la posicion del evento que desea quitar con este formato:\n\rPoscion\r\nLas posiciones van de 0 a 7\r\n"
-#define FORMATO_DE_LISTA_DE_EVENTOS "Cada linea representa una tarea. Las lineas tienen el siguiente formato: \r\nMomento de Activacion,Posicion,Led,Color,Accion\r\n"
+#define FORMATO_QUITAR_EVENTO "\r\nIngrese la posicion del evento que desea quitar con este formato:\n\rPoscion\r\nLas posiciones van de 0 a 7\r\n"
+#define FORMATO_DE_LISTA_DE_EVENTOS "\r\nCada linea representa una tarea. Las lineas tienen el siguiente formato: \r\nMomento de Activacion,Led,Color,Accion\r\n"
 
 /*Preguntas*/
 #define PREGUNTA_DE_COMAND "\r\nIngrese 1 si desea prender 0 si desea apagar un LED\r\n"
@@ -83,7 +83,6 @@ typedef struct {
 #define ELEMENTO_BORRADO "\r\nElemento Borrado Satisfactoriamente\r\n"
 
 #define EVENTOS_MAXIMOS 7
-#define ASCCI_TO_INT_DIFFERENCE 48
 
 /*Array de eventos*/
 app_event_t eventos[EVENTOS_MAXIMOS];

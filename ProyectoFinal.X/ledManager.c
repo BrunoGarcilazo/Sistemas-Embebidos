@@ -20,25 +20,27 @@
 /* Section: Included Files                                                    */
 /* ************************************************************************** */
 /* ************************************************************************** */
+#include "Platform/WS2812.h"
+#include "ledManager.h"
+
 
 /** Metodo llamado cuando se realiza una Medicion
  * Si los Leds estaban en Negro, se cambian a Azul y viceversa.
  */
 void invertirLedsMedicion(){
-    
-    if(coloresLeds[0] == BLACK){
-        for( i=0; i < coloresLeds.length; i++ ){
+    uint8_t i;
+    if(coloresLeds[0].b == 0){
+        for( i = 0; i < sizeof (coloresLeds); i++ ){
             coloresLeds[i] = BLUE;
         
         }        
     }else{
-        for( i=0; i < coloresLeds.length; i++ ){
+        for( i=0; i < sizeof (coloresLeds); i++ ){
             coloresLeds[i] = BLACK;   
         }  
         
     }
-    
-    WS2812_send(coloresLeds, coloresLeds.length);   
+    WS2812_send(coloresLeds,sizeof (coloresLeds));   
 }
 
 

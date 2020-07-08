@@ -62,7 +62,7 @@ void enviarMensaje(char *mensaje) {
     } while (!enviado);
 }
 
-void enviarMensaje(uint8_t mensaje) {
+/*void enviarMensajeInt(uint8_t mensaje) {
     bool enviado = false;
     do {
         CDCTxService();
@@ -70,12 +70,12 @@ void enviarMensaje(uint8_t mensaje) {
                 (USBIsDeviceSuspended() == true)) {
         } else {
             if (USBUSARTIsTxTrfReady()) {
-                putUSBUSART(mensaje,mensaje.length); //Si pudo enviar el mensaje devuelve 
+                putsUSBUSART(mensaje,sizeof(mensaje)); //Si pudo enviar el mensaje devuelve 
                 enviado = true;
             }
         }
     } while (!enviado);
-}
+}*/
 /* *****************************************************************************
  End of File
  */

@@ -15,10 +15,10 @@
  */
 /* ************************************************************************** */
 
-#ifndef _EXAMPLE_FILE_NAME_H    /* Guard against multiple inclusion */
-#define _EXAMPLE_FILE_NAME_H
+#ifndef _CONVERSIONES_H    /* Guard against multiple inclusion */
+#define _CONVERSIONES_H
 
-uint16_t samplesConversiones[10]
+uint16_t samplesConversiones[10];
 
 
 /* ************************************************************************** */
@@ -30,21 +30,7 @@ uint16_t samplesConversiones[10]
 /* This section lists the other files that are included in this file.
  */
 
-/* TODO:  Include other files here if needed. */
-
-
-/* Provide C++ Compatibility */
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-
-
-
-    /* Provide C++ Compatibility */
-#ifdef __cplusplus
-}
-#endif
+void conversiones(void *p_params);
 
 #endif /* _EXAMPLE_FILE_NAME_H */
 

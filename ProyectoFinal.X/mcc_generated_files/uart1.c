@@ -8,20 +8,21 @@
     uart1.c
 
   @Summary
-    This is the generated source file for the UART1 driver using PIC24 / dsPIC33 / PIC32MM MCUs
+    This is the generated source file for the UART1 driver using Foundation Services Library
 
   @Description
     This source file provides APIs for driver for UART1. 
+
     Generation Information : 
-        Product Revision  :  PIC24 / dsPIC33 / PIC32MM MCUs - 1.167.0
+        Product Revision  :  Foundation Services Library - pic24-dspic-pic32mm : v1.26
         Device            :  PIC32MM0256GPM064
     The generated drivers are tested against the following:
-        Compiler          :  XC32 v2.40
-        MPLAB             :  MPLAB X v5.35
+        Compiler          :  XC32 1.42
+        MPLAB 	          :  MPLAB X 3.45
 */
 
 /*
-    (c) 2020 Microchip Technology Inc. and its subsidiaries. You may use this
+    (c) 2016 Microchip Technology Inc. and its subsidiaries. You may use this
     software and any derivatives exclusively with Microchip products.
 
     THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
@@ -47,7 +48,6 @@
 */
 #include <stdbool.h>
 #include <stdint.h>
-#include <stddef.h>
 #include "xc.h"
 #include "uart1.h"
 
@@ -62,8 +62,8 @@
 */
 
 static uint8_t * volatile rxTail;
-static uint8_t *rxHead;
-static uint8_t *txTail;
+static uint8_t * rxHead;
+static uint8_t * txTail;
 static uint8_t * volatile txHead;
 static bool volatile rxOverflowed;
 
@@ -74,14 +74,8 @@ static bool volatile rxOverflowed;
 
 */
 
-/* We add one extra byte than requested so that we don't have to have a separate
- * bit to determine the difference between buffer full and buffer empty, but
- * still be able to hold the amount of data requested by the user.  Empty is
- * when head == tail.  So full will result in head/tail being off by one due to
- * the extra byte.
- */
-#define UART1_CONFIG_TX_BYTEQ_LENGTH (255+1)
-#define UART1_CONFIG_RX_BYTEQ_LENGTH (255+1)
+#define UART1_CONFIG_TX_BYTEQ_LENGTH (255)
+#define UART1_CONFIG_RX_BYTEQ_LENGTH (255)
 
 /** UART Driver Queue
 
@@ -90,8 +84,8 @@ static bool volatile rxOverflowed;
 
 */
 
-static uint8_t txQueue[UART1_CONFIG_TX_BYTEQ_LENGTH];
-static uint8_t rxQueue[UART1_CONFIG_RX_BYTEQ_LENGTH];
+static uint8_t txQueue[UART1_CONFIG_TX_BYTEQ_LENGTH] ;
+static uint8_t rxQueue[UART1_CONFIG_RX_BYTEQ_LENGTH] ;
 
 void (*UART1_TxDefaultInterruptHandler)(void);
 void (*UART1_RxDefaultInterruptHandler)(void);
@@ -100,116 +94,87 @@ void (*UART1_RxDefaultInterruptHandler)(void);
   Section: Driver Interface
 */
 
-void UART1_Initialize(void)
+
+void UART1_Initialize (void)
 {
-    IEC1bits.U1TXIE = 0;
-    IEC1bits.U1RXIE = 0;
-
-    // STSEL 1; PDSEL 8N; RTSMD disabled; OVFDIS disabled; ACTIVE disabled; RXINV disabled; WAKE disabled; BRGH enabled; IREN disabled; ON enabled; SLPEN disabled; SIDL disabled; ABAUD disabled; LPBACK disabled; UEN TX_RX; CLKSEL PBCLK; 
-    // Data Bits = 8; Parity = None; Stop Bits = 1;
-    U1MODE = (0x8008 & ~(1<<15));  // disabling UART ON bit
-    // UTXISEL TX_ONE_CHAR; UTXINV disabled; ADDR 0; MASK 0; URXEN disabled; OERR disabled; URXISEL RX_ONE_CHAR; UTXBRK disabled; UTXEN disabled; ADDEN disabled; 
-    U1STA = 0x00;
-    // U1TXREG 0; 
-    U1TXREG = 0x00;
-    // BaudRate = 115200; Frequency = 24000000 Hz; BRG 51; 
-    U1BRG = 0x33;
-    
-    txHead = txQueue;
-    txTail = txQueue;
-    rxHead = rxQueue;
-    rxTail = rxQueue;
+   IEC1bits.U1TXIE = 0;
+   IEC1bits.U1RXIE = 0;
    
-    rxOverflowed = false;
+   // STSEL 1; PDSEL 8N; RTSMD disabled; OVFDIS disabled; ACTIVE disabled; RXINV disabled; WAKE disabled; BRGH enabled; IREN disabled; ON enabled; SLPEN disabled; SIDL disabled; ABAUD disabled; LPBACK disabled; UEN TX_RX; CLKSEL PBCLK; 
+   U1MODE = (0x8008 & ~(1<<15));  // disabling UART
+   // UTXISEL TX_ONE_CHAR; UTXINV disabled; ADDR 0; MASK 0; URXEN disabled; OERR disabled; URXISEL RX_ONE_CHAR; UTXBRK disabled; UTXEN disabled; ADDEN disabled; 
+   U1STA = 0x0;
+   // BaudRate = 115200; Frequency = 24000000 Hz; BRG 51; 
+   U1BRG = 0x33;
+   
+   txHead = txQueue;
+   txTail = txQueue;
+   rxHead = rxQueue;
+   rxTail = rxQueue;
+   
+   rxOverflowed = 0;
 
-    UART1_SetTxInterruptHandler(&UART1_Transmit_CallBack);
+   UART1_SetTxInterruptHandler(UART1_Transmit_ISR);
 
-    UART1_SetRxInterruptHandler(&UART1_Receive_CallBack);
-
-    IEC1bits.U1RXIE = 1;
-    
+   UART1_SetRxInterruptHandler(UART1_Receive_ISR);
+   IEC1bits.U1RXIE = 1;
+   
     //Make sure to set LAT bit corresponding to TxPin as high before UART initialization
-    U1STASET = _U1STA_UTXEN_MASK;
-    U1MODESET = _U1MODE_ON_MASK;   // enabling UART ON bit
-    U1STASET = _U1STA_URXEN_MASK;
+   U1STASET = _U1STA_UTXEN_MASK;
+   U1MODESET = _U1MODE_ON_MASK;  // enabling UART ON bit
+   U1STASET = _U1STA_URXEN_MASK; 
 }
 
 /**
     Maintains the driver's transmitter state machine and implements its ISR
 */
-
-void UART1_SetTxInterruptHandler(void* handler)
-{
-    if(handler == NULL)
-    {
-        UART1_TxDefaultInterruptHandler = &UART1_Transmit_CallBack;
-    }
-    else
-    {
-        UART1_TxDefaultInterruptHandler = handler;
-    }
-
+void UART1_SetTxInterruptHandler(void* handler){
+    UART1_TxDefaultInterruptHandler = handler;
 }
 
 void __attribute__ ((vector(_UART1_TX_VECTOR), interrupt(IPL1SOFT))) _UART1_TX ( void )
 {
-    if(UART1_TxDefaultInterruptHandler)
-    {
-        UART1_TxDefaultInterruptHandler();
-    }
-    
+    (*UART1_TxDefaultInterruptHandler)();
+}
+
+void UART1_Transmit_ISR(void)
+{ 
     if(txHead == txTail)
     {
         IEC1bits.U1TXIE = 0;
+        return;
     }
-    else
+
+    IFS1CLR= 1 << _IFS1_U1TXIF_POSITION;
+
+    while(!(U1STAbits.UTXBF == 1))
     {
-        IFS1CLR= 1 << _IFS1_U1TXIF_POSITION;
+        U1TXREG = *txHead++;
 
-        while(!(U1STAbits.UTXBF == 1))
+        if(txHead == (txQueue + UART1_CONFIG_TX_BYTEQ_LENGTH))
         {
-            U1TXREG = *txHead++;
+            txHead = txQueue;
+        }
 
-            if(txHead == (txQueue + UART1_CONFIG_TX_BYTEQ_LENGTH))
-            {
-                txHead = txQueue;
-            }
-
-            // Are we empty?
-            if(txHead == txTail)
-            {
-                break;
-            }
+        // Are we empty?
+        if(txHead == txTail)
+        {
+            break;
         }
     }
 }
 
-void __attribute__ ((weak)) UART1_Transmit_CallBack ( void )
-{ 
-
-}
-
-void UART1_SetRxInterruptHandler(void* handler)
-{
-    if(handler == NULL)
-    {
-        UART1_RxDefaultInterruptHandler = &UART1_Receive_CallBack;
-    }
-    else
-    {
-        UART1_RxDefaultInterruptHandler = handler;
-    }
+void UART1_SetRxInterruptHandler(void* handler){
+    UART1_RxDefaultInterruptHandler = handler;
 }
 
 void __attribute__ ((vector(_UART1_RX_VECTOR), interrupt(IPL1SOFT))) _UART1_RX( void )
 {
-    if(UART1_RxDefaultInterruptHandler)
-    {
-        UART1_RxDefaultInterruptHandler();
-    }
-    
-    IFS1CLR= 1 << _IFS1_U1RXIF_POSITION;
-	
+    (*UART1_RxDefaultInterruptHandler)();
+}
+
+void UART1_Receive_ISR(void)
+{
     while((U1STAbits.URXDA == 1))
     {
         *rxTail = U1RXREG;
@@ -231,22 +196,20 @@ void __attribute__ ((vector(_UART1_RX_VECTOR), interrupt(IPL1SOFT))) _UART1_RX( 
         {
             rxOverflowed = true;
         }
+
     }
+
+      IFS1CLR= 1 << _IFS1_U1RXIF_POSITION;
 }
 
-void __attribute__ ((weak)) UART1_Receive_CallBack(void)
-{
-
-}
-
-void __attribute__ ((vector(_UART1_ERR_VECTOR), interrupt(IPL1SOFT))) _UART1_ERR( void )
+void __attribute__ ((vector(_UART1_ERR_VECTOR), interrupt(IPL1SOFT))) _UART1_ERR ( void )
 {
     if ((U1STAbits.OERR == 1))
     {
         U1STACLR = _U1STA_OERR_MASK; 
     }
-    
-    IFS1CLR= 1 << _IFS1_U1EIF_POSITION;
+
+     IFS1CLR= 1 << _IFS1_U1EIF_POSITION;
 }
 
 /**
@@ -322,14 +285,7 @@ bool UART1_IsTxDone(void)
     return false;
 }
 
-
-/*******************************************************************************
-
-  !!! Deprecated API !!!
-  !!! These functions will not be supported in future releases !!!
-
-*******************************************************************************/
-
+/* !!! Deprecated API - This function may not be supported in a future release !!! */
 static uint8_t UART1_RxDataAvailable(void)
 {
     uint16_t size;
@@ -352,6 +308,13 @@ static uint8_t UART1_RxDataAvailable(void)
     return size;
 }
 
+/* !!! Deprecated API - This function may not be supported in a future release !!! */
+uint8_t __attribute__((deprecated)) UART1_is_rx_ready(void)
+{
+    return UART1_RxDataAvailable();
+}
+
+/* !!! Deprecated API - This function may not be supported in a future release !!! */
 static uint8_t UART1_TxDataAvailable(void)
 {
     uint16_t size;
@@ -374,6 +337,19 @@ static uint8_t UART1_TxDataAvailable(void)
     return size;
 }
 
+/* !!! Deprecated API - This function may not be supported in a future release !!! */
+uint8_t __attribute__((deprecated)) UART1_is_tx_ready(void)
+{
+    return UART1_TxDataAvailable();
+}
+
+/* !!! Deprecated API - This function may not be supported in a future release !!! */
+bool __attribute__((deprecated)) UART1_is_tx_done(void)
+{
+    return UART1_IsTxDone();
+}
+
+/* !!! Deprecated API - This function may not be supported in a future release !!! */
 unsigned int __attribute__((deprecated)) UART1_ReadBuffer( uint8_t *buffer ,  unsigned int numbytes)
 {
     unsigned int rx_count = UART1_RxDataAvailable();
@@ -392,6 +368,7 @@ unsigned int __attribute__((deprecated)) UART1_ReadBuffer( uint8_t *buffer ,  un
     return rx_count;    
 }
 
+/* !!! Deprecated API - This function may not be supported in a future release !!! */
 unsigned int __attribute__((deprecated)) UART1_WriteBuffer( uint8_t *buffer , unsigned int numbytes )
 {
     unsigned int tx_count = UART1_TxDataAvailable();
@@ -410,6 +387,7 @@ unsigned int __attribute__((deprecated)) UART1_WriteBuffer( uint8_t *buffer , un
     return tx_count;  
 }
 
+/* !!! Deprecated API - This function may not be supported in a future release !!! */
 UART1_TRANSFER_STATUS __attribute__((deprecated)) UART1_TransferStatusGet (void )
 {
     UART1_TRANSFER_STATUS status = 0;
@@ -444,6 +422,7 @@ UART1_TRANSFER_STATUS __attribute__((deprecated)) UART1_TransferStatusGet (void 
     return status;    
 }
 
+/* !!! Deprecated API - This function may not be supported in a future release !!! */
 uint8_t __attribute__((deprecated)) UART1_Peek(uint16_t offset)
 {
     uint8_t *peek = rxHead + offset;
@@ -456,64 +435,21 @@ uint8_t __attribute__((deprecated)) UART1_Peek(uint16_t offset)
     return *peek;
 }
 
+/* !!! Deprecated API - This function may not be supported in a future release !!! */
 bool __attribute__((deprecated)) UART1_ReceiveBufferIsEmpty (void)
 {
     return (UART1_RxDataAvailable() == 0);
 }
 
-bool __attribute__((deprecated)) UART1_TransmitBufferIsFull(void)
+/* !!! Deprecated API - This function may not be supported in a future release !!! */
+bool __attribute__((deprecated)) UART1_TransmitBufferIsFull (void)
 {
     return (UART1_TxDataAvailable() == 0);
 }
 
-uint32_t __attribute__((deprecated)) UART1_StatusGet (void)
+/* !!! Deprecated API - This function may not be supported in a future release !!! */
+UART1_STATUS __attribute__((deprecated)) UART1_StatusGet (void )
 {
     return U1STA;
-}
-
-unsigned int __attribute__((deprecated)) UART1_TransmitBufferSizeGet(void)
-{
-    if(UART1_TxDataAvailable() != 0)
-    { 
-        if(txHead > txTail)
-        {
-            return((txHead - txTail) - 1);
-        }
-        else
-        {
-            return((UART1_CONFIG_TX_BYTEQ_LENGTH - (txTail - txHead)) - 1);
-        }
-    }
-    return 0;
-}
-
-unsigned int __attribute__((deprecated)) UART1_ReceiveBufferSizeGet(void)
-{
-    if(UART1_RxDataAvailable() != 0)
-    {
-        if(rxHead > rxTail)
-        {
-            return((rxHead - rxTail) - 1);
-        }
-        else
-        {
-            return((UART1_CONFIG_RX_BYTEQ_LENGTH - (rxTail - rxHead)) - 1);
-        } 
-    }
-    return 0;
-}
-
-void __attribute__((deprecated)) UART1_Enable(void)
-{
-    U1STASET = _U1STA_UTXEN_MASK;
-    U1STASET = _U1STA_URXEN_MASK;
-    U1MODESET = _U1MODE_ON_MASK;
-}
-
-void __attribute__((deprecated)) UART1_Disable(void)
-{
-    U1STACLR = _U1STA_UTXEN_MASK;
-    U1STACLR = _U1STA_URXEN_MASK;
-    U1MODECLR = _U1MODE_ON_MASK;
 }
 

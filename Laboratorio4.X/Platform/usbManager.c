@@ -50,18 +50,13 @@ void buscarEntrada(uint8_t * buffer, uint8_t large) {
 void enviarMensaje(char *mensaje) {
     bool enviado = false;
     do {
-        CDCTxService();
-        if ((USBGetDeviceState() < CONFIGURED_STATE) ||
-                (USBIsDeviceSuspended() == true)) {
-        } else {
-            if (USBUSARTIsTxTrfReady()) {
-                putsUSBUSART(mensaje); //Si pudo enviar el mensaje devuelve 
-                enviado = true;
-            }
+        if (USBUSARTIsTxTrfReady()) {
+            putsUSBUSART(mensaje);
+            enviado = true;
         }
+        CDCTxService();
     } while (!enviado);
 }
-
 
 /* *****************************************************************************
  End of File

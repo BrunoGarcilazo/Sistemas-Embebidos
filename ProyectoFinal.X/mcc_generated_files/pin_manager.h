@@ -73,11 +73,11 @@
   @Example
     <code>
     // Set RA0 high (1)
-    GPRS_PWKEY_SetHigh();
+    GPRS_PWRKEY_SetHigh();
     </code>
 
 */
-#define GPRS_PWKEY_SetHigh()          ( LATASET = (1 << 0) )
+#define GPRS_PWRKEY_SetHigh()          ( LATASET = (1 << 0) )
 /**
   @Summary
     Sets the GPIO pin, RA0, low using LATA0.
@@ -97,11 +97,11 @@
   @Example
     <code>
     // Set RA0 low (0)
-    GPRS_PWKEY_SetLow();
+    GPRS_PWRKEY_SetLow();
     </code>
 
 */
-#define GPRS_PWKEY_SetLow()           ( LATACLR = (1 << 0) )
+#define GPRS_PWRKEY_SetLow()           ( LATACLR = (1 << 0) )
 
 /**
   @Summary
@@ -122,19 +122,19 @@
   @Example
     <code>
     // Set RA0 to low.
-    GPRS_PWKEY_SetValue(false);
+    GPRS_PWRKEY_SetValue(false);
     </code>
 
 */
-inline static void GPRS_PWKEY_SetValue(bool value)
+inline static void GPRS_PWRKEY_SetValue(bool value)
 {
   if(value)
   {
-    GPRS_PWKEY_SetHigh();
+    GPRS_PWRKEY_SetHigh();
   }
   else
   {
-    GPRS_PWKEY_SetLow();
+    GPRS_PWRKEY_SetLow();
   }
 }
 
@@ -157,11 +157,11 @@ inline static void GPRS_PWKEY_SetValue(bool value)
   @Example
     <code>
     // Toggle RA0
-    GPRS_PWKEY_Toggle();
+    GPRS_PWRKEY_Toggle();
     </code>
 
 */
-#define GPRS_PWKEY_Toggle()           ( LATAINV = (1 << 0) )
+#define GPRS_PWRKEY_Toggle()           ( LATAINV = (1 << 0) )
 /**
   @Summary
     Reads the value of the GPIO pin, RA0.
@@ -183,11 +183,11 @@ inline static void GPRS_PWKEY_SetValue(bool value)
     uint16_t portValue;
 
     // Read RA0
-    postValue = GPRS_PWKEY_GetValue();
+    postValue = GPRS_PWRKEY_GetValue();
     </code>
 
 */
-#define GPRS_PWKEY_GetValue()         PORTAbits.RA0
+#define GPRS_PWRKEY_GetValue()         PORTAbits.RA0
 /**
   @Summary
     Configures the GPIO pin, RA0, as an input.
@@ -207,11 +207,11 @@ inline static void GPRS_PWKEY_SetValue(bool value)
   @Example
     <code>
     // Sets the RA0 as an input
-    GPRS_PWKEY_SetDigitalInput();
+    GPRS_PWRKEY_SetDigitalInput();
     </code>
 
 */
-#define GPRS_PWKEY_SetDigitalInput()   ( TRISASET = (1 << 0) )
+#define GPRS_PWRKEY_SetDigitalInput()   ( TRISASET = (1 << 0) )
 /**
   @Summary
     Configures the GPIO pin, RA0, as an output.
@@ -231,11 +231,11 @@ inline static void GPRS_PWKEY_SetValue(bool value)
   @Example
     <code>
     // Sets the RA0 as an output
-    GPRS_PWKEY_SetDigitalOutput();
+    GPRS_PWRKEY_SetDigitalOutput();
     </code>
 
 */
-#define GPRS_PWKEY_SetDigitalOutput()   ( TRISACLR = (1 << 0) )
+#define GPRS_PWRKEY_SetDigitalOutput()   ( TRISACLR = (1 << 0) )
 /**
   @Summary
     Sets the GPIO pin, RA1, high using LATA1.
