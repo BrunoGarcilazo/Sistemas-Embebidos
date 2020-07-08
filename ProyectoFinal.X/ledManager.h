@@ -18,6 +18,10 @@
 #ifndef _LED_MANAGER_H    /* Guard against multiple inclusion */
 #define _LED_MANAGER_H
 
+#include "../ProyectoFinal.X/Platform/WS2812.h"
+
+void invertirLedsMedicion(void);
+
 
 ws2812_t coloresLeds[10];
         
