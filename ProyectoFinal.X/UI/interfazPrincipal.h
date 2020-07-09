@@ -28,7 +28,7 @@
 #include <stdint.h>
 
 typedef struct{
-    uint8_t dispositivoID;
+    uint32_t dispositivoID;
     uint8_t numeroDeContacto;
     uint8_t umbralDeTemperatura;
     bool midiendo;

@@ -35,13 +35,43 @@ void interfazUSB(void* params) {
         if (!dispositivo.midiendo && USBUSARTIsTxTrfReady()) {
             numBytes = getsUSBUSART(buffer, sizeof (buffer));
             if (numBytes > 0) {
-                if (!dispositivo.inicializado) {
+                if (!dispositivo.inicializado){
                     inicializar();
                 }
                 menu();
             }
         }
     }
+}
+
+boolean pedirID(){ // sin terminar
+    
+    uint8_t entrada[32]; // Array donde se va a recibir la entrada
+    buscarEntrada(entrada,sizeof(entrada));
+    
+    
+    
+    dispositivo.dispositivoID = entrada;
+       
+}
+
+boolean pedirNumeroDeContacto(){ // sin terminar
+    uint8_t entrada[8];
+    buscarEntrada(entrada,sizeof(entrada));
+    
+    
+    
+    dispositivo.numeroDeContacto = entrada;
+}
+
+boolean pedirTemperatura(){ 
+    uint8_t entrada[2];
+    uint8_t temperatura;
+    buscarEntrada(entrada,sizeof(entrada));
+    temperatura = ((10*entrada[0]) + (entrada[1] - ASCII_TO_INT_DIFFERENCE));
+    dispositivo.umbralDeTemperatura = temperatura;
+    
+    
 }
 
 

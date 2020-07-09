@@ -75,10 +75,10 @@ void conversiones(void *p_params) {
         vTaskDelay(pdMS_TO_TICKS(250));
     }
     promedio = promedioSamples();
-    promedio = conversorADCTemp(promedio);
+    //promedio = conversorADCTemp(promedio);
     if (promedio > dispositivo.umbralDeTemperatura){
         xTaskCreate(prenderLedsRojosPor2Seg, "LucesRojas", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
-        //Enviar mensaje
+        //Enviar mensaje por SMS
     } else {
         xTaskCreate(prenderLedsVerdesPor2Seg, "LucesVerdes", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
     }

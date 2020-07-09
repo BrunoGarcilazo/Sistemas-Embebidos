@@ -87,13 +87,16 @@ void menu() {
                                 mostrarHora(); //Muestra la hora del sistema
                                 status = EN_MENU;
                                 break;
-                            case ('c'): //Poner Id del dispositivo
+                            case ('c'): //Poner Id del dispositivo, numero unico de 32 bits.
+                                pedirID();
                                 status = EN_MENU;
                                 break;
                             case ('d'): //Umbral de temperatura
+                                pedirTemperatura();
                                 status = EN_MENU;
                                 break;
                             case ('e')://Telefono para enviar mensajes
+                                pedirNumeroDeContacto();
                                 status = EN_MENU;
                                 break;
                             case ('f')://Imprimir lista de medidas 

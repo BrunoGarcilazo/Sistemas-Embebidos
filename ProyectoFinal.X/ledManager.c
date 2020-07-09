@@ -55,6 +55,8 @@ void prenderLedsRojosPor2Seg(void *p_params) {
         coloresLeds[i] = BLACK;
     }
     WS2812_send(coloresLeds, 8);
+    
+    vTaskDelete();
 }
 
 void prenderLedsVerdesPor2Seg(void *p_params) {
@@ -68,6 +70,8 @@ void prenderLedsVerdesPor2Seg(void *p_params) {
         coloresLeds[i] = BLACK;
     }
     WS2812_send(coloresLeds, 8);
+    
+    vTaskDelete();
 }
 
 

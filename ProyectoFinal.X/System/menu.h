@@ -20,7 +20,7 @@
 #define _MENU_H
 
 /*Menu*/
-#define MENU "\r\nBienvenido\r\nMenu\r\nPara seleccionar una opcion envie la tecla presente a la izquierda de la funcion\r\na - Fijar hora del reloj RTC\r\nb - Consultar hora del RTC\r\nc - Agregar evento\r\nd - Quitar evento\r\ne - Consultar lista de eventos\r\n\0"
+#define MENU "\r\nBienvenido\r\nMenu\r\nPara seleccionar una opcion envie la tecla presente a la izquierda de la funcion\r\nNota: 'a','c','d' y 'e' son criticas para el funcionamiento del sistema\r\na - Fijar hora del reloj RTC\r\nb - Consultar hora del RTC\r\nc - Agregar evento\r\nd - Quitar evento\r\ne - Consultar lista de eventos\r\n\0"
 
 
 /* ************************************************************************** */
@@ -42,6 +42,7 @@ typedef enum {
     EN_ESPERA,
 
 } MENU_STATUS;
+
 
 /* ***************************************************************************** */
 /* ***************************************************************************** */
