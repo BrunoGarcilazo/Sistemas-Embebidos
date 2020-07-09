@@ -62,16 +62,22 @@
 /*
                          Main application
  */
+
+
+void mantenimientoUSB(void * p_param){
+    CDCTxService();
+    vTaskDelay(pdMS_TO_TICKS(9));
+}
+
 int main(void) {
     // initialize the device
     SYSTEM_Initialize();
-
     
-    xTaskCreate(conversiones, "conversiones", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
+    xTaskCreate(SIM808_taskCheck, "modemTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
     
-    //xTaskCreate(SIM808_taskCheck, "modemTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
+    xTaskCreate(SIM808_initModule, "modemIni", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, &modemInitHandle);
     
-    //xTaskCreate(SIM808_initModule, "modemIni", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, &modemInitHandle);
+    xTaskCreate(mantenimientoUSB, "mantenimientoUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
 
     /*Se crea el menu*/
     //xTaskCreate(menu, "Menu", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL);
@@ -90,6 +96,7 @@ int main(void) {
     for (;;);
     return 1;
 }
+
 
 void vApplicationMallocFailedHook(void) {
     /* vApplicationMallocFailedHook() will only be called if

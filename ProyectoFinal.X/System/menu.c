@@ -39,77 +39,80 @@
 // *****************************************************************************
 // *****************************************************************************
 
-void menu(void *p_params) {
-    bool primeraVez = true;
+void menu() {
     MENU_STATUS status;
     uint8_t buffer[4];
     uint8_t numBytes;
     struct tm tiempoASetear;
-    
+
     status = EN_MENU;
 
-    while (true) {
-        CDCTxService();
-        switch (status) {
-            case(EN_MENU):
-                if ((USBGetDeviceState() < CONFIGURED_STATE) ||
-                        (USBIsDeviceSuspended() == true)) {
 
-                } else {
-                    if (USBUSARTIsTxTrfReady()) {
-                        putsUSBUSART(MENU); //Si se pudo enviar el menu 
-                        status = EN_ESPERA; //Se espera un input
-                    }
-                }
-                break;
-            case(EN_ESPERA):
-                if (USBUSARTIsTxTrfReady()) {
+    /**
+     * Lista de menú:
+     * Setear hora
+     * Mostrar hora
+     * Poner ID de dispositivo
+     * Umbral de temperatura
+     * Telefono para enviar mensajes
+     * Imprimir lista de medidas
+     * Borrar todos las medidas
+     * Terminar conexion
+     */
+    while (true) {
+        if (USBUSARTIsTxTrfReady()) {
+            switch (status) {
+                case(EN_MENU):
+                    putsUSBUSART(MENU); //Si se pudo enviar el menu 
+                    status = EN_ESPERA; //Se espera un input
+                    break;
+                case(EN_ESPERA):
                     numBytes = getsUSBUSART(buffer, sizeof (buffer));
-                    if (numBytes > 0) { // Si recibimos un input
-                        if (primeraVez) { //La primera vez inicializamos fecha y hora
-                            inicializar();
-                            primeraVez = false;
-                            status = EN_MENU; //Luego imprimimos el menu
-                        } else {
-                            switch (buffer[0]) {
-                                case('m'): //Los estados indican que significa cada opcion
-                                    if (buffer[1] == 'e' & buffer[2] == 'n' & buffer[3] == 'u') {
-                                        status = EN_MENU; //Imprimimos menu
-                                    }
-                                    break;
-                                case('a'):
-                                {
-                                    pedirHora(&tiempoASetear); //Pedimos que se ingrese una hora
-                                    pedirFecha(&tiempoASetear); //Pedimos que se ingrese una fecha
-                                    RTCC_TimeSet(&tiempoASetear); //Seteamos el RTC a esa hora
-                                    status = EN_MENU; //Pasamos al menu
-                                    break;
+                    if (numBytes > 0) { //Si recibimos un input
+                        switch (buffer[0]) {
+                            case('m'): //Los estados indican que significa cada opcion
+                                if (buffer[1] == 'e' & buffer[2] == 'n' & buffer[3] == 'u') {
+                                    status = EN_MENU; //Imprimimos menu
                                 }
-                                case('b'):
-                                    mostrarHora(); //Muestra la hora del sistema
-                                    status = EN_MENU; 
-                                    break;
-                                case ('c'):
-                                    agregarEvento(); //Agrega un evento al array de eventos
-                                    status = EN_MENU; 
-                                    break;
-                                case ('d'):
-                                    quitarEvento(); //Quita un evento del array de eventos
-                                    status = EN_MENU;
-                                    break;
-                                case ('e'):
-                                    consultarListaDeEventos(); //Imprime todos los eventos
-                                    status = EN_MENU;
-                                    break;
-                                default:
-                                    break;
+                                break;
+                            case('a'):
+                            {
+                                pedirHora(&tiempoASetear); //Pedimos que se ingrese una hora
+                                pedirFecha(&tiempoASetear); //Pedimos que se ingrese una fecha
+                                RTCC_TimeSet(&tiempoASetear); //Seteamos el RTC a esa hora
+                                status = EN_MENU; //Pasamos al menu
+                                break;
                             }
+                            case('b'):
+                                mostrarHora(); //Muestra la hora del sistema
+                                status = EN_MENU;
+                                break;
+                            case ('c'): //Poner Id del dispositivo
+                                status = EN_MENU;
+                                break;
+                            case ('d'): //Umbral de temperatura
+                                status = EN_MENU;
+                                break;
+                            case ('e')://Telefono para enviar mensajes
+                                status = EN_MENU;
+                                break;
+                            case ('f')://Imprimir lista de medidas 
+                                status = EN_MENU;
+                                break;
+                            case ('g')://Borrar medidias 
+                                status = EN_MENU;
+                                break;
+                            case ('h')://Terminar conexion
+                                vTaskDelete(NULL);
+                                break;
+                            default:
+                                break;
                         }
                     }
-                }
-                break;
-            default:
-                break;
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

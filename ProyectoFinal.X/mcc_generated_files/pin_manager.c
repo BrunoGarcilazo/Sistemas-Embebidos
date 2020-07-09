@@ -52,12 +52,26 @@
 #include <xc.h>
 #include "pin_manager.h"
 #include "system.h"
-
+#include "FreeRTOS.h"
+#include "task.h"
+#include "../conversiones.h"
+#include "../UI/interfazPrincipal.h"
 /**
  Section: File specific functions
 */
 void (*BTN2_InterruptHandler)(void) = NULL;
 void (*BTN1_InterruptHandler)(void) = NULL;
+
+TaskHandle_t medicionHandle = NULL;
+
+void invertirMidiendo(){
+    if (!dispositivo.midiendo){
+        xTaskCreate(conversiones, "conversiones", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, &medicionHandle);    
+    } else {
+        vTaskDelete(medicionHandle);
+    }
+    dispositivo.midiendo = !(dispositivo.midiendo);
+}
 
 /**
  Section: Driver Interface Function Definitions
@@ -127,7 +141,7 @@ void PIN_MANAGER_Initialize (void)
     CNCONBbits.ON = 1;    //Config for PORTB
     
     /* Initialize IOC Interrupt Handler*/
-    BTN2_SetInterruptHandler(&BTN2_CallBack);
+    BTN2_SetInterruptHandler(&invertirMidiendo);
     BTN1_SetInterruptHandler(&BTN1_CallBack);
     
     /****************************************************************************

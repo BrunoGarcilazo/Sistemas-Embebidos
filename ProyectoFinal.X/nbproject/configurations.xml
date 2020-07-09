@@ -124,7 +124,7 @@
         <itemPath>conversiones.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="UI" projectFiles="true">
-        <itemPath>UI/interfazPrincipal.c</itemPath>
+        <itemPath>UI/interfazUSB.c</itemPath>
       </logicalFolder>
       <itemPath>main.c</itemPath>
     </logicalFolder>

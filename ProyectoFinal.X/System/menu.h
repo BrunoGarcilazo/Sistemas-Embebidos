@@ -20,7 +20,7 @@
 #define _MENU_H
 
 /*Menu*/
-#define MENU "\r\nBienvenido\r\nMenu\r\nPara seleccionar una opcion envie la tecla presente a la izquierda de la funcion\r\na - Fijar hora del reloj RTC\r\nb - Consultar hora del RTC\r\nc - Agregar evento\r\nd - Quitar evento\r\ne - Consultar lista de eventos\r\n"
+#define MENU "\r\nBienvenido\r\nMenu\r\nPara seleccionar una opcion envie la tecla presente a la izquierda de la funcion\r\na - Fijar hora del reloj RTC\r\nb - Consultar hora del RTC\r\nc - Agregar evento\r\nd - Quitar evento\r\ne - Consultar lista de eventos\r\n\0"
 
 
 /* ************************************************************************** */
@@ -54,6 +54,6 @@ typedef enum {
  * para responder al usuario
  * @param p_params
  */
-void menu(void *p_params);
+void menu();
 
 #endif /* _MENU_H */

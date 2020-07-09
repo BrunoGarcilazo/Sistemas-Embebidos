@@ -1,17 +1,18 @@
 /* ************************************************************************** */
-/** Descriptive File Name
+/** Conversiones
 
   @Company
     UCUDAL
 
   @File Name
-    filename.h
+    conversiones.h
 
   @Summary
-    Brief description of the file.
+    Se encarga de las mediciones de temperatura del dispositivo
 
   @Description
-    Describe the purpose of this file.
+    Mide, promedia, convierte la medida a grados. Prende leds cuando esta midiendo y luego leds de colores 
+    segun la salud del paciente.
  */
 /* ************************************************************************** */
 
@@ -29,18 +30,18 @@
 #include <stdint.h>
 
 typedef struct{
-    uint8_t dispositivoID;
-    uint8_t numeroDeContacto;
-    uint8_t umbralDeTemperatura;
-    bool midiendo;
-} termometro_t;
+    uint8_t IdDelRegistro;
+    uint8_t temperaturaRegistrada;
+} medida_t ;
+
+medida_t mediciones[200];
+uint8_t ultimaMedida;
 
 uint16_t samplesConversiones[10];
-extern const termometro_t dispositivo; 
 
 void conversiones(void *p_params);
 
-#endif /* _EXAMPLE_FILE_NAME_H */
+#endif
 
 /* *****************************************************************************
  End of File

@@ -32,6 +32,10 @@
 
 /* TODO:  Include other files here if needed. */
 
+void prenderLedsRojosPor2Seg(void *p_params);
+
+void prenderLedsVerdesPor2Seg(void *p_params);
+
 void invertirLedsMedicion();
 
 ws2812_t coloresLeds[8];

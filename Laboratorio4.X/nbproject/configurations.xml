@@ -48,6 +48,8 @@
         <itemPath>System/scheludeManager.h</itemPath>
         <itemPath>System/menu.h</itemPath>
       </logicalFolder>
+      <logicalFolder name="f4" displayName="UI" projectFiles="true">
+      </logicalFolder>
       <itemPath>FreeRTOSConfig.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -95,6 +97,8 @@
       <logicalFolder name="f2" displayName="System" projectFiles="true">
         <itemPath>System/scheludeManager.c</itemPath>
         <itemPath>System/menu.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f4" displayName="UI" projectFiles="true">
       </logicalFolder>
       <itemPath>main.c</itemPath>
     </logicalFolder>

@@ -1,11 +1,14 @@
 /* ************************************************************************** */
-/**
+
+#include "interfazPrincipal.h"
+
+/** Descriptive File Name
 
   @Company
     Company Name
 
   @File Name
-    filename.h
+    filename.c
 
   @Summary
     Brief description of the file.
@@ -14,32 +17,33 @@
     Describe the purpose of this file.
  */
 /* ************************************************************************** */
-
-#ifndef _INTERFAZ_PRINCIPAL_H    /* Guard against multiple inclusion */
-#define _INTERFAZ_PRINCIPAL_H
-
-
 /* ************************************************************************** */
 /* ************************************************************************** */
 /* Section: Included Files                                                    */
 /* ************************************************************************** */
 /* ************************************************************************** */
-#include <stdbool.h>
-#include <stdint.h>
+#include  "../mcc_generated_files/usb/usb_device_cdc.h"
+#include  "FreeRTOS.h"
+#include  "task.h"
+#include  <stdint.h>
 
-typedef struct{
-    uint8_t dispositivoID;
-    uint8_t numeroDeContacto;
-    uint8_t umbralDeTemperatura;
-    bool midiendo;
-    bool inicializado;
-} termometro_t;
+void interfazUSB(void* params) {
+    uint8_t buffer[4];
+    uint16_t numBytes;
+    
+    while (1) {
+        if (!dispositivo.midiendo && USBUSARTIsTxTrfReady()) {
+            numBytes = getsUSBUSART(buffer, sizeof (buffer));
+            if (numBytes > 0) {
+                if (!dispositivo.inicializado) {
+                    inicializar();
+                }
+                menu();
+            }
+        }
+    }
+}
 
-termometro_t dispositivo; 
-
-void interfazPrincipal();
-
-#endif /* _INTERFAZ_PRINCIPAL_H */
 
 /* *****************************************************************************
  End of File
