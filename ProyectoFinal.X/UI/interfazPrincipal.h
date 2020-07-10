@@ -28,14 +28,15 @@
 #include <stdint.h>
 
 typedef struct{
-    uint32_t dispositivoID;
-    uint8_t numeroDeContacto;
-    uint8_t umbralDeTemperatura;
-    bool midiendo;
-    bool inicializado;
+    uint32_t dispositivoID; // ID unico del dispositivo
+    uint8_t numeroDeContacto;   // Numero de contacto de forma 96123456
+    uint8_t umbralDeTemperatura; // Umbral de Temperatura. 32 < umbral < 42
+    bool midiendo;               // variable que indica si se esta realizando una medicion (se utiliza si se presiona el boton mientras ya se esta midiendo)
+    bool inicializado;           // Indica si el Termometro ya cuenta con todos los datos necesarios para su correcto funcionamiento.   
 } termometro_t;
 
 termometro_t dispositivo; 
+
 
 void interfazPrincipal();
 

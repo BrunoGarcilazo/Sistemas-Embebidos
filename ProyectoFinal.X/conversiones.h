@@ -32,6 +32,7 @@
 typedef struct{
     uint8_t IdDelRegistro;
     uint8_t temperaturaRegistrada;
+    tm tiempo; // a confirmar
 } medida_t ;
 
 medida_t mediciones[200];

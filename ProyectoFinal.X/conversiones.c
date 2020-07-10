@@ -59,6 +59,7 @@ uint16_t conversorADCTemp(uint16_t promedio) {
 }
 
 void conversiones(void *p_params) {
+    tm tiempoActual;
     uint8_t contador;
     uint16_t promedio;
     uint16_t muestra;
@@ -86,6 +87,10 @@ void conversiones(void *p_params) {
     
     medida.IdDelRegistro = ultimaMedida;
     medida.temperaturaRegistrada = promedio;
+    if(RTCC_TimeGet(tiempoActual)){       
+     medida.tiempo = tiempoActual;       
+    }
+ 
     mediciones[ultimaMedida] = medida;
     ultimaMedida++;
     
