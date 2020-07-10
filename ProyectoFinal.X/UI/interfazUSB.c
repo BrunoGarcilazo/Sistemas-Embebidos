@@ -47,28 +47,37 @@ void interfazUSB(void* params) {
 boolean pedirID(){ // sin terminar
     
     uint8_t entrada[32]; // Array donde se va a recibir la entrada
+    memset(entrada,0,sizeof(entrada)); //Se limpia la entrada
     buscarEntrada(entrada,sizeof(entrada));
+    uint32_t k;
+    int i;
+    for (i = 0; i < 32; i++){                                // Metodo de conversion de Array de char a int : shorturl.at/acoAL
+    k = 10 * k + (entrada[i] - ASCII_TO_INT_DIFFERENCE);
+    }
     
-    
-    
-    dispositivo.dispositivoID = entrada;
+    dispositivo.dispositivoID = k;
        
 }
 
 boolean pedirNumeroDeContacto(){ // sin terminar
     uint8_t entrada[8];
+    memset(entrada,0,sizeof(entrada)); //Se limpia la entrada
     buscarEntrada(entrada,sizeof(entrada));
     
+    int i;
+    uint8_t k;
+    for (i = 0; i < n; i++){
+    k = 10 * k + (entrada[i] - ASCII_TO_INT_DIFFERENCE);
+    }
     
-    
-    dispositivo.numeroDeContacto = entrada;
+    dispositivo.numeroDeContacto = k;
 }
 
 boolean pedirTemperatura(){ 
     uint8_t entrada[2];
     uint8_t temperatura;
     buscarEntrada(entrada,sizeof(entrada));
-    temperatura = ((10*entrada[0]) + (entrada[1] - ASCII_TO_INT_DIFFERENCE));
+    temperatura = ((10*entrada[0] - ASCII_TO_INT_DIFFERENCE) + (entrada[1] - ASCII_TO_INT_DIFFERENCE));
     dispositivo.umbralDeTemperatura = temperatura;
     
     
