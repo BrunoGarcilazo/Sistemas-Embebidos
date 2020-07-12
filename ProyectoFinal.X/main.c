@@ -57,6 +57,7 @@
 #include "System/scheludeManager.h"
 #include "System/menu.h"
 #include "conversiones.h"
+#include "UI/interfazUSB.h"
 
 
 /*
@@ -72,19 +73,25 @@ void mantenimientoUSB(void * p_param){
 int main(void) {
     // initialize the device
     SYSTEM_Initialize();
+    dispositivo.inicializado = false;
+    dispositivo.umbralDeTemperatura = 40.0;
+    ultimaMedida = 0;
+    boton2Flag = false;
     
-    xTaskCreate(SIM808_taskCheck, "modemTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
     
-    xTaskCreate(SIM808_initModule, "modemIni", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, &modemInitHandle);
+    //xTaskCreate(SIM808_taskCheck, "modemTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
     
-    xTaskCreate(mantenimientoUSB, "mantenimientoUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
-
-    /*Se crea el menu*/
-    //xTaskCreate(menu, "Menu", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL);
-
-    /*Se crea la tarea que verifica los eventos*/
-    //xTaskCreate(verificarEventos, "CheckearEventos", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
-
+    //xTaskCreate(SIM808_initModule, "modemIni", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, &modemInitHandle);
+    
+    //xTaskCreate(mantenimientoUSB, "mantenimientoUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 4, NULL);
+    
+    
+    //xTaskCreate(checkearBoton2, "PollingDeBoton2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
+    
+    xTaskCreate(interfazUSB, "interfazUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 4, NULL);
+    
+    
+    
     /* Finally start the scheduler. */
     vTaskStartScheduler();
 

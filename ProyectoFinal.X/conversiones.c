@@ -25,28 +25,26 @@
 #include <time.h>
 #include "FreeRTOS.h"
 #include "task.h"
+#include <math.h>
 
 #include "../ProyectoFinal.X/mcc_generated_files/usb/usb_device_cdc.h"
-#include "../ProyectoFinal.X/Platform/usbManager.h"
-#include "../ProyectoFinal.X/Platform/rtcManager.h"
 #include "ledManager.h"
 #include "conversiones.h"
-#include "UI/interfazPrincipal.h"
+#include "UI/interfazUSB.h"
+#include "mcc_generated_files/pin_manager.h"
 
 /**
  * Hace el Promedio de todos los Samples obtenidos del ADC
  * @return 
  */
-uint16_t promedioSamples() {
+uint16_t promedioSamples(uint16_t *samplesConversiones) {
     uint8_t i;
     uint16_t sumaDeValores;
     sumaDeValores = 0;
-
-    for (i = 0; i < sizeof (samplesConversiones); i++) {
+    for (i = 0; i < sizeof (samplesConversiones) / sizeof (samplesConversiones[0]); i++) {
         sumaDeValores = sumaDeValores + samplesConversiones[i];
     }
-
-    return (sumaDeValores / sizeof (samplesConversiones));
+    return sumaDeValores / (sizeof (samplesConversiones) / sizeof (samplesConversiones[0]));
 }
 
 /**
@@ -54,16 +52,27 @@ uint16_t promedioSamples() {
  * @param promedio Promedio de las temperaturas medidas por el ADC
  * @return Valor en grados
  */
-uint16_t conversorADCTemp(uint16_t promedio) {
-    return promedio;
+uint16_t conversorADCTemp(float promedio) {
+    uint8_t vecesQueEntra10;
+    float temperatura;
+
+    //Corregir numeros magicos
+    vecesQueEntra10 = floorf(promedio / 10);
+    temperatura = 32 + (0.1 * vecesQueEntra10);
+    return temperatura;
 }
 
 void conversiones(void *p_params) {
-    tm tiempoActual;
+    uint16_t samplesConversiones[10];
+    struct tm tiempoActual;
     uint8_t contador;
-    uint16_t promedio;
+    float promedio;
     uint16_t muestra;
     medida_t medida;
+
+    while (!ADC1_IsConversionComplete()) {
+    }
+    muestra = ADC1_ConversionResultGet();
 
     contador = 0;
     while (contador != 10) {
@@ -75,26 +84,25 @@ void conversiones(void *p_params) {
         invertirLedsMedicion();
         vTaskDelay(pdMS_TO_TICKS(250));
     }
-    promedio = promedioSamples();
-    //promedio = conversorADCTemp(promedio);
-    if (promedio > dispositivo.umbralDeTemperatura){
-        xTaskCreate(prenderLedsRojosPor2Seg, "LucesRojas", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
+    promedio = promedioSamples(samplesConversiones);
+    promedio = conversorADCTemp(promedio);
+
+    if (promedio > dispositivo.umbralDeTemperatura) {
+        xTaskCreate(prenderLedsRojosPor2Seg, "LucesRojas", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 6, NULL);
         //Enviar mensaje por SMS
     } else {
-        xTaskCreate(prenderLedsVerdesPor2Seg, "LucesVerdes", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
+        xTaskCreate(prenderLedsVerdesPor2Seg, "LucesVerdes", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 6, NULL);
     }
-    //Guardar medida
-    
+
+
     medida.IdDelRegistro = ultimaMedida;
     medida.temperaturaRegistrada = promedio;
-    if(RTCC_TimeGet(tiempoActual)){       
-     medida.tiempo = tiempoActual;       
-    }
- 
+    RTCC_TimeGet(&tiempoActual);
+
+    medida.tiempo = tiempoActual;
     mediciones[ultimaMedida] = medida;
     ultimaMedida++;
-    
-    
+
 }
 
 /* *****************************************************************************

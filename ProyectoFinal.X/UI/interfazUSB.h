@@ -15,8 +15,8 @@
  */
 /* ************************************************************************** */
 
-#ifndef _INTERFAZ_PRINCIPAL_H    /* Guard against multiple inclusion */
-#define _INTERFAZ_PRINCIPAL_H
+#ifndef _INTERFAZ_USB_H    /* Guard against multiple inclusion */
+#define _INTERFAZ_USB_H
 
 
 /* ************************************************************************** */
@@ -27,9 +27,13 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#define ASCII_TO_INT_DIFFERENCE 48
+
+bool boton2Flag;
+
 typedef struct{
-    uint32_t dispositivoID; // ID unico del dispositivo
-    uint8_t numeroDeContacto;   // Numero de contacto de forma 96123456
+    uint32_t dispositivoID;      // ID unico del dispositivo
+    uint8_t numeroDeContacto;    // Numero de contacto de forma 96123456
     uint8_t umbralDeTemperatura; // Umbral de Temperatura. 32 < umbral < 42
     bool midiendo;               // variable que indica si se esta realizando una medicion (se utiliza si se presiona el boton mientras ya se esta midiendo)
     bool inicializado;           // Indica si el Termometro ya cuenta con todos los datos necesarios para su correcto funcionamiento.   
@@ -38,8 +42,7 @@ typedef struct{
 termometro_t dispositivo; 
 
 
-void interfazPrincipal();
-
+void interfazUSB(void* params);
 #endif /* _INTERFAZ_PRINCIPAL_H */
 
 /* *****************************************************************************

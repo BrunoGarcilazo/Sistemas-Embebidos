@@ -28,19 +28,20 @@
 /* ************************************************************************** */
 /* ************************************************************************** */
 #include <stdint.h>
+#include <time.h>
 
 typedef struct{
     uint8_t IdDelRegistro;
-    uint8_t temperaturaRegistrada;
-    tm tiempo; // a confirmar
+    float temperaturaRegistrada;
+    struct tm tiempo;
 } medida_t ;
 
-medida_t mediciones[200];
+medida_t mediciones[10];
 uint8_t ultimaMedida;
 
-uint16_t samplesConversiones[10];
 
 void conversiones(void *p_params);
+void checkearBoton2(void *p_params);
 
 #endif
 

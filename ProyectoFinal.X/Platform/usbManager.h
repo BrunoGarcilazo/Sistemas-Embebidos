@@ -30,7 +30,6 @@
 /* Section: Funciones de interfaz                                             */
 /* ************************************************************************** */
 
-
 /**
  * Termina cuando se ha recibido algo.
  * Lo coloca en el array de entrada.
