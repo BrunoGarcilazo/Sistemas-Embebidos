@@ -33,6 +33,7 @@
 void buscarEntrada(uint8_t * buffer, uint8_t large) {
     int8_t numBytes; //Numero de bytes recibidos
     while (true) {
+        CDCTxService();
         if ((USBGetDeviceState() < CONFIGURED_STATE) ||
                 (USBIsDeviceSuspended() == true)) {
         } else {
@@ -49,6 +50,7 @@ void buscarEntrada(uint8_t * buffer, uint8_t large) {
 void enviarMensaje(char *mensaje) {
     bool enviado = false;
     do {
+        CDCTxService();
         if ((USBGetDeviceState() < CONFIGURED_STATE) ||
                 (USBIsDeviceSuspended() == true)) {
         } else {

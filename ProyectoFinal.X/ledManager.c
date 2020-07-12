@@ -24,7 +24,6 @@
 #include "../ProyectoFinal.X/ledManager.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "mcc_generated_files/pin_manager.h"
 
 
 /** Metodo llamado cuando se realiza una Medicion
@@ -51,15 +50,17 @@ void prenderLedsRojosPor2Seg(void *p_params) {
         coloresLeds[i] = RED;
     }
     WS2812_send(coloresLeds, 8);
-    vTaskDelay(pdMS_TO_TICKS(500));
-    for (j = 0; j < 8; j++) {
-        coloresLeds[j] = BLACK;
+    vTaskDelay(pdMS_TO_TICKS(2000));
+    for (i = 0; i < 8; i++) {
+        coloresLeds[i] = BLACK;
     }
     WS2812_send(coloresLeds, 8);
+    
+    vTaskDelete();
 }
 
 void prenderLedsVerdesPor2Seg(void *p_params) {
-    uint8_t i;
+    uint8_t i,j;
     for (i = 0; i < 8; i++) {
         coloresLeds[i] = GREEN;
     }
@@ -70,7 +71,7 @@ void prenderLedsVerdesPor2Seg(void *p_params) {
     }
     WS2812_send(coloresLeds, 8);
     
-    vTaskDelete(NULL);
+    vTaskDelete();
 }
 
 

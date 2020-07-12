@@ -60,7 +60,7 @@
         <itemPath>conversiones.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="UI" projectFiles="true">
-        <itemPath>UI/interfazUSB.h</itemPath>
+        <itemPath>UI/interfazPrincipal.h</itemPath>
       </logicalFolder>
       <itemPath>FreeRTOSConfig.h</itemPath>
       <itemPath>ledManager.h</itemPath>
