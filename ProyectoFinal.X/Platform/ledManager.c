@@ -1,30 +1,30 @@
 /* ************************************************************************** */
-/** Descriptive File Name
+/** LedManager
 
   @Company
-    Company Name
+    UCUDAL
 
   @File Name
-    filename.c
+    ledManager.c
 
   @Summary
-    Brief description of the file.
+    Metodos encargados de manejar los leds RGB
 
   @Description
-    Describe the purpose of this file.
+    Prender y Apagar leds RGB. Seleccionando colores
  */
-/* ************************************************************************** */
 
+/* ************************************************************************** */
 /* ************************************************************************** */
 /* ************************************************************************** */
 /* Section: Included Files                                                    */
 /* ************************************************************************** */
 /* ************************************************************************** */
-#include "Platform/WS2812.h"
-#include "../ProyectoFinal.X/ledManager.h"
+#include "WS2812.h"
+#include "ledManager.h"
 #include "FreeRTOS.h"
 #include "task.h"
-#include "mcc_generated_files/pin_manager.h"
+#include "../mcc_generated_files/pin_manager.h"
 
 
 /** Metodo llamado cuando se realiza una Medicion
@@ -60,16 +60,11 @@ void prenderLedsVerdesPor2Seg(void *p_params) {
     for (i = 0; i < 8; i++) {
         coloresLeds[i] = GREEN;
     }
-    WS2812_send(coloresLeds, 8);
-//    vTaskDelay(pdMS_TO_TICKS(2000));
-//    for (i = 0; i < 8; i++) {
-//        coloresLeds[i] = BLACK;
-//    }
-//    WS2812_send(coloresLeds, 8);   
+    WS2812_send(coloresLeds, 8); 
     vTaskDelete(NULL);
 }
 
-void apagarLeds(void *p_params){
+void apagarLeds(){
     
     uint8_t j;
     for (j = 0; j < 8; j++) {

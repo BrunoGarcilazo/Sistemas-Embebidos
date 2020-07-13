@@ -56,7 +56,7 @@
 #include "mcc_generated_files/pin_manager.h"
 #include "System/scheludeManager.h"
 #include "System/menu.h"
-#include "conversiones.h"
+#include "System/conversiones.h"
 #include "UI/interfazUSB.h"
 
 
@@ -79,18 +79,13 @@ int main(void) {
     boton2Flag = false;
     
     
-    //xTaskCreate(SIM808_taskCheck, "modemTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
+    xTaskCreate(SIM808_taskCheck, "modemTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL);
     
-    //xTaskCreate(SIM808_initModule, "modemIni", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, &modemInitHandle);
+    xTaskCreate(SIM808_initModule, "modemIni", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, &modemInitHandle);
     
     //xTaskCreate(mantenimientoUSB, "mantenimientoUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 4, NULL);
     
-    
-    //xTaskCreate(checkearBoton2, "PollingDeBoton2", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
-    
-    xTaskCreate(interfazUSB, "interfazUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 4, NULL);
-    
-    
+    xTaskCreate(interfazUSB, "interfazUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 7, NULL);
     
     /* Finally start the scheduler. */
     vTaskStartScheduler();

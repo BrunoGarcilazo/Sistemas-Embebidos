@@ -1,17 +1,17 @@
 /* ************************************************************************** */
-/** Descriptive File Name
+/** LedManager
 
   @Company
-    Company Name
+    UCUDAL
 
   @File Name
-    filename.h
+    ledManager.c
 
   @Summary
-    Brief description of the file.
+    Metodos encargados de manejar los leds RGB
 
   @Description
-    Describe the purpose of this file.
+    Prender y Apagar leds RGB. Seleccionando colores
  */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@
 /* ************************************************************************** */
 /* ************************************************************************** */
 
-#include "Platform/WS2812.h"
+#include "WS2812.h"
 
 /* This section lists the other files that are included in this file.
  */
@@ -37,6 +37,8 @@ void prenderLedsRojosPor2Seg(void *p_params);
 void prenderLedsVerdesPor2Seg(void *p_params);
 
 void invertirLedsMedicion();
+
+void apagarLeds();
 
 ws2812_t coloresLeds[8];
 

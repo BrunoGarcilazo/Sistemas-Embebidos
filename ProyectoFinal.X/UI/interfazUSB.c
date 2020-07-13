@@ -28,7 +28,7 @@
 #include  <stdint.h>
 #include <stdio.h>
 #include <string.h>
-#include "../conversiones.h"
+#include "../System/conversiones.h"
 
 void interfazUSB(void* params) {
     uint8_t buffer[4];
@@ -50,8 +50,7 @@ void interfazUSB(void* params) {
                 vTaskDelete(conversionHandler);
                 dispositivo.midiendo = false;
             } else {
-                xTaskCreate(conversiones, "Conversiones", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, &conversionHandler);
-                //dispositivo.midiendo = false;
+                xTaskCreate(conversiones, "Conversiones", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 5, &conversionHandler);
             }
             boton2Flag = false;
         } else {
@@ -73,8 +72,7 @@ bool pedirID() { // sin terminar
 }
 
 bool pedirNumeroDeContacto() { // sin terminar
-    uint8_t entrada[8];
-
+    uint8_t entrada[12];
     memset(entrada, 0, sizeof (entrada)); //Se limpia la entrada
     buscarEntrada(entrada, sizeof (entrada));
 
@@ -84,7 +82,7 @@ bool pedirNumeroDeContacto() { // sin terminar
         k = 10 * k + (entrada[i] - ASCII_TO_INT_DIFFERENCE);
     }
 
-    dispositivo.numeroDeContacto = k;
+    //dispositivo.numeroDeContacto = k;
 }
 
 bool pedirTemperatura() {

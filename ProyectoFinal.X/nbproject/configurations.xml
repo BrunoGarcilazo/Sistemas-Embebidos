@@ -53,17 +53,17 @@
         <itemPath>Platform/usbManager.h</itemPath>
         <itemPath>Platform/rtcManager.h</itemPath>
         <itemPath>Platform/WS2812.h</itemPath>
+        <itemPath>Platform/ledManager.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="System" projectFiles="true">
         <itemPath>System/scheludeManager.h</itemPath>
         <itemPath>System/menu.h</itemPath>
-        <itemPath>conversiones.h</itemPath>
+        <itemPath>System/conversiones.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="UI" projectFiles="true">
         <itemPath>UI/interfazUSB.h</itemPath>
       </logicalFolder>
       <itemPath>FreeRTOSConfig.h</itemPath>
-      <itemPath>ledManager.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -116,12 +116,12 @@
         <itemPath>Platform/usbManager.c</itemPath>
         <itemPath>Platform/WS2812.c</itemPath>
         <itemPath>Platform/rtcManager.c</itemPath>
-        <itemPath>ledManager.c</itemPath>
+        <itemPath>Platform/ledManager.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="System" projectFiles="true">
         <itemPath>System/scheludeManager.c</itemPath>
         <itemPath>System/menu.c</itemPath>
-        <itemPath>conversiones.c</itemPath>
+        <itemPath>System/conversiones.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="UI" projectFiles="true">
         <itemPath>UI/interfazUSB.c</itemPath>

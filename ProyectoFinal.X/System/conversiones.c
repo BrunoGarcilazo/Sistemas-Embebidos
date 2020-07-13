@@ -20,18 +20,24 @@
 /* Section: Included Files                                                    */
 /* ************************************************************************** */
 /* ************************************************************************** */
+
+#include "FreeRTOS.h"
+#include "task.h"
+
 #include <stdbool.h>
 #include <stdint.h>
 #include <time.h>
-#include "FreeRTOS.h"
-#include "task.h"
 #include <math.h>
 
-#include "../ProyectoFinal.X/mcc_generated_files/usb/usb_device_cdc.h"
-#include "ledManager.h"
+#include "../mcc_generated_files/usb/usb_device_cdc.h"
+#include "../mcc_generated_files/pin_manager.h"
+
+#include "../Platform/ledManager.h"
 #include "conversiones.h"
-#include "UI/interfazUSB.h"
-#include "mcc_generated_files/pin_manager.h"
+#include "../UI/interfazUSB.h"
+#include "scheludeManager.h"
+#include "../Communications/GPS.h"
+#include "../Communications/SIM808.h"
 
 /**
  * Hace el Promedio de todos los Samples obtenidos del ADC
@@ -62,9 +68,35 @@ uint16_t conversorADCTemp(float promedio) {
     return temperatura;
 }
 
+void alertarPersona(void *p_params) {
+    struct tm fechaYHora;
+    uint8_t trama[64];
+    bool resultado;
+    GPSPosition_t posicion;
+    uint8_t mensaje[64];
+    mensaje[0] = 'h' + ASCCI_TO_INT_DIFFERENCE;
+    mensaje[1] = 'o' + ASCCI_TO_INT_DIFFERENCE;
+    mensaje[2] = 'l' + ASCCI_TO_INT_DIFFERENCE;
+    mensaje[3] = 'a' + ASCCI_TO_INT_DIFFERENCE;
+
+    SIM808_getNMEA(trama);
+    resultado = SIM808_validateNMEAFrame(trama);
+    while (!resultado) {
+        SIM808_getNMEA(trama);
+    }
+    GPS_getUTC(&fechaYHora, trama);
+    GPS_getPosition(&posicion, trama);
+
+    GPS_generateGoogleMaps(mensaje,posicion);
+    
+    
+    SIM808_sendSMS("\"092020400\"", mensaje);
+}
+
+
 void conversiones(void *p_params) {
     dispositivo.midiendo = true;
-    
+
     uint16_t samplesConversiones[10];
     struct tm tiempoActual;
     uint8_t contador;
@@ -90,15 +122,10 @@ void conversiones(void *p_params) {
     promedio = conversorADCTemp(promedio);
     if (promedio > dispositivo.umbralDeTemperatura) {
         xTaskCreate(prenderLedsRojosPor2Seg, "LucesRojas", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 6, NULL);
-        //Enviar mensaje por SMS
+        xTaskCreate(alertarPersona,"MandarMensaje",configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 4, NULL);
     } else {
         xTaskCreate(prenderLedsVerdesPor2Seg, "LucesVerdes", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 6, NULL);
     }
-    
-    vTaskDelay(pdMS_TO_TICKS(2000));
-    apagarLeds();
-    
-
 
     medida.IdDelRegistro = ultimaMedida;
     medida.temperaturaRegistrada = promedio;
@@ -107,12 +134,15 @@ void conversiones(void *p_params) {
     medida.tiempo = tiempoActual;
     mediciones[ultimaMedida] = medida;
     ultimaMedida++;
-    
-    dispositivo.midiendo = false;
-    
-    vTaskDelete(NULL);
 
+    dispositivo.midiendo = false;
+
+    vTaskDelay(pdMS_TO_TICKS(2000));
+    apagarLeds();
+
+    vTaskDelete(NULL);
 }
+
 
 /* *****************************************************************************
  End of File
