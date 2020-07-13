@@ -88,9 +88,9 @@ void ADC1_Initialize (void)
 
    AD1CON2 = 0x400;
 
-    // SAMC 31; EXTSAM disabled; ADRC PBCLK; ADCS 5499999; 
+    // SAMC 31; EXTSAM disabled; ADRC PBCLK; ADCS 255; 
 
-   AD1CON3 = 0x1F5F;
+   AD1CON3 = 0x1FFF;
 
     // CH0SA AN0; CH0NA AVSS; 
 
