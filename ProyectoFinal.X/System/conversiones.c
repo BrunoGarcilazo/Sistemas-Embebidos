@@ -28,6 +28,7 @@
 #include <stdint.h>
 #include <time.h>
 #include <math.h>
+#include <string.h>
 
 #include "../mcc_generated_files/usb/usb_device_cdc.h"
 #include "../mcc_generated_files/pin_manager.h"
@@ -74,23 +75,20 @@ void alertarPersona(void *p_params) {
     bool resultado;
     GPSPosition_t posicion;
     uint8_t mensaje[64];
-    mensaje[0] = 'h' + ASCCI_TO_INT_DIFFERENCE;
-    mensaje[1] = 'o' + ASCCI_TO_INT_DIFFERENCE;
-    mensaje[2] = 'l' + ASCCI_TO_INT_DIFFERENCE;
-    mensaje[3] = 'a' + ASCCI_TO_INT_DIFFERENCE;
+    
+    strcpy(mensaje,"hola Bruno Humberto, tenes fiebre");    
 
     SIM808_getNMEA(trama);
     resultado = SIM808_validateNMEAFrame(trama);
-    while (!resultado) {
+    while (!resultado){
         SIM808_getNMEA(trama);
+        resultado = SIM808_validateNMEAFrame(trama);
     }
-    GPS_getUTC(&fechaYHora, trama);
     GPS_getPosition(&posicion, trama);
-
+    GPS_getUTC(&fechaYHora, trama);
     GPS_generateGoogleMaps(mensaje,posicion);
     
-    
-    SIM808_sendSMS("\"092020400\"", mensaje);
+    SIM808_sendSMS(dispositivo.numeroDeContacto, mensaje);
 }
 
 

@@ -185,6 +185,7 @@ static void SIM808_initGSM( void* p_param ){
                         if( (resultExchange = SIM808_exchangeCmd( ATREQ_NTWRK_REG_CHK, ATRES_NTWRK_OK, SIM808_UART_TIMEOUT_ms, 3*SIM808_MAX_RETRIES ))==true ){
                             if( (resultExchange = SIM808_exchangeCmd( ATREQ_SMS_FORMAT, ATRES_OK, SIM808_UART_TIMEOUT_ms, SIM808_MAX_RETRIES ))==true ){
                                 // Estoy registrado en la red y ya puedo enviar mensajes
+                                LEDA_SetHigh();
                                 xSemaphoreGive( c_semIsModuleOnAndReady ); /** Libero el semáforo para que otro pueda hablarle al módulo */
                                 xSemaphoreGive( c_semGSMIsReady ); /** Habilito el uso de GPS */
                                 vTaskDelete( initGSMHandle );
@@ -232,6 +233,7 @@ static void SIM808_initGPS( void* p_param ){
             if( (resultExchange = SIM808_exchangeCmd( ATREQ_GPS_PWR_ON, ATRES_OK, SIM808_UART_TIMEOUT_ms, SIM808_MAX_RETRIES ))==true ){
                 if( (resultExchange = SIM808_exchangeCmd( ATREQ_GPS_SEQ_RMC, ATRES_OK, SIM808_UART_TIMEOUT_ms, SIM808_MAX_RETRIES ))==true ){
                     // Se prendió y seteó la trama RMC
+                    LEDB_SetHigh();
                     xSemaphoreGive( c_semIsModuleOnAndReady ); /** Libero el semáforo para que otro pueda hablarle al módulo */
                     xSemaphoreGive( c_semGPSIsReady ); /** Habilito el uso de GPS */
                     vTaskDelete( initGPSHandle );
@@ -306,8 +308,8 @@ void SIM808_initModule( void *p_param ){
             if( (resultExchange = SIM808_exchangeCmd( ATREQ_AT, ATRES_OK, SIM808_UART_TIMEOUT_ms, SIM808_MAX_RETRIES ))==true ){
                 if( (resultExchange = SIM808_exchangeCmd( ATREQ_ECHO_OFF, ATRES_OK, SIM808_UART_TIMEOUT_ms, SIM808_MAX_RETRIES ))==true ){
                     xSemaphoreGive( c_semIsModuleOnAndReady );
-                    xTaskCreate( SIM808_initGSM, "iniGSM", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+3, &initGSMHandle );
-                    xTaskCreate( SIM808_initGPS, "iniGPS", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+2, &initGPSHandle );
+                    xTaskCreate( SIM808_initGSM, "iniGSM", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+12, &initGSMHandle );
+                    xTaskCreate( SIM808_initGPS, "iniGPS", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+13, &initGPSHandle );
                     vTaskDelete( modemInitHandle );
                 }
                 else{

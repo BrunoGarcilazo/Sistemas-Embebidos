@@ -52,6 +52,7 @@
 #include "Communications/SIM808.h"
 #include "task.h"
 #include <stdbool.h>
+#include <string.h>
 #include "mcc_generated_files/system.h"
 #include "mcc_generated_files/pin_manager.h"
 #include "System/scheludeManager.h"
@@ -75,13 +76,15 @@ int main(void) {
     SYSTEM_Initialize();
     dispositivo.inicializado = false;
     dispositivo.umbralDeTemperatura = 40.0;
+   
+    strcpy(dispositivo.numeroDeContacto,"\"099343156\"");
+   
     ultimaMedida = 0;
     boton2Flag = false;
     
+    xTaskCreate(SIM808_taskCheck, "modemTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 12, NULL);    
     
-    xTaskCreate(SIM808_taskCheck, "modemTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, NULL);
-    
-    xTaskCreate(SIM808_initModule, "modemIni", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, &modemInitHandle);
+    xTaskCreate(SIM808_initModule, "modemIni", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 11, &modemInitHandle);
     
     //xTaskCreate(mantenimientoUSB, "mantenimientoUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 4, NULL);
     
