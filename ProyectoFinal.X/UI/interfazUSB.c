@@ -60,16 +60,22 @@ void interfazUSB(void* params) {
 }
 
 bool pedirID() { // sin terminar
-    uint8_t entrada[32]; // Array donde se va a recibir la entrada
+    char entrada[32]; // Array donde se va a recibir la entrada
     memset(entrada, 0, sizeof (entrada)); //Se limpia la entrada
     buscarEntrada(entrada, sizeof (entrada));
     uint32_t k;
     int i;
     for (i = 0; i < 32; i++) { // Metodo de conversion de Array de char a int : shorturl.at/acoAL
+        if((entrada[i] - ASCII_TO_INT_DIFFERENCE) >= 10 || (entrada[i] - ASCII_TO_INT_DIFFERENCE) < 0){ // Solo puede ser numerico
+            return false;
+        }       
         k = 10 * k + (entrada[i] - ASCII_TO_INT_DIFFERENCE);
     }
     dispositivo.dispositivoID = k;
+    return true;
 }
+
+
 /**
  * 
  * @return numero dado es valido o no
@@ -121,16 +127,30 @@ bool pedirNumeroDeContacto(){ // sin terminar
 }
 
 
-
+bool validarTemperatura(uint8_t numero){
+    if(numero <= 42 && numero >= 32){
+        return true
+    }else{
+        return false;
+    }
+}
 /**
  * 
  */
 bool pedirTemperatura() {
+    bool verificado;
     uint8_t entrada[2];
     uint8_t temperatura;
     buscarEntrada(entrada, sizeof (entrada));
     temperatura = ((10 * entrada[0] - ASCII_TO_INT_DIFFERENCE) + (entrada[1] - ASCII_TO_INT_DIFFERENCE));
-    dispositivo.umbralDeTemperatura = temperatura;
+    verificado = validarTemperatura(temperatura);
+    if(verificado){
+        dispositivo.umbralDeTemperatura = temperatura;
+        return true;
+    }else{
+        return false;
+    }
+    
 }
 
 
