@@ -70,21 +70,61 @@ bool pedirID() { // sin terminar
     }
     dispositivo.dispositivoID = k;
 }
-
-bool pedirNumeroDeContacto() { // sin terminar
-    uint8_t entrada[12];
-    memset(entrada, 0, sizeof (entrada)); //Se limpia la entrada
-    buscarEntrada(entrada, sizeof (entrada));
-
-    uint8_t i, n;
-    uint8_t k;
-    for (i = 0; i < n; i++) {
-        k = 10 * k + (entrada[i] - ASCII_TO_INT_DIFFERENCE);
+/**
+ * 
+ * @return numero dado es valido o no
+ */
+bool validarTelefono(char numero[9]){
+    int i;
+    if((numero[0] - ASCII_TO_INT_DIFFERENCE) == 0){
+        if((numero[1] - ASCII_TO_INT_DIFFERENCE) == 9){
+            for(i=0;i<9;i++){
+                if((numero[i] - ASCII_TO_INT_DIFFERENCE) >= 10 || (numero[i] - 48) < 0){
+                    return false; // No es un numero
+                }
+            }
+             // Valide todos los numeros
+            return true;         
+        }else{
+            return false; // No es de la manera 09XXXXXX
+        }
+    }else{
+        return false; // No comienza con 0
     }
-
-    //dispositivo.numeroDeContacto = k;
+    
 }
 
+bool pedirNumeroDeContacto(){ // sin terminar
+    int i,k;
+    char entrada[9];
+    uint8_t numeroSolo[9];
+    uint8_t numeroFormatoSMS[11];
+    
+    memset(entrada, 0, (sizeof(entrada)/entrada[0])); //Se limpia la entrada
+    buscarEntrada(entrada, (sizeof(entrada)/entrada[0]));
+    
+    if(validarTelefono(entrada)){
+        // Convierto la entrada en un array de char con el formato \"092020400\"
+        numeroFormatoSMS[0] = '"';
+        for(i=0;i<sizeof(entrada);i++){
+            numeroFormatoSMS[i+1] = entrada[i];
+        }
+        numeroFormatoSMS[10] = '"';
+        // Ahora numeroFormatoSMS = "096123456"
+        for(k=0;k<sizeof(entrada);k++){
+            dispositivo.numeroDeContacto[k] = numeroFormatoSMS[k];
+        }
+        return true;
+    }else{
+        return false;
+    }
+}
+
+
+
+/**
+ * 
+ */
 bool pedirTemperatura() {
     uint8_t entrada[2];
     uint8_t temperatura;
@@ -92,6 +132,8 @@ bool pedirTemperatura() {
     temperatura = ((10 * entrada[0] - ASCII_TO_INT_DIFFERENCE) + (entrada[1] - ASCII_TO_INT_DIFFERENCE));
     dispositivo.umbralDeTemperatura = temperatura;
 }
+
+
 
 
 /* *****************************************************************************
