@@ -1,7 +1,4 @@
 /* ************************************************************************** */
-
-#include "interfazUSB.h"
-
 /** Descriptive File Name
 
   @Company
@@ -29,6 +26,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "../System/conversiones.h"
+#include "interfazUSB.h"
 
 void interfazUSB(void* params) {
     uint8_t buffer[4];
