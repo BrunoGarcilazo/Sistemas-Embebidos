@@ -44,7 +44,8 @@ void menu() {
     uint8_t buffer[4];
     uint8_t numBytes;
     struct tm tiempoASetear;
-
+    bool telefonoOk;
+    telefonoOk = false;
     status = EN_MENU;
 
 
@@ -96,7 +97,23 @@ void menu() {
                                 status = EN_MENU;
                                 break;
                             case ('e')://Telefono para enviar mensajes
-                                pedirNumeroDeContacto();
+                                while(!telefonoOk){ // HAY QUE PROBARLO
+                                    enviarMensaje("Ingrese numero de telefono celular. Formato: 096123456");
+                                    telefonoOk = pedirNumeroDeContacto();
+                                }               
+                                /** Otra forma
+                                 enviarMensaje("Ingrese numero de telefono celular. Formato: 096123456");
+                                 telefonoOk = pedirNumeroDeContacto();
+                                 if(!telefonoOk){
+                                   buffer[0] == 'e';
+                                   status = EN_ESPERA; 
+                                 }else{
+                                   status = EN_MENU
+                                 
+                                 }
+                                 * 
+                                 
+                                 */
                                 status = EN_MENU;
                                 break;
                             case ('f')://Imprimir lista de medidas 
