@@ -44,8 +44,14 @@ void menu() {
     uint8_t buffer[4];
     uint8_t numBytes;
     struct tm tiempoASetear;
+    
+    bool temperaturaOk;
+    temperaturaOk = false;
     bool telefonoOk;
     telefonoOk = false;
+    bool idOk;
+    idOk = false;
+
     status = EN_MENU;
 
 
@@ -89,11 +95,17 @@ void menu() {
                                 status = EN_MENU;
                                 break;
                             case ('c'): //Poner Id del dispositivo, numero unico de 32 bits.
-                                pedirID();
+                                while(!idOk){
+                                    enviarMensaje("Ingrese ID unico del Dispositivo. Numero entero de 32 bits");
+                                    idOk = pedirID();
+                                }
                                 status = EN_MENU;
                                 break;
                             case ('d'): //Umbral de temperatura
-                                pedirTemperatura();
+                                while(!temperaturaOk){
+                                    enviarMensaje("Ingrese umbral de temperatura. Entre 32C y 42C");
+                                    temperturaOk = pedirTemperatura();
+                                }                               
                                 status = EN_MENU;
                                 break;
                             case ('e')://Telefono para enviar mensajes
