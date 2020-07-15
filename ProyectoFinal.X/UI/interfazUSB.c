@@ -120,11 +120,22 @@ bool pedirNumeroDeContacto(){ // sin terminar
     }
 }
 
-bool validarTemperatura(uint8_t numero){
-    if(numero <= 42 && numero >= 32){
-        return true;
-    }else{
+bool validarTemperatura(char entrada[4]){
+    
+    uint8_t parteEntera;
+    parteEntera = ((10 * entrada[0] - ASCII_TO_INT_DIFFERENCE) + (entrada[1] - ASCII_TO_INT_DIFFERENCE));
+    if(parteEntera > 42 || parteEntera < 32){
         return false;
+    }else{
+        if(entrada[2]!='.'){
+            return false;
+        }else{
+            if((entrada[3] - ASCII_TO_INT_DIFFERENCE) < 0 || (entrada[3] - ASCII_TO_INT_DIFFERENCE) > 9){
+                return false;
+            }else{
+                return true;
+            } 
+        }
     }
 }
 /**
@@ -132,13 +143,12 @@ bool validarTemperatura(uint8_t numero){
  */
 bool pedirTemperatura() {
     bool verificado;
-    uint8_t entrada[2];
-    uint8_t temperatura;
+    uint8_t entrada[4];
+    float temperatura;
     buscarEntrada(entrada, sizeof (entrada));
-    temperatura = ((10 * entrada[0] - ASCII_TO_INT_DIFFERENCE) + (entrada[1] - ASCII_TO_INT_DIFFERENCE));
-    verificado = validarTemperatura(temperatura);
+    verificado = validarTemperatura(entrada);
     if(verificado){
-        dispositivo.umbralDeTemperatura = temperatura;
+        dispositivo.umbralDeTemperatura = atof(entrada);
         return true;
     }else{
         return false;
