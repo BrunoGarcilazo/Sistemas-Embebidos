@@ -19,8 +19,6 @@
 #ifndef _MENU_H    /* Guard against multiple inclusion */
 #define _MENU_H
 
-/*Menu*/
-#define MENU "\r\nBienvenido\r\nEnvie la tecla presente a la izquierda de la funcion\r\na - Fijar el reloj RTC\r\nb - Consultar hora del RTC\r\nc - Setear ID\r\nd - Set umbral de temperatura\r\ne - Set telefono de contacto\r\nf - Imprimir medidas\r\ng - Borrar registros\r\nh - Terminar\r\n\0"
 
 /*Constantes para pedir datos*/
 #define PEDIDO_DE_ID "Ingrese ID unico del Dispositivo. Numero entero de 32 bits\0"

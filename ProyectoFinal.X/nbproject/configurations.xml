@@ -56,7 +56,6 @@
         <itemPath>Platform/ledManager.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="System" projectFiles="true">
-        <itemPath>System/scheludeManager.h</itemPath>
         <itemPath>System/menu.h</itemPath>
         <itemPath>System/conversiones.h</itemPath>
       </logicalFolder>
@@ -120,7 +119,6 @@
         <itemPath>Platform/ledManager.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="System" projectFiles="true">
-        <itemPath>System/scheludeManager.c</itemPath>
         <itemPath>System/menu.c</itemPath>
         <itemPath>System/conversiones.c</itemPath>
       </logicalFolder>

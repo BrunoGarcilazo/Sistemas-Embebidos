@@ -30,11 +30,12 @@
 #define FORMATO_DE_HORA "\r\nIngrese hora en formato hh:mm:ss\r\n\0"
 #define FORMATO_DE_FECHA "\r\nIngrese fecha en formato dd/mm/aaaa\r\n\0"
 
+/*Tiempo que usa el sistema*/
+static struct tm tiempoDelSistema;
 
 /* ************************************************************************** */
 /* Seccion: Funciones de interfaz                                             */
 /* ************************************************************************** */
-
 
 /**
  * Esta funcion pide al usuario que ingrese la fecha que sera usada para usar el RTC
@@ -59,6 +60,11 @@ void pedirHora(struct tm *tiempo);
  * @param tiempo struct donde se guardan los datos de fecha
  */
 void pedirFecha(struct tm *tiempo);
+
+/**
+ * Funcion que envia la hora actual del Reloj RTC por USB
+ */
+void mostrarHora();
 
 #endif /* _RTC_MANAGER_H */
 

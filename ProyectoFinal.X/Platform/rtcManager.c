@@ -31,8 +31,8 @@
 
 #include "rtcManager.h"
 #include "usbManager.h"
+#include "../UI/interfazUSB.h"
 #include "../System/menu.h"
-#include "../System/scheludeManager.h"
 
 /* ************************************************************************** */
 /* ************************************************************************** */
@@ -55,9 +55,9 @@ void pedirHora(struct tm* tiempo) {
         memset(entrada,0,sizeof(entrada)); //Se limpia la entrada
         buscarEntrada(entrada, sizeof(entrada)); //Este metodo pone la entrada USB en el array pasado con el largo dado.
         //Se pasan los caracteres a numeros y se calcula el valor numerico de hora, minutos y segundos
-        segundos = ((entrada[7]) - ASCCI_TO_INT_DIFFERENCE) + (10 * (entrada[6] - ASCCI_TO_INT_DIFFERENCE)); 
-        minutos = ((entrada[4]) - ASCCI_TO_INT_DIFFERENCE) + (10 * (entrada[3] - ASCCI_TO_INT_DIFFERENCE));
-        horas = ((entrada[1]) - ASCCI_TO_INT_DIFFERENCE) + (10 * (entrada[0] - ASCCI_TO_INT_DIFFERENCE));
+        segundos = ((entrada[7]) - ASCII_TO_INT_DIFFERENCE) + (10 * (entrada[6] - ASCII_TO_INT_DIFFERENCE)); 
+        minutos = ((entrada[4]) - ASCII_TO_INT_DIFFERENCE) + (10 * (entrada[3] - ASCII_TO_INT_DIFFERENCE));
+        horas = ((entrada[1]) - ASCII_TO_INT_DIFFERENCE) + (10 * (entrada[0] - ASCII_TO_INT_DIFFERENCE));
     } while ((horas > 23 || horas < 0 || minutos > 59 || minutos < 0 || segundos < 0 || segundos > 59)
             || entrada[2] != ':' || entrada[5] != ':'); //Mientras que los minutos, horas y segundos no esten en rango
     tiempo->tm_hour = horas;
@@ -74,13 +74,21 @@ void pedirFecha(struct tm* tiempo) {
     do {
         memset(fecha, 0, sizeof (fecha)); //Se limpia la entrada
         buscarEntrada(fecha, sizeof (fecha)); //Se busca una nueva entrada
-        dia = (fecha[1] - ASCCI_TO_INT_DIFFERENCE) + 10 * (fecha[0] - ASCCI_TO_INT_DIFFERENCE);
-        mes = (fecha[4] - ASCCI_TO_INT_DIFFERENCE) + 10 * (fecha[3] - ASCCI_TO_INT_DIFFERENCE);
-        year = ((fecha[6] - ASCCI_TO_INT_DIFFERENCE) * 1000) + (100 * (fecha[7] - ASCCI_TO_INT_DIFFERENCE)) + (10 * (fecha[8] - ASCCI_TO_INT_DIFFERENCE)) + (fecha[9] - ASCCI_TO_INT_DIFFERENCE);
+        dia = (fecha[1] - ASCII_TO_INT_DIFFERENCE) + 10 * (fecha[0] - ASCII_TO_INT_DIFFERENCE);
+        mes = (fecha[4] - ASCII_TO_INT_DIFFERENCE) + 10 * (fecha[3] - ASCII_TO_INT_DIFFERENCE);
+        year = ((fecha[6] - ASCII_TO_INT_DIFFERENCE) * 1000) + (100 * (fecha[7] - ASCII_TO_INT_DIFFERENCE)) + (10 * (fecha[8] - ASCII_TO_INT_DIFFERENCE)) 
+                + (fecha[9] - ASCII_TO_INT_DIFFERENCE);
     } while ((dia > 31 || dia < 1 || mes < 1 || mes > 31 || year < 1970) || fecha[2] != '/' || fecha[5] != '/');
     tiempo->tm_year = year - 1900;
     tiempo->tm_mon = mes - 1;
     tiempo->tm_mday = dia;
+}
+
+void mostrarHora() {
+    //Muestra la hora del sistema.
+    uint8_t hora[17];
+    strftime(hora, sizeof(hora)/sizeof(hora[0]), "%d/%m/%Y-%H:%M", &tiempoDelSistema);
+    enviarMensaje(hora);
 }
 
 /* *****************************************************************************

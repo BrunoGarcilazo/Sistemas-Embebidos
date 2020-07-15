@@ -26,6 +26,7 @@
 #include "../System/conversiones.h"
 #include "interfazUSB.h"
 #include "interfazConversiones.h"
+#include "../Platform/rtcManager.h"
 
 
 void interfazUSB(void* params) {
@@ -33,7 +34,6 @@ void interfazUSB(void* params) {
     uint16_t numBytes;
     while (1) {
         if (USBUSARTIsTxTrfReady() & (USBGetDeviceState() >= CONFIGURED_STATE) && !USBIsDeviceSuspended()) {
-            CDCTxService();
             numBytes = getsUSBUSART(buffer, strlen (buffer));
             if (numBytes > 0) {
                 if (!dispositivo.inicializado){
@@ -50,8 +50,9 @@ void mantenimientoUSB(void * p_param) {
         if ((USBGetDeviceState() >= CONFIGURED_STATE) && !USBIsDeviceSuspended()) {
             CDCTxService();
         }
-        vTaskDelay(pdMS_TO_TICKS(5));
+        vTaskDelay(pdMS_TO_TICKS(10));
     }
+    
 }
 
 bool pedirID() { // sin terminar

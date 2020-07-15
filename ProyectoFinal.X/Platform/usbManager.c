@@ -47,14 +47,14 @@ void buscarEntrada(uint8_t * buffer, uint8_t large) {
     }
 }
 
-void enviarMensaje(char *mensaje) {
+void enviarMensaje(uint8_t *mensaje) {
     bool enviado = false;
     do {
         if ((USBGetDeviceState() < CONFIGURED_STATE) ||
                 (USBIsDeviceSuspended() == true)) {
         } else {
             if (USBUSARTIsTxTrfReady()) {
-                putsUSBUSART(mensaje); //Si pudo enviar el mensaje devuelve 
+                putUSBUSART(mensaje,strlen(mensaje)); //Si pudo enviar el mensaje devuelve 
                 enviado = true;
             }
         }

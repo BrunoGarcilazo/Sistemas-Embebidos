@@ -38,7 +38,6 @@
 #include "menu.h"
 #include "../Platform/usbManager.h"
 #include "../Platform/rtcManager.h"
-#include "scheludeManager.h"
 #include "../UI/interfazUSB.h"
 
 // *****************************************************************************
@@ -78,7 +77,11 @@ void menu() {
         if (USBUSARTIsTxTrfReady()) {
             switch (status) {
                 case(EN_MENU):
-                    enviarMensaje(MENU); //Si se pudo enviar el menu 
+                    enviarMensaje("\r\nBienvenido\r\nEnvie la tecla presente a la izquierda de la funcion\r\n"); 
+                    enviarMensaje("a - Fijar el reloj RTC\r\nb - Consultar hora del RTC\r\n"); 
+                    enviarMensaje("c - Set ID\r\nd - Set umbral de temperatura\r\n");  
+                    enviarMensaje("e - Set telefono de contacto\r\nf - Imprimir medidas\r\n");  
+                    enviarMensaje("g - Borrar registros\r\nh - Terminar\r\n");  
                     status = EN_ESPERA; //Se espera un input
                     break;
                 case(EN_ESPERA):
