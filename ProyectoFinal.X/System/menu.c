@@ -20,18 +20,26 @@
 /* Section: Archivos incluidos                                                */
 /* ************************************************************************** */
 /* ************************************************************************** */
-#include <stdbool.h>
-#include <stdint.h>
-#include <time.h>
+
+//Includes de FreeRtos
 #include "FreeRTOS.h"
 #include "task.h"
 
+//Librerias
+#include <stdbool.h>
+#include <stdint.h>
+#include <time.h>
+#include <string.h>
 
-#include "menu.h"
+//MCC
 #include "../mcc_generated_files/usb/usb_device_cdc.h"
+
+//Archivos del programa
+#include "menu.h"
 #include "../Platform/usbManager.h"
 #include "../Platform/rtcManager.h"
 #include "scheludeManager.h"
+#include "../UI/interfazUSB.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -44,7 +52,7 @@ void menu() {
     uint8_t buffer[4];
     uint8_t numBytes;
     struct tm tiempoASetear;
-    
+
     bool temperaturaOk;
     temperaturaOk = false;
     bool telefonoOk;
@@ -70,7 +78,7 @@ void menu() {
         if (USBUSARTIsTxTrfReady()) {
             switch (status) {
                 case(EN_MENU):
-                    putsUSBUSART(MENU); //Si se pudo enviar el menu 
+                    enviarMensaje(MENU); //Si se pudo enviar el menu 
                     status = EN_ESPERA; //Se espera un input
                     break;
                 case(EN_ESPERA):
@@ -95,24 +103,24 @@ void menu() {
                                 status = EN_MENU;
                                 break;
                             case ('c'): //Poner Id del dispositivo, numero unico de 32 bits.
-                                while(!idOk){
-                                    enviarMensaje("Ingrese ID unico del Dispositivo. Numero entero de 32 bits");
+                                while (!idOk) {
+                                    enviarMensaje(PEDIDO_DE_ID);
                                     idOk = pedirID();
                                 }
                                 status = EN_MENU;
                                 break;
                             case ('d'): //Umbral de temperatura
-                                while(!temperaturaOk){
-                                    enviarMensaje("Ingrese umbral de temperatura. Entre 32C y 42C");
-                                    temperturaOk = pedirTemperatura();
-                                }                               
+                                while (!temperaturaOk) {
+                                    enviarMensaje(PEDIDO_DE_UMBRAL);
+                                    temperaturaOk = pedirTemperatura();
+                                }
                                 status = EN_MENU;
                                 break;
                             case ('e')://Telefono para enviar mensajes
-                                while(!telefonoOk){ // HAY QUE PROBARLO
-                                    enviarMensaje("Ingrese numero de telefono celular. Formato: 096123456");
+                                while (!telefonoOk) { // HAY QUE PROBARLO
+                                    enviarMensaje(FORMATO_DE_TELEFONO);
                                     telefonoOk = pedirNumeroDeContacto();
-                                }               
+                                }
                                 /** Otra forma
                                  enviarMensaje("Ingrese numero de telefono celular. Formato: 096123456");
                                  telefonoOk = pedirNumeroDeContacto();

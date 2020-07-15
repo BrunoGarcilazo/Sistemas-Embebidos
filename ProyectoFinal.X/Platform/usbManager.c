@@ -26,6 +26,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 
 /*MCC Includes*/
 #include "../mcc_generated_files/usb/usb_device_cdc.h" 

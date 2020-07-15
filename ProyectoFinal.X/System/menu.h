@@ -20,14 +20,15 @@
 #define _MENU_H
 
 /*Menu*/
-#define MENU "\r\nBienvenido\r\nMenu\r\nPara seleccionar una opcion envie la tecla presente a la izquierda de la funcion\r\nNota: 'a','c','d' y 'e' son criticas para el funcionamiento del sistema\r\na - Fijar hora del reloj RTC\r\nb - Consultar hora del RTC\r\nc - Agregar evento\r\nd - Quitar evento\r\ne - Consultar lista de eventos\r\n\0"
-
+#define MENU "\r\nBienvenido\r\nMenu\r\nPara seleccionar una opcion envie la tecla presente a la izquierda de la funcion\r\na - Fijar el reloj RTC\r\nb - Consultar hora del RTC\r\nc - Setear ID\r\nd - Setear umbral de temperatura\r\ne - Setear telefono de contacto\r\nf - Imprimir medidas\r\n g -  \r\n h - Borrar registros\r\n i - Terminar conexion\r\n\0"
+#define PEDIDO_DE_ID "Ingrese ID unico del Dispositivo. Numero entero de 32 bits"
+#define PEDIDO_DE_UMBRAL "Ingrese umbral de temperatura. Entre 32C y 42C"
+#define FORMATO_DE_TELEFONO "Ingrese numero de telefono celular. Formato: 096123456"
 
 /* ************************************************************************** */
 /* ************************************************************************** */
 /* Section: Included Files                                                    */
 /* ************************************************************************** */
-
 /* ************************************************************************** */
 
 typedef enum {

@@ -231,8 +231,8 @@ void consultarListaDeEventos() {
 
 void mostrarHora() {
     //Muestra la hora del sistema.
-    char hora[22];
-    strftime(hora, sizeof (hora), "%d/%m/%Y-%H:%M", &tiempoDelSistema);
+    char hora[23];
+    strftime(hora, sizeof (hora), "%d/%m/%Y-%H:%M\0", &tiempoDelSistema);
     enviarMensaje(hora);
 }
 /* *****************************************************************************

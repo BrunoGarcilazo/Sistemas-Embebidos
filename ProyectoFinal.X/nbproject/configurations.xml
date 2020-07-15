@@ -62,6 +62,7 @@
       </logicalFolder>
       <logicalFolder name="f5" displayName="UI" projectFiles="true">
         <itemPath>UI/interfazUSB.h</itemPath>
+        <itemPath>UI/interfazConversiones.h</itemPath>
       </logicalFolder>
       <itemPath>FreeRTOSConfig.h</itemPath>
     </logicalFolder>
@@ -125,6 +126,7 @@
       </logicalFolder>
       <logicalFolder name="f5" displayName="UI" projectFiles="true">
         <itemPath>UI/interfazUSB.c</itemPath>
+        <itemPath>UI/interfazConversiones.c</itemPath>
       </logicalFolder>
       <itemPath>main.c</itemPath>
     </logicalFolder>

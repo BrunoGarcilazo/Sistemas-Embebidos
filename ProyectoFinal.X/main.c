@@ -48,48 +48,47 @@
 
 /* Kernel includes. */
 #include "FreeRTOS.h"
-#include "Communications/GPS.h"
-#include "Communications/SIM808.h"
 #include "task.h"
+
 #include <stdbool.h>
 #include <string.h>
+
 #include "mcc_generated_files/system.h"
 #include "mcc_generated_files/pin_manager.h"
-#include "System/scheludeManager.h"
+
+#include "Communications/GPS.h"
+#include "Communications/SIM808.h"
 #include "System/menu.h"
 #include "System/conversiones.h"
 #include "UI/interfazUSB.h"
-
+#include "UI/interfazConversiones.h"
 
 /*
                          Main application
  */
-
-
-void mantenimientoUSB(void * p_param){
-    CDCTxService();
-    vTaskDelay(pdMS_TO_TICKS(9));
-}
 
 int main(void) {
     // initialize the device
     SYSTEM_Initialize();
     dispositivo.inicializado = false;
     dispositivo.umbralDeTemperatura = 40.0;
-   
-    strcpy(dispositivo.numeroDeContacto,"\"099343156\"");
-   
+
+    strcpy(dispositivo.numeroDeContacto, "\"092020400\"");
+
     ultimaMedida = 0;
     boton2Flag = false;
     
-    xTaskCreate(SIM808_taskCheck, "modemTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 12, NULL);    
-    
+    xTaskCreate(SIM808_taskCheck, "modemTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 12, NULL);
+
     xTaskCreate(SIM808_initModule, "modemIni", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 11, &modemInitHandle);
+
+    xTaskCreate(interfazUSB, "interfazUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 8, NULL);
     
-    //xTaskCreate(mantenimientoUSB, "mantenimientoUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 4, NULL);
+    xTaskCreate(interfazTermometro, "interfazTermometro", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 7, NULL);
     
-    xTaskCreate(interfazUSB, "interfazUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 7, NULL);
-    
+    xTaskCreate(mantenimientoUSB, "mantenimientoUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 10, NULL);
+
+
     /* Finally start the scheduler. */
     vTaskStartScheduler();
 
@@ -101,7 +100,6 @@ int main(void) {
     for (;;);
     return 1;
 }
-
 
 void vApplicationMallocFailedHook(void) {
     /* vApplicationMallocFailedHook() will only be called if

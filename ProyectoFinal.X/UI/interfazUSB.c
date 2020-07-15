@@ -1,68 +1,65 @@
 /* ************************************************************************** */
-/** Descriptive File Name
+/** InterfazUSB
 
   @Company
-    Company Name
+    UCUDAL
 
   @File Name
-    filename.c
+    interfazUSB.c
 
   @Summary
-    Brief description of the file.
+    Gestion de la interaccion del mundo exterior con la placa 
 
   @Description
-    Describe the purpose of this file.
+    Crear tareas para manejar la interaccion de la placa con el mundo
  */
-/* ************************************************************************** */
-/* ************************************************************************** */
-/* ************************************************************************** */
-/* Section: Included Files                                                    */
-/* ************************************************************************** */
-/* ************************************************************************** */
-#include  "../mcc_generated_files/usb/usb_device_cdc.h"
+
 #include  "FreeRTOS.h"
 #include  "task.h"
+
+#include  "../mcc_generated_files/usb/usb_device_cdc.h"
+
 #include  <stdint.h>
 #include <stdio.h>
 #include <string.h>
+
 #include "../System/conversiones.h"
 #include "interfazUSB.h"
+#include "interfazConversiones.h"
+
 
 void interfazUSB(void* params) {
     uint8_t buffer[4];
     uint16_t numBytes;
-    TaskHandle_t conversionHandler = NULL;
-
     while (1) {
-        /*if (USBUSARTIsTxTrfReady()) {
-            numBytes = getsUSBUSART(buffer, sizeof (buffer));
+        if (USBUSARTIsTxTrfReady() & (USBGetDeviceState() >= CONFIGURED_STATE) && !USBIsDeviceSuspended()) {
+            CDCTxService();
+            numBytes = getsUSBUSART(buffer, strlen (buffer));
             if (numBytes > 0) {
-                if (!dispositivo.inicializado) {
+                if (!dispositivo.inicializado){
                     inicializar();
                 }
                 menu();
             }
-        }*/
-        if (boton2Flag){
-            if (dispositivo.midiendo){
-                vTaskDelete(conversionHandler);
-                dispositivo.midiendo = false;
-            } else {
-                xTaskCreate(conversiones, "Conversiones", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 5, &conversionHandler);
-            }
-            boton2Flag = false;
-        } else {
-            vTaskDelay(pdMS_TO_TICKS(250));
         }
     }
 }
 
+void mantenimientoUSB(void * p_param) {
+    while (1) {
+        if ((USBGetDeviceState() >= CONFIGURED_STATE) && !USBIsDeviceSuspended()) {
+            CDCTxService();
+        }
+        vTaskDelay(pdMS_TO_TICKS(5));
+    }
+}
+
 bool pedirID() { // sin terminar
+    uint32_t k;
+    uint8_t i;
     char entrada[32]; // Array donde se va a recibir la entrada
     memset(entrada, 0, sizeof (entrada)); //Se limpia la entrada
     buscarEntrada(entrada, sizeof (entrada));
-    uint32_t k;
-    int i;
     for (i = 0; i < 32; i++) { // Metodo de conversion de Array de char a int : shorturl.at/acoAL
         if((entrada[i] - ASCII_TO_INT_DIFFERENCE) >= 10 || (entrada[i] - ASCII_TO_INT_DIFFERENCE) < 0){ // Solo puede ser numerico
             return false;
@@ -73,13 +70,12 @@ bool pedirID() { // sin terminar
     return true;
 }
 
-
 /**
  * 
  * @return numero dado es valido o no
  */
 bool validarTelefono(char numero[9]){
-    int i;
+    uint8_t i;
     if((numero[0] - ASCII_TO_INT_DIFFERENCE) == 0){
         if((numero[1] - ASCII_TO_INT_DIFFERENCE) == 9){
             for(i=0;i<9;i++){
@@ -99,7 +95,7 @@ bool validarTelefono(char numero[9]){
 }
 
 bool pedirNumeroDeContacto(){ // sin terminar
-    int i,k;
+    uint8_t i,k;
     char entrada[9];
     uint8_t numeroSolo[9];
     uint8_t numeroFormatoSMS[11];
@@ -124,10 +120,9 @@ bool pedirNumeroDeContacto(){ // sin terminar
     }
 }
 
-
 bool validarTemperatura(uint8_t numero){
     if(numero <= 42 && numero >= 32){
-        return true
+        return true;
     }else{
         return false;
     }
@@ -150,10 +145,6 @@ bool pedirTemperatura() {
     }
     
 }
-
-
-
-
 /* *****************************************************************************
  End of File
  */

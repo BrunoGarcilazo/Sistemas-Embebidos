@@ -27,8 +27,8 @@
 /* ************************************************************************** */
 /* Section: Constantes                                                        */
 /* ************************************************************************** */
-#define FORMATO_DE_HORA "\r\nIngrese hora en formato hh:mm:ss\r\n"
-#define FORMATO_DE_FECHA "\r\nIngrese fecha en formato dd/mm/aaaa\r\n"
+#define FORMATO_DE_HORA "\r\nIngrese hora en formato hh:mm:ss\r\n\0"
+#define FORMATO_DE_FECHA "\r\nIngrese fecha en formato dd/mm/aaaa\r\n\0"
 
 
 /* ************************************************************************** */

@@ -52,7 +52,7 @@
 #include <xc.h>
 #include "pin_manager.h"
 #include "system.h"
-#include "../UI/interfazUSB.h"
+#include "../UI/interfazConversiones.h"
 
 /**
  Section: File specific functions

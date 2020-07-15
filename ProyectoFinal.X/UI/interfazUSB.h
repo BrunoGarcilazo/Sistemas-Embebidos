@@ -1,22 +1,22 @@
 /* ************************************************************************** */
-/**
+/**InterfazUSB
 
   @Company
-    Company Name
+    UCUDAL
 
   @File Name
-    filename.h
+    interfazUSB.c
 
   @Summary
-    Brief description of the file.
+    Gestion de la interaccion del mundo exterior con la placa 
 
   @Description
-    Describe the purpose of this file.
+    Crear tareas para manejar la interaccion de la placa con el mundo
  */
 /* ************************************************************************** */
 
-#ifndef _INTERFAZ_USB_H    /* Guard against multiple inclusion */
-#define _INTERFAZ_USB_H
+#ifndef _interfazUSB_H    /* Guard against multiple inclusion */
+#define _interfazUSB_H
 
 
 /* ************************************************************************** */
@@ -29,21 +29,15 @@
 
 #define ASCII_TO_INT_DIFFERENCE 48
 
-bool boton2Flag;
-
-typedef struct{
-    uint32_t dispositivoID;      // ID unico del dispositivo
-    uint8_t numeroDeContacto[11];    // Numero de contacto de forma 96123456
-    uint8_t umbralDeTemperatura; // Umbral de Temperatura. 32 < umbral < 42
-    bool midiendo;               // variable que indica si se esta realizando una medicion (se utiliza si se presiona el boton mientras ya se esta midiendo)
-    bool inicializado;           // Indica si el Termometro ya cuenta con todos los datos necesarios para su correcto funcionamiento.   
-} termometro_t;
-
-termometro_t dispositivo; 
-
-
 void interfazUSB(void* params);
-#endif /* _INTERFAZ_PRINCIPAL_H */
+
+void mantenimientoUSB(void * p_param);
+
+void inicalizarUSB(void * p_param);
+
+bool enUSB;
+
+#endif /* _INTERFAZ_USB_H */
 
 /* *****************************************************************************
  End of File

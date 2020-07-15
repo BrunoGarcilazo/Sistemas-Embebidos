@@ -35,7 +35,7 @@
 
 #include "../Platform/ledManager.h"
 #include "conversiones.h"
-#include "../UI/interfazUSB.h"
+#include "../UI/interfazConversiones.h"
 #include "scheludeManager.h"
 #include "../Communications/GPS.h"
 #include "../Communications/SIM808.h"
