@@ -22,6 +22,7 @@
 /* Section: Include                                                           */
 /* ************************************************************************** */
 #include <time.h>
+#include "../freeRTOS/include/semphr.h"
 
 
 /* ************************************************************************** */
@@ -33,10 +34,14 @@
 /*Tiempo que usa el sistema*/
 static struct tm tiempoDelSistema;
 
+/*Semaforo que indica que el sistema obtuvo hora del GPS*/
+static SemaphoreHandle_t horaSeteada;
+/*Semaforo que indica si la trama obtenida es valida*/
+static SemaphoreHandle_t tramaValida;
+
 /* ************************************************************************** */
 /* Seccion: Funciones de interfaz                                             */
 /* ************************************************************************** */
-
 /**
  * Esta funcion pide al usuario que ingrese la fecha que sera usada para usar el RTC
  * Junto con la hora inicial.
@@ -65,6 +70,12 @@ void pedirFecha(struct tm *tiempo);
  * Funcion que envia la hora actual del Reloj RTC por USB
  */
 void mostrarHora();
+
+/**
+ * Tarea que se encarga de refrescar los datos del GPS
+ * @param p_params
+ */
+void mantenerGPS(void *p_params);
 
 #endif /* _RTC_MANAGER_H */
 

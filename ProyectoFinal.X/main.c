@@ -58,8 +58,7 @@
 
 #include "Communications/GPS.h"
 #include "Communications/SIM808.h"
-#include "System/menu.h"
-#include "System/conversiones.h"
+#include "Platform/rtcManager.h"
 #include "UI/interfazUSB.h"
 #include "UI/interfazConversiones.h"
 
@@ -70,23 +69,26 @@
 int main(void) {
     // initialize the device
     SYSTEM_Initialize();
+    boton2Flag = false;
     dispositivo.inicializado = false;
+    dispositivo.midiendo = false;
     dispositivo.umbralDeTemperatura = 40.0;
-
+    dispositivo.dispositivoID = 1234;
     strcpy(dispositivo.numeroDeContacto, "\"092020400\"");
 
-    ultimaMedida = 0;
-    boton2Flag = false;
+    
     
     xTaskCreate(SIM808_taskCheck, "modemTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 12, NULL);
 
     xTaskCreate(SIM808_initModule, "modemIni", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 11, &modemInitHandle);
 
-    xTaskCreate(interfazUSB, "interfazUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 8, NULL);
+    //xTaskCreate(interfazUSB, "interfazUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 7, NULL);
     
-    xTaskCreate(interfazTermometro, "interfazTermometro", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 7, NULL);
+    xTaskCreate(interfazTermometro, "interfazTermometro", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 9, NULL);
     
-    xTaskCreate(mantenimientoUSB, "mantenimientoUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 10, NULL);
+    //xTaskCreate(mantenimientoUSB, "mantenimientoUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 10, NULL);
+    
+    xTaskCreate(mantenerGPS, "mantenimientoGPS", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 10, NULL);
 
 
     /* Finally start the scheduler. */

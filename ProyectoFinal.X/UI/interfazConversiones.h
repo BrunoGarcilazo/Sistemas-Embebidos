@@ -28,6 +28,7 @@
 typedef struct{
     uint32_t dispositivoID;      // ID unico del dispositivo
     uint8_t numeroDeContacto[11];    // Numero de contacto de forma 96123456
+    uint8_t trama[64];          //Trama de GPS del dispositivo
     float umbralDeTemperatura; // Umbral de Temperatura. 32 < umbral < 42
     bool midiendo;               // variable que indica si se esta realizando una medicion (se utiliza si se presiona el boton mientras ya se esta midiendo)
     bool enUSB;                  // Indica si el dispositivo se encuentra en comunicacion USB

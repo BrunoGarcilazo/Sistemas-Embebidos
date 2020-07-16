@@ -21,11 +21,12 @@
 #include "../System/conversiones.h"
 #include "interfazConversiones.h"
 
-void interfazTermometro(void* params){
+void interfazTermometro(void* params) {
+    ultimaMedida = 0;
     TaskHandle_t conversionHandler = NULL;
-    while (1){
-        if (boton2Flag){
-            if (dispositivo.midiendo){
+    while (1) {
+        if (boton2Flag) {
+            if (dispositivo.midiendo) {
                 vTaskDelete(conversionHandler);
                 dispositivo.midiendo = false;
             } else {

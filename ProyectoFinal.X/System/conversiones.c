@@ -26,6 +26,7 @@
 
 #include <stdbool.h>
 #include <stdint.h>
+#include <stdio.h>
 #include <time.h>
 #include <math.h>
 #include <string.h>
@@ -34,6 +35,7 @@
 #include "../mcc_generated_files/pin_manager.h"
 
 #include "../Platform/ledManager.h"
+#include "../Platform/rtcManager.h"
 #include "conversiones.h"
 #include "../UI/interfazConversiones.h"
 #include "../Communications/GPS.h"
@@ -69,27 +71,34 @@ uint16_t conversorADCTemp(float promedio) {
 }
 
 void alertarPersona(void *p_params) {
-    struct tm fechaYHora;
-    uint8_t trama[64];
-    bool resultado;
     GPSPosition_t posicion;
-    uint8_t mensaje[64];
-    
-    strcpy(mensaje,"hola Bruno Humberto, tenes fiebre");    
+    char mensaje[64];
+    char idDeDispositivo[32];
+    uint8_t posicionStr[64];
+    uint8_t fechaYhora[22];
+    uint8_t temperaturaDePaciente[4];
+    float *promedio;
+    promedio = (float*) p_params;
 
-    SIM808_getNMEA(trama);
-    resultado = SIM808_validateNMEAFrame(trama);
-    while (!resultado){
-        SIM808_getNMEA(trama);
-        resultado = SIM808_validateNMEAFrame(trama);
-    }
-    GPS_getPosition(&posicion, trama);
-    GPS_getUTC(&fechaYHora, trama);
-    GPS_generateGoogleMaps(mensaje,posicion);
-    
+    sprintf(idDeDispositivo, "%d",dispositivo.dispositivoID); //El 10 representa la base numerica
+
+    strcpy(mensaje + strlen(mensaje), idDeDispositivo);
+
+    strftime(fechaYhora, sizeof (fechaYhora), "%d/%m/%Y-%H:%M", &tiempoDelSistema);
+
+    strcat(mensaje, fechaYhora);
+
+    GPS_getPosition(&posicion, dispositivo.trama);
+    GPS_generateGoogleMaps(posicionStr, posicion);
+    strcat(mensaje, posicionStr);
+
+    sprintf(temperaturaDePaciente, "%f", promedio[0]);
+
+    strcat(mensaje, temperaturaDePaciente);
+
     SIM808_sendSMS(dispositivo.numeroDeContacto, mensaje);
-}
 
+}
 
 void conversiones(void *p_params) {
     dispositivo.midiendo = true;
@@ -98,6 +107,7 @@ void conversiones(void *p_params) {
     struct tm tiempoActual;
     uint8_t contador;
     float promedio;
+    float promedioParaMensaje[1];
     uint16_t muestra;
     medida_t medida;
 
@@ -118,8 +128,9 @@ void conversiones(void *p_params) {
     promedio = promedioSamples(samplesConversiones);
     promedio = conversorADCTemp(promedio);
     if (promedio > dispositivo.umbralDeTemperatura) {
-        xTaskCreate(prenderLedsRojosPor2Seg, "LucesRojas", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 6, NULL);
-        xTaskCreate(alertarPersona,"MandarMensaje",configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 4, NULL);
+        promedioParaMensaje[0] = promedio;
+        xTaskCreate(prenderLedsRojosPor2Seg, "LucesRojas", configMINIMAL_STACK_SIZE, (void*) promedioParaMensaje, tskIDLE_PRIORITY + 6, NULL);
+        xTaskCreate(alertarPersona, "MandarMensaje", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 4, NULL);
     } else {
         xTaskCreate(prenderLedsVerdesPor2Seg, "LucesVerdes", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 6, NULL);
     }
