@@ -30,6 +30,7 @@ void interfazTermometro(void* params) {
                 vTaskDelete(conversionHandler);
                 dispositivo.midiendo = false;
             } else {
+                dispositivo.midiendo = true;
                 xTaskCreate(conversiones, "Conversiones", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 5, &conversionHandler);
             }
             boton2Flag = false;

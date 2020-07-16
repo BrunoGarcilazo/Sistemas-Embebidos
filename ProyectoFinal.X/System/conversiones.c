@@ -23,6 +23,7 @@
 
 #include "FreeRTOS.h"
 #include "task.h"
+#include "../freeRTOS/include/semphr.h"
 
 #include <stdbool.h>
 #include <stdint.h>
@@ -72,39 +73,38 @@ uint16_t conversorADCTemp(float promedio) {
 
 void alertarPersona(void *p_params) {
     GPSPosition_t posicion;
-    char mensaje[64];
-    char idDeDispositivo[32];
-    uint8_t posicionStr[64];
-    uint8_t fechaYhora[22];
-    uint8_t temperaturaDePaciente[4];
-    float *promedio;
-    promedio = (float*) p_params;
+    uint8_t mensaje[100];
+    uint8_t idDeDispositivo[10];
+    uint8_t posicionStr[55];
+    uint8_t fechaYhora[24];
+    uint8_t temperaturaStr[4];
+    float temperatura;
+    float *temperaturaPaciente;
+    temperaturaPaciente = (float*) p_params;
+    temperatura = temperaturaPaciente[0];
 
-    sprintf(idDeDispositivo, "%d",dispositivo.dispositivoID); //El 10 representa la base numerica
+    if (xSemaphoreTake(horaSeteada, portMAX_DELAY) == pdTRUE) {
+        sprintf(idDeDispositivo, "%d", dispositivo.dispositivoID);
+        strcpy(mensaje, idDeDispositivo);
+        strcat(mensaje, " ");
 
-    strcpy(mensaje + strlen(mensaje), idDeDispositivo);
+        sprintf(temperaturaStr, "%f", temperatura);
+        strcat(mensaje, temperaturaStr);
+        strcat(mensaje, " ");
 
-    strftime(fechaYhora, sizeof (fechaYhora), "%d/%m/%Y-%H:%M", &tiempoDelSistema);
+        RTCC_TimeGet(&tiempoDelSistema);
+        strftime(fechaYhora, sizeof (fechaYhora), " %d/%m/%Y-%H:%M ", &tiempoDelSistema);
+        strcat(mensaje, fechaYhora);
 
-    strcat(mensaje, fechaYhora);
-
-    GPS_getPosition(&posicion, dispositivo.trama);
-    GPS_generateGoogleMaps(posicionStr, posicion);
-    strcat(mensaje, posicionStr);
-
-    sprintf(temperaturaDePaciente, "%f", promedio[0]);
-
-    strcat(mensaje, temperaturaDePaciente);
-
-    SIM808_sendSMS(dispositivo.numeroDeContacto, mensaje);
-
+        GPS_getPosition(&posicion, dispositivo.trama);
+        GPS_generateGoogleMaps(posicionStr, posicion);
+        strcat(mensaje, posicionStr);
+        SIM808_sendSMS(dispositivo.numeroDeContacto, mensaje);
+    }
 }
 
 void conversiones(void *p_params) {
-    dispositivo.midiendo = true;
-
     uint16_t samplesConversiones[10];
-    struct tm tiempoActual;
     uint8_t contador;
     float promedio;
     float promedioParaMensaje[1];
@@ -129,17 +129,13 @@ void conversiones(void *p_params) {
     promedio = conversorADCTemp(promedio);
     if (promedio > dispositivo.umbralDeTemperatura) {
         promedioParaMensaje[0] = promedio;
-        xTaskCreate(prenderLedsRojosPor2Seg, "LucesRojas", configMINIMAL_STACK_SIZE, (void*) promedioParaMensaje, tskIDLE_PRIORITY + 6, NULL);
-        xTaskCreate(alertarPersona, "MandarMensaje", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 4, NULL);
+        xTaskCreate(prenderLedsRojosPor2Seg, "LucesRojas", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 6, NULL);
+        xTaskCreate(alertarPersona, "MandarMensaje", configMINIMAL_STACK_SIZE + 500, (void*) promedioParaMensaje, tskIDLE_PRIORITY + 4, NULL);
     } else {
         xTaskCreate(prenderLedsVerdesPor2Seg, "LucesVerdes", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 6, NULL);
     }
 
-    medida.IdDelRegistro = ultimaMedida;
     medida.temperaturaRegistrada = promedio;
-    RTCC_TimeGet(&tiempoActual);
-
-    medida.tiempo = tiempoActual;
     mediciones[ultimaMedida] = medida;
     ultimaMedida++;
 

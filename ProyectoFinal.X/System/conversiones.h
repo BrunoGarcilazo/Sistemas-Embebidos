@@ -29,16 +29,16 @@
 /* ************************************************************************** */
 #include <stdint.h>
 #include <time.h>
+#include "../Communications/GPS.h"
 
 typedef struct{
-    uint8_t IdDelRegistro;
     float temperaturaRegistrada;
-    struct tm tiempo;
+    time_t tiempo;
+    GPSPosition_t posicion;
 } medida_t ;
 
-medida_t mediciones[10];
+medida_t mediciones[200];
 uint8_t ultimaMedida;
-
 
 void conversiones(void *p_params);
 void checkearBoton2(void *p_params);

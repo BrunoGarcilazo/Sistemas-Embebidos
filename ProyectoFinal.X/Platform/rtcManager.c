@@ -40,6 +40,9 @@
 #include "../UI/interfazConversiones.h"
 #include "../System/menu.h"
 
+SemaphoreHandle_t tramaValida;
+SemaphoreHandle_t horaSeteada;
+
 /* ************************************************************************** */
 /* ************************************************************************** */
 // Section: Interface Functions                                               */
@@ -56,12 +59,13 @@ void mantenerGPS(void *p_params) {
     horaSeteada = xSemaphoreCreateBinary();
     tramaValida = xSemaphoreCreateBinary();
     while (1) {
-        SIM808_getNMEA(dispositivo.trama);
+        /*SIM808_getNMEA(dispositivo.trama);
         while (!SIM808_validateNMEAFrame(dispositivo.trama)) {
-            SIM808_getNMEA(dispositivo.trama);
-            vTaskDelay(pdMS_TO_TICKS(100));
-        }
-        xSemaphoreGive(tramaValida);
+           SIM808_getNMEA(dispositivo.trama);
+           xSemaphoreTake(tramaValida,0);
+           vTaskDelay(pdMS_TO_TICKS(100));
+        }*/
+        
         if (!dispositivo.inicializado) {
             GPS_getUTC(&tiempoDelSistema, dispositivo.trama);
             RTCC_TimeSet(&tiempoDelSistema);

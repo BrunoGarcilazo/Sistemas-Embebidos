@@ -124,7 +124,7 @@ void menu() {
                                 status = EN_MENU;
                                 telefonoOk = false;
                                 break;
-                            case ('f')://Imprimir lista de medidas 
+                            case ('d')://Imprimir lista de medidas 
                                 imprimirMedidas();
                                 status = EN_MENU;
                                 break;
