@@ -46,7 +46,7 @@ void interfazUSB(void* params) {
     }
 }
 
-void mantenimientoUSB(void * p_param) {
+void mantenimientoUSB(void * p_param){
     while (1) {
         if ((USBGetDeviceState() >= CONFIGURED_STATE) && !USBIsDeviceSuspended()) {
             CDCTxService();
@@ -55,7 +55,10 @@ void mantenimientoUSB(void * p_param) {
     }
     
 }
-
+/**
+ * Pide al Usuario un ID para el Dispositivo
+ * @return si el ID ingresado se guardo con exito o no (fue valido)
+ */
 bool pedirID() { // sin terminar
     uint32_t k;
     uint8_t i;
@@ -76,7 +79,7 @@ bool pedirID() { // sin terminar
  * 
  * @return numero dado es valido o no
  */
-bool validarTelefono(char numero[9]){
+bool validarTelefono(char *numero){
     uint8_t i;
     if((numero[0] - ASCII_TO_INT_DIFFERENCE) == 0){
         if((numero[1] - ASCII_TO_INT_DIFFERENCE) == 9){
@@ -95,15 +98,18 @@ bool validarTelefono(char numero[9]){
     }
     
 }
-
-bool pedirNumeroDeContacto(){ // sin terminar
+/**
+ * Funcion que pide un numero de contacto al Usuario
+ * @return  Telefono ingresado valido o no
+ */
+bool pedirNumeroDeContacto(){
     uint8_t i,k;
     char entrada[9];
     uint8_t numeroSolo[9];
     uint8_t numeroFormatoSMS[11];
     
-    memset(entrada, 0, (sizeof(entrada)/entrada[0])); //Se limpia la entrada
-    buscarEntrada(entrada, (sizeof(entrada)/entrada[0]));
+    memset(entrada, 0, (sizeof(entrada))); //Se limpia la entrada
+    buscarEntrada(entrada, (sizeof(entrada)));
     
     if(validarTelefono(entrada)){
         // Convierto la entrada en un array de char con el formato \"092020400\"
@@ -122,10 +128,14 @@ bool pedirNumeroDeContacto(){ // sin terminar
     }
 }
 
-bool validarTemperatura(char entrada[4]){
-    
+/**
+ * Funcion que verifica si una temperatura dada por el Usuario es valida o no
+ * @param entrada dada por el Usuario
+ * @return entrada valida o no
+ */
+bool validarTemperatura(char entrada[4]){   
     uint8_t parteEntera;
-    parteEntera = ((10 * entrada[0] - ASCII_TO_INT_DIFFERENCE) + (entrada[1] - ASCII_TO_INT_DIFFERENCE));
+    parteEntera = ((10 * (entrada[0] - ASCII_TO_INT_DIFFERENCE)) + (entrada[1] - ASCII_TO_INT_DIFFERENCE));
     if(parteEntera > 42 || parteEntera < 32){
         return false;
     }else{
@@ -141,7 +151,8 @@ bool validarTemperatura(char entrada[4]){
     }
 }
 /**
- * 
+ *  Funcion que pide el Umbral de Temperatura al Usuario
+ * @return Temperatura valida o no
  */
 bool pedirTemperatura() {
     bool verificado;
@@ -156,6 +167,14 @@ bool pedirTemperatura() {
         return false;
     }
     
+}
+/**
+ * Funcion que envia por USB las medidas guardadas hasta el momento
+ */
+void imprimirMedidas(){
+    /**
+     Recorrer la estructura con las Medidas y enviar los datos por USB.
+     */
 }
 /* *****************************************************************************
  End of File

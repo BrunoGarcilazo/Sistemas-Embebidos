@@ -51,7 +51,7 @@ void menu() {
     uint8_t buffer[4];
     uint8_t numBytes;
     struct tm tiempoASetear;
-
+    Nop();
     bool temperaturaOk;
     temperaturaOk = false;
     bool telefonoOk;
@@ -63,7 +63,7 @@ void menu() {
 
 
     /**
-     * Lista de menú:
+     * Lista de menï¿½:
      * Setear hora
      * Mostrar hora
      * Poner ID de dispositivo
@@ -96,13 +96,19 @@ void menu() {
                                 while (!idOk) {
                                     enviarMensaje(PEDIDO_DE_ID);
                                     idOk = pedirID();
+                                    if(idOk){
+                                        enviarMensaje(PEDIDO_DE_UMBRAL);
+                                    }
                                 }
                                 status = EN_MENU;
                                 break;
                             case ('b'): //Umbral de temperatura
                                 while (!temperaturaOk) {
                                     enviarMensaje(PEDIDO_DE_UMBRAL);
-                                    temperaturaOk = pedirTemperatura();   
+                                    temperaturaOk = pedirTemperatura();
+                                    if(temperaturaOk){
+                                        enviarMensaje(DATO_CORRECTO);
+                                    }
                                 }
                                 status = EN_MENU;
                                 break;
@@ -110,23 +116,16 @@ void menu() {
                                 while (!telefonoOk) { // HAY QUE PROBARLO
                                     enviarMensaje(FORMATO_DE_TELEFONO);
                                     telefonoOk = pedirNumeroDeContacto();
+                                    if(telefonoOk){
+                                        enviarMensaje(DATO_CORRECTO);
+                                    }
+                                    Nop();
                                 }
-                                /** Otra forma
-                                 enviarMensaje("Ingrese numero de telefono celular. Formato: 096123456");
-                                 telefonoOk = pedirNumeroDeContacto();
-                                 if(!telefonoOk){
-                                   buffer[0] == 'e';
-                                   status = EN_ESPERA; 
-                                 }else{
-                                   status = EN_MENU
-                                 
-                                 }
-                                 * 
-                                 
-                                 */
                                 status = EN_MENU;
+                                telefonoOk = false;
                                 break;
-                            case ('d')://Imprimir lista de medidas 
+                            case ('f')://Imprimir lista de medidas 
+                                imprimirMedidas();
                                 status = EN_MENU;
                                 break;
                             case ('e')://Borrar medidias 
