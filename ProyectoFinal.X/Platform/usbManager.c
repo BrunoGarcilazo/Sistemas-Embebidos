@@ -29,6 +29,8 @@
 #include <string.h>
 
 /*MCC Includes*/
+#include  "FreeRTOS.h"
+#include  "task.h"
 #include "../mcc_generated_files/usb/usb_device_cdc.h" 
 
 void buscarEntrada(uint8_t * buffer, uint8_t large) {

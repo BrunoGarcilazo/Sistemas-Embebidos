@@ -70,7 +70,7 @@
 int main(void) {
     // initialize the device
     SYSTEM_Initialize();
-    dispositivo.inicializado = false;
+    dispositivo.inicializado = true;
     dispositivo.umbralDeTemperatura = 40.0;
 
     strcpy(dispositivo.numeroDeContacto, "\"092020400\"");
@@ -78,11 +78,13 @@ int main(void) {
     ultimaMedida = 0;
     boton2Flag = false;
     
-    xTaskCreate(SIM808_taskCheck, "modemTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 12, NULL);
+   // xTaskCreate(SIM808_taskCheck, "modemTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 12, NULL);
 
-    xTaskCreate(SIM808_initModule, "modemIni", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 11, &modemInitHandle);
+   // xTaskCreate(SIM808_initModule, "modemIni", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 11, &modemInitHandle);
 
     xTaskCreate(interfazUSB, "interfazUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 8, NULL);
+    
+    //xTaskCreate(menu, "menu", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 9, NULL);
     
     xTaskCreate(interfazTermometro, "interfazTermometro", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 7, NULL);
     
