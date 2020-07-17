@@ -40,7 +40,7 @@ void invertirLedsMedicion();
 
 void apagarLeds();
 
-ws2812_t coloresLeds[8];
+ws2812_t coloresLeds[7];
 
 
 #endif /* _EXAMPLE_FILE_NAME_H */

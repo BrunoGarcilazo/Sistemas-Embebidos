@@ -63,7 +63,7 @@ void menu() {
 
 
     /**
-     * Lista de menú:
+     * Lista de menï¿½:
      * Setear hora
      * Mostrar hora
      * Poner ID de dispositivo
@@ -78,10 +78,9 @@ void menu() {
             switch (status) {
                 case(EN_MENU):
                     enviarMensaje("\r\nBienvenido\r\nEnvie la tecla presente a la izquierda de la funcion\r\n"); 
-                    enviarMensaje("a - Fijar el reloj RTC\r\nb - Consultar hora del RTC\r\n"); 
-                    enviarMensaje("c - Set ID\r\nd - Set umbral de temperatura\r\n");  
-                    enviarMensaje("e - Set telefono de contacto\r\nf - Imprimir medidas\r\n");  
-                    enviarMensaje("g - Borrar registros\r\nh - Terminar\r\n");  
+                    enviarMensaje("a - Set ID\r\nb - Set umbral de temperatura\r\n");  
+                    enviarMensaje("c - Set telefono de contacto\r\nd - Imprimir medidas\r\n");  
+                    enviarMensaje("e - Borrar registros\r\nf - Terminar\r\n");  
                     status = EN_ESPERA; //Se espera un input
                     break;
                 case(EN_ESPERA):
@@ -93,19 +92,7 @@ void menu() {
                                     status = EN_MENU; //Imprimimos menu
                                 }
                                 break;
-                            case('a'):
-                            {
-                                pedirHora(&tiempoASetear); //Pedimos que se ingrese una hora
-                                pedirFecha(&tiempoASetear); //Pedimos que se ingrese una fecha
-                                RTCC_TimeSet(&tiempoASetear); //Seteamos el RTC a esa hora
-                                status = EN_MENU; //Pasamos al menu
-                                break;
-                            }
-                            case('b'):
-                                mostrarHora(); //Muestra la hora del sistema
-                                status = EN_MENU;
-                                break;
-                            case ('c'): //Poner Id del dispositivo, numero unico de 32 bits.
+                            case ('a'): //Poner Id del dispositivo, numero unico de 32 bits.
                                 while (!idOk) {
                                     enviarMensaje(PEDIDO_DE_ID);
                                     idOk = pedirID();
@@ -115,7 +102,7 @@ void menu() {
                                 }
                                 status = EN_MENU;
                                 break;
-                            case ('d'): //Umbral de temperatura
+                            case ('b'): //Umbral de temperatura
                                 while (!temperaturaOk) {
                                     enviarMensaje(PEDIDO_DE_UMBRAL);
                                     temperaturaOk = pedirTemperatura();
@@ -125,7 +112,7 @@ void menu() {
                                 }
                                 status = EN_MENU;
                                 break;
-                            case ('e')://Telefono para enviar mensajes
+                            case ('c')://Telefono para enviar mensajes
                                 while (!telefonoOk) { // HAY QUE PROBARLO
                                     enviarMensaje(FORMATO_DE_TELEFONO);
                                     telefonoOk = pedirNumeroDeContacto();
@@ -137,14 +124,14 @@ void menu() {
                                 status = EN_MENU;
                                 telefonoOk = false;
                                 break;
-                            case ('f')://Imprimir lista de medidas 
+                            case ('d')://Imprimir lista de medidas 
                                 imprimirMedidas();
                                 status = EN_MENU;
                                 break;
-                            case ('g')://Borrar medidias 
+                            case ('e')://Borrar medidias 
                                 status = EN_MENU;
                                 break;
-                            case ('h')://Terminar conexion
+                            case ('f')://Terminar conexion
                                 vTaskDelete(NULL);
                                 break;
                             default:

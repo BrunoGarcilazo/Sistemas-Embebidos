@@ -20,6 +20,7 @@
 #include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 
 /*******************************************************************************/    
 /************************* LOCAL VARIABLES *************************************/    
@@ -43,8 +44,8 @@
 void GPS_getPosition( GPSPosition_t *p_pos, uint8_t *p_sentence ){
     uint8_t offset;
     uint8_t *ptr;
-
-    offset=GPS_RMC_RUN_LEN+GPS_RMC_COMMA_LEN+GPS_RMC_FIX_LEN+GPS_RMC_COMMA_LEN+GPS_RMC_UTC_LEN+GPS_RMC_COMMA_LEN;
+    //"+CGNSINF: 1,1,20200715213000.000,-32.370193,-54.172768,117.100"
+    offset=GPS_COMAND_LEN+GPS_RMC_RUN_LEN+GPS_RMC_COMMA_LEN+GPS_RMC_FIX_LEN+GPS_RMC_COMMA_LEN+GPS_RMC_UTC_LEN+GPS_RMC_COMMA_LEN;
     p_pos->latitude=strtod( (p_sentence+offset), &ptr );
     p_pos->longitude=strtod( (ptr+GPS_RMC_COMMA_LEN), &ptr );
 }
@@ -64,7 +65,7 @@ void GPS_getUTC( struct tm *p_newtime, uint8_t *p_sentence ){
     uint8_t offset;
     uint8_t temp_str[5];
 
-    offset=GPS_RMC_RUN_LEN+GPS_RMC_COMMA_LEN+GPS_RMC_FIX_LEN+GPS_RMC_COMMA_LEN;
+    offset=GPS_COMAND_LEN+GPS_RMC_RUN_LEN+GPS_RMC_COMMA_LEN+GPS_RMC_FIX_LEN+GPS_RMC_COMMA_LEN;
     // Copy Year YYYY
     memset( temp_str, 0, 5 );
     strncpy( temp_str, (p_sentence+offset), 4 );
@@ -122,13 +123,13 @@ double GPS_getGroundDistance( GPSPosition_t *a, GPSPosition_t *b ){
 }
 
 void GPS_generateGoogleMaps( uint8_t *p_linkDest, GPSPosition_t p_gpsData ){
-    uint8_t latitude[128];
-    uint8_t longitude[128];
-
+    uint8_t latitude[15];
+    uint8_t longitude[15];
+    
     strcpy( p_linkDest, "http://maps.google.com/?q=" );
-    sprintf( latitude, "%f", p_gpsData.latitude );
+    sprintf( latitude,"%f", p_gpsData.latitude );
     strcat( p_linkDest, latitude );
     strcat( p_linkDest, "," );
-    sprintf( longitude, "%f", p_gpsData.longitude );
+    sprintf( longitude,"%f", p_gpsData.longitude );
     strcat( p_linkDest, longitude );
 }
