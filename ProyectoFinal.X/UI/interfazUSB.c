@@ -172,9 +172,16 @@ bool pedirTemperatura() {
  * Funcion que envia por USB las medidas guardadas hasta el momento
  */
 void imprimirMedidas(){
+    uint8_t i;
+    char datos[1];
+    for(i=0;i<ultimaMedida;i++){
+        datos[0] = mediciones[i].IdDelRegistro + ASCII_TO_INT_DIFFERENCE;
+        enviarMensaje(datos);
+        vTaskDelay(pdMS_TO_TICKS(500));
+    }
     /**
      Recorrer la estructura con las Medidas y enviar los datos por USB.
-     */
+     */ 
 }
 /* *****************************************************************************
  End of File
