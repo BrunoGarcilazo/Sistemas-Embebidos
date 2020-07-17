@@ -51,6 +51,8 @@ void prenderLedsRojosPor2Seg(void *p_params) {
         coloresLeds[i] = RED;
     }
     WS2812_send(coloresLeds, MAX_LEDS);
+    vTaskDelay(pdMS_TO_TICKS(2000));
+    apagarLeds();
     vTaskDelete(NULL);
 }
 
@@ -59,7 +61,9 @@ void prenderLedsVerdesPor2Seg(void *p_params) {
     for (i = 0; i < MAX_LEDS; i++) {
         coloresLeds[i] = GREEN;
     }
-    WS2812_send(coloresLeds, MAX_LEDS); 
+    WS2812_send(coloresLeds, MAX_LEDS);
+    vTaskDelay(pdMS_TO_TICKS(2000));
+    apagarLeds();
     vTaskDelete(NULL);
 }
 

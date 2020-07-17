@@ -175,7 +175,7 @@ void imprimirMedidas(){
     uint8_t i;
     char datos[1];
     for(i=0;i<ultimaMedida;i++){
-        datos[0] = mediciones[i].IdDelRegistro + ASCII_TO_INT_DIFFERENCE;
+        //datos[0] = mediciones[i].IdDelRegistro + ASCII_TO_INT_DIFFERENCE;
         enviarMensaje(datos);
         vTaskDelay(pdMS_TO_TICKS(500));
     }

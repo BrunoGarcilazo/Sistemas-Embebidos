@@ -37,7 +37,7 @@ typedef struct{
     GPSPosition_t posicion;
 } medida_t ;
 
-medida_t mediciones[1];
+medida_t mediciones[200];
 uint8_t ultimaMedida;
 
 void alertarPersona(void *p_params);

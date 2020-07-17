@@ -83,24 +83,25 @@ void alertarPersona(void *p_params) {
     temperaturaPaciente = (float*) p_params;
     temperatura = temperaturaPaciente[0];
 
-    //if (xSemaphoreTake(horaSeteada, portMAX_DELAY) == pdTRUE) {
-    sprintf(idDeDispositivo, "%d", dispositivo.dispositivoID);
-    strcpy(mensaje, idDeDispositivo);
-    strcat(mensaje, " ");
+    if (xSemaphoreTake(horaSeteada, portMAX_DELAY) == pdTRUE) {
+        sprintf(idDeDispositivo, "%d", dispositivo.dispositivoID);
+        strcpy(mensaje, idDeDispositivo);
+        strcat(mensaje, " ");
 
-    sprintf(temperaturaStr, "%f", temperatura);
-    strcat(mensaje, temperaturaStr);
-    strcat(mensaje, " ");
+        sprintf(temperaturaStr, "%f", temperatura);
+        strcat(mensaje, temperaturaStr);
+        strcat(mensaje, " ");
 
-    RTCC_TimeGet(&tiempoDelSistema);
-    strftime(fechaYhora, sizeof (fechaYhora), " %d/%m/%Y-%H:%M ", &tiempoDelSistema);
-    strcat(mensaje, fechaYhora);
+        RTCC_TimeGet(&tiempoDelSistema);
+        strftime(fechaYhora, sizeof (fechaYhora), " %d/%m/%Y-%H:%M ", &tiempoDelSistema);
+        strcat(mensaje, fechaYhora);
 
-    GPS_getPosition(&posicion, dispositivo.trama);
-    GPS_generateGoogleMaps(posicionStr, posicion);
-    strcat(mensaje, posicionStr);
-    SIM808_sendSMS(dispositivo.numeroDeContacto, mensaje);
-    
+        GPS_getPosition(&posicion, dispositivo.trama);
+        GPS_generateGoogleMaps(posicionStr, posicion);
+        strcat(mensaje, posicionStr);
+        SIM808_sendSMS(dispositivo.numeroDeContacto, mensaje);
+    }
+
     vTaskDelete(NULL);
 }
 
@@ -123,13 +124,13 @@ void conversiones(void *p_params) {
         invertirLedsMedicion();
         vTaskDelay(pdMS_TO_TICKS(250));
     }
-    promedio = promedioSamples(samplesConversiones,conversionesAHacer);
+    promedio = promedioSamples(samplesConversiones, conversionesAHacer);
     promedio = conversorADCTemp(promedio);
-    promedio = 41.0;
     if (promedio > dispositivo.umbralDeTemperatura) {
         promedioParaMensaje[0] = promedio;
         xTaskCreate(prenderLedsRojosPor2Seg, "LucesRojas", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 6, NULL);
-        xTaskCreate(alertarPersona, "mandarMensaje", configMINIMAL_STACK_SIZE + 500,(void*) promedioParaMensaje, tskIDLE_PRIORITY + 4, NULL);
+        xTaskCreate(alertarPersona, "mandarMensaje", configMINIMAL_STACK_SIZE + 500, (void*) promedioParaMensaje, tskIDLE_PRIORITY + 4, NULL);
+        
     } else {
         xTaskCreate(prenderLedsVerdesPor2Seg, "LucesVerdes", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 6, NULL);
     }
@@ -137,11 +138,7 @@ void conversiones(void *p_params) {
     medida.temperaturaRegistrada = promedio;
     mediciones[ultimaMedida] = medida;
     ultimaMedida++;
-
     dispositivo.midiendo = false;
-    apagarLeds();
-    
-    
     vTaskDelete(NULL);
 }
 
