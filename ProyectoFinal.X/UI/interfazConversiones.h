@@ -27,8 +27,8 @@
 
 typedef struct{
     uint32_t dispositivoID;      // ID unico del dispositivo
-    uint8_t numeroDeContacto[12];    // Numero de contacto de forma 96123456
-    uint8_t trama[65];          //Trama de GPS del dispositivo
+    uint8_t numeroDeContacto[15];    // Numero de contacto de forma 96123456
+    uint8_t trama[70];          //Trama de GPS del dispositivo
     float umbralDeTemperatura; // Umbral de Temperatura. 32 < umbral < 42
     bool midiendo;               // variable que indica si se esta realizando una medicion (se utiliza si se presiona el boton mientras ya se esta midiendo)
     bool enUSB;                  // Indica si el dispositivo se encuentra en comunicacion USB
@@ -41,8 +41,4 @@ bool boton2Flag;
 
 void interfazTermometro(void* params);
 
-#endif /* _INTERFAZ_CONVERIONES_H */
-
-/* *****************************************************************************
- End of File
- */
+#endif

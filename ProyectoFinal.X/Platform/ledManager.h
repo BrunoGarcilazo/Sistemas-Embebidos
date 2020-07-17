@@ -15,22 +15,15 @@
  */
 /* ************************************************************************** */
 
-#ifndef _LED_MANAGER_H    /* Guard against multiple inclusion */
+#ifndef _LED_MANAGER_H
 #define _LED_MANAGER_H
         
         
-/* ************************************************************************** */
-/* ************************************************************************** */
 /* Section: Included Files                                                    */
-/* ************************************************************************** */
-/* ************************************************************************** */
 
 #include "WS2812.h"
 
-/* This section lists the other files that are included in this file.
- */
-
-/* TODO:  Include other files here if needed. */
+#define MAX_LEDS 8
 
 void prenderLedsRojosPor2Seg(void *p_params);
 
@@ -40,11 +33,7 @@ void invertirLedsMedicion();
 
 void apagarLeds();
 
-ws2812_t coloresLeds[7];
+ws2812_t coloresLeds[MAX_LEDS];
 
 
-#endif /* _EXAMPLE_FILE_NAME_H */
-
-/* *****************************************************************************
- End of File
- */
+#endif

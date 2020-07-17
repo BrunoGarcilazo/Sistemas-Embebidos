@@ -33,44 +33,42 @@
 void invertirLedsMedicion() {
     uint8_t i;
     if (coloresLeds[0].b == 0) {
-        for (i = 0; i < 8; i++) { //PREGUNTAR PORQUE NO ANDA SIZEOF
+        for (i = 0; i < MAX_LEDS; i++) { //PREGUNTAR PORQUE NO ANDA SIZEOF
             coloresLeds[i] = BLUE;
         }
     } else {
-        for (i = 0; i < 8; i++) {
+        for (i = 0; i < MAX_LEDS; i++) {
             coloresLeds[i] = BLACK;
         }
 
     }
-    WS2812_send(coloresLeds, 8);
+    WS2812_send(coloresLeds, MAX_LEDS);
 }
 
 void prenderLedsRojosPor2Seg(void *p_params) {
     uint8_t i,j;
-    for (i = 0; i < 8; i++) {
+    for (i = 0; i < MAX_LEDS; i++) {
         coloresLeds[i] = RED;
     }
-    WS2812_send(coloresLeds, 8);
-    
+    WS2812_send(coloresLeds, MAX_LEDS);
     vTaskDelete(NULL);
 }
 
 void prenderLedsVerdesPor2Seg(void *p_params) {
     uint8_t i;
-    for (i = 0; i < 8; i++) {
+    for (i = 0; i < MAX_LEDS; i++) {
         coloresLeds[i] = GREEN;
     }
-    WS2812_send(coloresLeds, 8); 
+    WS2812_send(coloresLeds, MAX_LEDS); 
     vTaskDelete(NULL);
 }
 
 void apagarLeds(){
-    
     uint8_t j;
-    for (j = 0; j < 8; j++) {
+    for (j = 0; j < MAX_LEDS; j++) {
         coloresLeds[j] = BLACK;
     }
-    WS2812_send(coloresLeds, 8);
+    WS2812_send(coloresLeds, MAX_LEDS);
 }
 
 

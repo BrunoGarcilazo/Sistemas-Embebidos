@@ -46,14 +46,14 @@
  * Hace el Promedio de todos los Samples obtenidos del ADC
  * @return 
  */
-uint16_t promedioSamples(uint16_t *samplesConversiones) {
+uint16_t promedioSamples(uint16_t *samplesConversiones, uint8_t tamanio) {
     uint8_t i;
     uint16_t sumaDeValores;
     sumaDeValores = 0;
-    for (i = 0; i < sizeof (samplesConversiones) / sizeof (samplesConversiones[0]); i++) {
+    for (i = 0; i < tamanio; i++) {
         sumaDeValores = sumaDeValores + samplesConversiones[i];
     }
-    return sumaDeValores / (sizeof (samplesConversiones) / sizeof (samplesConversiones[0]));
+    return sumaDeValores / tamanio;
 }
 
 /**
@@ -77,43 +77,41 @@ void alertarPersona(void *p_params) {
     uint8_t idDeDispositivo[10];
     uint8_t posicionStr[55];
     uint8_t fechaYhora[24];
-    uint8_t temperaturaStr[4];
+    uint8_t temperaturaStr[5];
     float temperatura;
     float *temperaturaPaciente;
     temperaturaPaciente = (float*) p_params;
     temperatura = temperaturaPaciente[0];
 
-    if (xSemaphoreTake(horaSeteada, portMAX_DELAY) == pdTRUE) {
-        sprintf(idDeDispositivo, "%d", dispositivo.dispositivoID);
-        strcpy(mensaje, idDeDispositivo);
-        strcat(mensaje, " ");
+    //if (xSemaphoreTake(horaSeteada, portMAX_DELAY) == pdTRUE) {
+    sprintf(idDeDispositivo, "%d", dispositivo.dispositivoID);
+    strcpy(mensaje, idDeDispositivo);
+    strcat(mensaje, " ");
 
-        sprintf(temperaturaStr, "%f", temperatura);
-        strcat(mensaje, temperaturaStr);
-        strcat(mensaje, " ");
+    sprintf(temperaturaStr, "%f", temperatura);
+    strcat(mensaje, temperaturaStr);
+    strcat(mensaje, " ");
 
-        RTCC_TimeGet(&tiempoDelSistema);
-        strftime(fechaYhora, sizeof (fechaYhora), " %d/%m/%Y-%H:%M ", &tiempoDelSistema);
-        strcat(mensaje, fechaYhora);
+    RTCC_TimeGet(&tiempoDelSistema);
+    strftime(fechaYhora, sizeof (fechaYhora), " %d/%m/%Y-%H:%M ", &tiempoDelSistema);
+    strcat(mensaje, fechaYhora);
 
-        GPS_getPosition(&posicion, dispositivo.trama);
-        GPS_generateGoogleMaps(posicionStr, posicion);
-        strcat(mensaje, posicionStr);
-        SIM808_sendSMS(dispositivo.numeroDeContacto, mensaje);
-    }
+    GPS_getPosition(&posicion, dispositivo.trama);
+    GPS_generateGoogleMaps(posicionStr, posicion);
+    strcat(mensaje, posicionStr);
+    SIM808_sendSMS(dispositivo.numeroDeContacto, mensaje);
+    
+    vTaskDelete(NULL);
 }
 
 void conversiones(void *p_params) {
-    uint16_t samplesConversiones[10];
+    uint8_t conversionesAHacer = 10;
+    uint16_t samplesConversiones[conversionesAHacer];
     uint8_t contador;
     float promedio;
-    float promedioParaMensaje[1];
+    float promedioParaMensaje[2];
     uint16_t muestra;
     medida_t medida;
-
-    while (!ADC1_IsConversionComplete()) {
-    }
-    muestra = ADC1_ConversionResultGet();
 
     contador = 0;
     while (contador != 10) {
@@ -125,12 +123,13 @@ void conversiones(void *p_params) {
         invertirLedsMedicion();
         vTaskDelay(pdMS_TO_TICKS(250));
     }
-    promedio = promedioSamples(samplesConversiones);
+    promedio = promedioSamples(samplesConversiones,conversionesAHacer);
     promedio = conversorADCTemp(promedio);
+    promedio = 41.0;
     if (promedio > dispositivo.umbralDeTemperatura) {
         promedioParaMensaje[0] = promedio;
         xTaskCreate(prenderLedsRojosPor2Seg, "LucesRojas", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 6, NULL);
-        xTaskCreate(alertarPersona, "MandarMensaje", configMINIMAL_STACK_SIZE + 500, (void*) promedioParaMensaje, tskIDLE_PRIORITY + 4, NULL);
+        xTaskCreate(alertarPersona, "mandarMensaje", configMINIMAL_STACK_SIZE + 500,(void*) promedioParaMensaje, tskIDLE_PRIORITY + 4, NULL);
     } else {
         xTaskCreate(prenderLedsVerdesPor2Seg, "LucesVerdes", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 6, NULL);
     }
@@ -140,10 +139,9 @@ void conversiones(void *p_params) {
     ultimaMedida++;
 
     dispositivo.midiendo = false;
-
-    vTaskDelay(pdMS_TO_TICKS(2000));
     apagarLeds();
-
+    
+    
     vTaskDelete(NULL);
 }
 
