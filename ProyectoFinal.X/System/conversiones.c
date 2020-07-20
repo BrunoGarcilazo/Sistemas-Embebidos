@@ -87,7 +87,7 @@ void alertarPersona(medida_t *medida) {
     strcpy(mensaje, idDeDispositivo);
     strcat(mensaje, " ");
 
-    sprintf(temperaturaStr, "%f", medida->temperaturaRegistrada);
+    sprintf(temperaturaStr, "%.1f", medida->temperaturaRegistrada);
     strcat(mensaje, temperaturaStr);
     strcat(mensaje, " ");
 
@@ -149,6 +149,7 @@ void conversiones(void *p_params) {
                     xSemaphoreGive(medir);
                     promedio = promedioSamples(samplesConversiones, conversionesAHacer);
                     promedio = conversorADCTemp(promedio);
+                    
                     RTCC_TimeGet(&tiempoDelSistema);
                     GPS_getPosition(&posicion, dispositivo.trama);
 
@@ -168,10 +169,10 @@ void conversiones(void *p_params) {
                             xSemaphoreGive(prenderYapagarLucesVerdes);
                         }
                     } else {
+                        apagarLeds();
                         continue;
                     }
                 } else {
-                    apagarLeds();
                     continue;
                 }
                 xSemaphoreGive(tramaValida);
@@ -179,7 +180,7 @@ void conversiones(void *p_params) {
                 vTaskDelay(pdMS_TO_TICKS(30));
             }
         } else {
-            vTaskDelay(pdMS_TO_TICKS(200));
+            vTaskDelay(pdMS_TO_TICKS(1000));
         }
 
     }

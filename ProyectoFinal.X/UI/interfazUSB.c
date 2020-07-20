@@ -38,9 +38,9 @@ void interfazUSB(void* params) {
         if (USBUSARTIsTxTrfReady() & (USBGetDeviceState() >= CONFIGURED_STATE) && !USBIsDeviceSuspended()) {
             numBytes = getsUSBUSART(buffer, strlen (buffer));
             if (numBytes > 0) {
-                /*if (!dispositivo.inicializado){
+                if (!dispositivo.inicializado){
                     inicializar();
-                }*/
+                }
                 menu();
             }
         }

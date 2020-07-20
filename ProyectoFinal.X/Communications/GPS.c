@@ -44,8 +44,10 @@
 void GPS_getPosition( GPSPosition_t *p_pos, uint8_t *p_sentence ){
     uint8_t offset;
     uint8_t *ptr;
-    //"+CGNSINF: 1,1,20200715213000.000,-32.370193,-54.172768,117.100"
     offset=GPS_COMAND_LEN+GPS_RMC_RUN_LEN+GPS_RMC_COMMA_LEN+GPS_RMC_FIX_LEN+GPS_RMC_COMMA_LEN+GPS_RMC_UTC_LEN+GPS_RMC_COMMA_LEN;
+    if (p_sentence[0] == '\r'){
+        offset +=2;
+    }
     p_pos->latitude=strtod( (p_sentence+offset), &ptr );
     p_pos->longitude=strtod( (ptr+GPS_RMC_COMMA_LEN), &ptr );
 }
@@ -66,6 +68,9 @@ void GPS_getUTC( struct tm *p_newtime, uint8_t *p_sentence ){
     uint8_t temp_str[5];
 
     offset=GPS_COMAND_LEN+GPS_RMC_RUN_LEN+GPS_RMC_COMMA_LEN+GPS_RMC_FIX_LEN+GPS_RMC_COMMA_LEN;
+    if (p_sentence[0] == '\r'){
+        offset +=2;
+    }
     // Copy Year YYYY
     memset( temp_str, 0, 5 );
     strncpy( temp_str, (p_sentence+offset), 4 );

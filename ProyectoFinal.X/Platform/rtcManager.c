@@ -73,6 +73,7 @@ void mantenerGPS(void *p_params) {
             xSemaphoreGive(horaSeteada);
             dispositivo.inicializado = true;
         }
+        LEDA_Toggle();
         vTaskDelay(pdMS_TO_TICKS(1000)); //Si la trama es valida y seteo la hora que espere segundo
     }
 }

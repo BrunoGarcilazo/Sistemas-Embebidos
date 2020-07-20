@@ -77,7 +77,7 @@ int main(void) {
     dispositivo.umbralDeTemperatura = 40.0;
     dispositivo.dispositivoID = 1234;
     strcpy(dispositivo.numeroDeContacto, "\"099343156\"");
-    strcpy(dispositivo.trama, "+CGNSINF: 1,1,20200715213000.000,-32.370193,-54.172768,117.100");
+    //strcpy(dispositivo.trama, "+CGNSINF: 1,1,20200715213000.000,-32.370193,-54.172768,117.100");
     ultimaMedida = 0;
     apagarLeds();
 
@@ -92,8 +92,6 @@ int main(void) {
     xTaskCreate(interfazTermometro, "interfazTermometro", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
     
     xTaskCreate(interfazUSB, "interfazUSB", configMINIMAL_STACK_SIZE + 500, NULL, tskIDLE_PRIORITY + 1, NULL);
-
-    //xTaskCreate(interfazUSB, "interfazUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 7, NULL);
 
     /* Finally start the scheduler. */
     vTaskStartScheduler();
