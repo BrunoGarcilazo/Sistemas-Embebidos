@@ -86,10 +86,12 @@ int main(void) {
     xTaskCreate(SIM808_taskCheck, "modemTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
 
     xTaskCreate(SIM808_initModule, "modemIni", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, &modemInitHandle);
-
+    
     xTaskCreate(mantenimientoUSB, "mantenimientoUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
 
     xTaskCreate(interfazTermometro, "interfazTermometro", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
+    
+    xTaskCreate(interfazUSB, "interfazUSB", configMINIMAL_STACK_SIZE + 500, NULL, tskIDLE_PRIORITY + 1, NULL);
 
     //xTaskCreate(interfazUSB, "interfazUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 7, NULL);
 

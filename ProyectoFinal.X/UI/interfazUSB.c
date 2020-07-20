@@ -22,6 +22,8 @@
 #include  <stdint.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
+
 
 #include "../System/conversiones.h"
 #include "interfazUSB.h"
@@ -172,11 +174,62 @@ bool pedirTemperatura() {
  * Funcion que envia por USB las medidas guardadas hasta el momento
  */
 void imprimirMedidas(){
+    char id[15];
+    strcpy(id,"\r\nMedida    \r\n");
+    
+    char temperaturaMensaje[26];
+    strcpy(temperaturaMensaje,"\r\nTemperatura: ");
+    
+    char fechaMensaje[36];
+    strcpy(fechaMensaje,"Fecha y Hora: ");
+    
+    char indiceStringID[3];
+    
+    
+    char posicionString[55];
+    char posicionMensaje[69];
+    strcpy(posicionMensaje,"Localizacion: ");
+    
     uint8_t i;
-    char datos[1];
+    uint8_t fechaYhora[24];
+    struct tm *tiempoMedida; 
+    char temperatura[4];
+    time_t timetMedida;
     for(i=0;i<ultimaMedida;i++){
-        //datos[0] = mediciones[i].IdDelRegistro + ASCII_TO_INT_DIFFERENCE;
-        enviarMensaje(datos);
+        mediciones[i].tiempo = 0;
+        timetMedida = mediciones[i].tiempo;
+        
+        tiempoMedida = gmtime(&timetMedida);
+        
+        strftime(fechaYhora,24, " %d/%m/%Y-%H:%M ",tiempoMedida);
+           
+        sprintf(temperatura,"%f",mediciones[i].temperaturaRegistrada);
+        
+        sprintf(indiceStringID,"%d",i);
+        id[9] = indiceStringID[0];
+        id[10] = indiceStringID[1];
+        id[11] = indiceStringID[2];
+        
+        strcat(temperaturaMensaje,temperatura);
+        strcat(temperaturaMensaje,"\r\n");
+        
+        strcat(fechaMensaje,fechaYhora);
+        
+        GPS_generateGoogleMaps(posicionString, mediciones[i].posicion);
+        strcat(posicionMensaje,posicionString);
+        
+        enviarMensaje(id);
+        enviarMensaje(fechaMensaje);
+        enviarMensaje(temperaturaMensaje);
+        enviarMensaje(posicionMensaje);
+
+       
+
+        
+        
+        
+
+        //enviarMensaje(datos);
         vTaskDelay(pdMS_TO_TICKS(500));
     }
     /**
