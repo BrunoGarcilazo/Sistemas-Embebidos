@@ -64,16 +64,20 @@ void mantenimientoUSB(void * p_param){
 bool pedirID() { // sin terminar
     uint32_t k;
     uint8_t i;
-    char entrada[32]; // Array donde se va a recibir la entrada
+    char entrada[10]; // Array donde se va a recibir la entrada
     memset(entrada, 0, sizeof (entrada)); //Se limpia la entrada
     buscarEntrada(entrada, sizeof (entrada));
-    for (i = 0; i < 32; i++) { // Metodo de conversion de Array de char a int : shorturl.at/acoAL
+    for (i = 0; i < 10; i++) { // Metodo de conversion de Array de char a int : shorturl.at/acoAL
         if((entrada[i] - ASCII_TO_INT_DIFFERENCE) >= 10 || (entrada[i] - ASCII_TO_INT_DIFFERENCE) < 0){ // Solo puede ser numerico
             return false;
         }       
         k = 10 * k + (entrada[i] - ASCII_TO_INT_DIFFERENCE);
     }
-    dispositivo.dispositivoID = k;
+    if (k > 4294967295 || k < 0){
+        return false;
+    } else {
+        dispositivo.dispositivoID = k;
+    }
     return true;
 }
 
@@ -159,7 +163,6 @@ bool validarTemperatura(char entrada[4]){
 bool pedirTemperatura() {
     bool verificado;
     uint8_t entrada[4];
-    float temperatura;
     buscarEntrada(entrada, sizeof (entrada));
     verificado = validarTemperatura(entrada);
     if(verificado){

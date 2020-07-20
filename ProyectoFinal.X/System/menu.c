@@ -50,8 +50,6 @@ void menu() {
     MENU_STATUS status;
     uint8_t buffer[4];
     uint8_t numBytes;
-    struct tm tiempoASetear;
-    Nop();
     bool temperaturaOk;
     temperaturaOk = false;
     bool telefonoOk;
@@ -73,14 +71,14 @@ void menu() {
      * Borrar todos las medidas
      * Terminar conexion
      */
-    while (true) {
+    while (buffer[0] != 'f') {
         if (USBUSARTIsTxTrfReady()) {
             switch (status) {
                 case(EN_MENU):
-                    enviarMensaje("\r\nBienvenido\r\nEnvie la tecla presente a la izquierda de la funcion\r\n"); 
-                    enviarMensaje("a - Set ID\r\nb - Set umbral de temperatura\r\n");  
-                    enviarMensaje("c - Set telefono de contacto\r\nd - Imprimir medidas\r\n");  
-                    enviarMensaje("e - Borrar registros\r\nf - Terminar\r\n");  
+                    enviarMensaje("\r\nBienvenido\r\nEnvie la tecla presente a la izquierda de la funcion\r\n");
+                    enviarMensaje("a - Set ID\r\nb - Set umbral de temperatura\r\n");
+                    enviarMensaje("c - Set telefono de contacto\r\nd - Imprimir medidas\r\n");
+                    enviarMensaje("e - Borrar registros\r\nf - Terminar\r\n");
                     status = EN_ESPERA; //Se espera un input
                     break;
                 case(EN_ESPERA):
@@ -96,33 +94,28 @@ void menu() {
                                 while (!idOk) {
                                     enviarMensaje(PEDIDO_DE_ID);
                                     idOk = pedirID();
-                                    if(idOk){
-                                        enviarMensaje(PEDIDO_DE_UMBRAL);
-                                    }
                                 }
+                                idOk = false;
+                                enviarMensaje(DATO_CORRECTO);
                                 status = EN_MENU;
                                 break;
                             case ('b'): //Umbral de temperatura
                                 while (!temperaturaOk) {
                                     enviarMensaje(PEDIDO_DE_UMBRAL);
                                     temperaturaOk = pedirTemperatura();
-                                    if(temperaturaOk){
-                                        enviarMensaje(DATO_CORRECTO);
-                                    }
                                 }
+                                enviarMensaje(DATO_CORRECTO);
+                                temperaturaOk = false;
                                 status = EN_MENU;
                                 break;
                             case ('c')://Telefono para enviar mensajes
                                 while (!telefonoOk) { // HAY QUE PROBARLO
                                     enviarMensaje(FORMATO_DE_TELEFONO);
                                     telefonoOk = pedirNumeroDeContacto();
-                                    if(telefonoOk){
-                                        enviarMensaje(DATO_CORRECTO);
-                                    }
-                                    Nop();
                                 }
-                                status = EN_MENU;
+                                enviarMensaje(DATO_CORRECTO);
                                 telefonoOk = false;
+                                status = EN_MENU;
                                 break;
                             case ('d')://Imprimir lista de medidas 
                                 imprimirMedidas();
@@ -132,7 +125,6 @@ void menu() {
                                 status = EN_MENU;
                                 break;
                             case ('f')://Terminar conexion
-                                vTaskDelete(NULL);
                                 break;
                             default:
                                 break;
