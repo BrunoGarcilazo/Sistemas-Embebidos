@@ -273,6 +273,7 @@ void SIM808_taskCheck( void* p_param ){
     c_semGSMIsReady = xSemaphoreCreateBinary( );
     
     while( 1 ){
+        
         if( GPRS_STATUS_GetValue( )==1 ){
             // Si no está el módulo encendido tampoco envío ni recibo
             if( UART1_IsTxDone( ) ){
@@ -308,8 +309,8 @@ void SIM808_initModule( void *p_param ){
             if( (resultExchange = SIM808_exchangeCmd( ATREQ_AT, ATRES_OK, SIM808_UART_TIMEOUT_ms, SIM808_MAX_RETRIES ))==true ){
                 if( (resultExchange = SIM808_exchangeCmd( ATREQ_ECHO_OFF, ATRES_OK, SIM808_UART_TIMEOUT_ms, SIM808_MAX_RETRIES ))==true ){
                     xSemaphoreGive( c_semIsModuleOnAndReady );
-                    xTaskCreate( SIM808_initGSM, "iniGSM", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+12, &initGSMHandle );
-                    xTaskCreate( SIM808_initGPS, "iniGPS", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+13, &initGPSHandle );
+                    xTaskCreate( SIM808_initGSM, "iniGSM", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+3, &initGSMHandle );
+                    xTaskCreate( SIM808_initGPS, "iniGPS", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY+2, &initGPSHandle );
                     vTaskDelete( modemInitHandle );
                 }
                 else{

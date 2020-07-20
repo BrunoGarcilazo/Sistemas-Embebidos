@@ -30,6 +30,7 @@ struct tm tiempoDelSistema;
 
 /*Semaforo que indica que el sistema obtuvo hora del GPS*/
 extern SemaphoreHandle_t horaSeteada;
+
 /*Semaforo que indica si la trama obtenida es valida*/
 extern SemaphoreHandle_t tramaValida;
 

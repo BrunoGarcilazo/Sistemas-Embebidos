@@ -58,22 +58,22 @@ SemaphoreHandle_t horaSeteada;
 void mantenerGPS(void *p_params) {
     horaSeteada = xSemaphoreCreateBinary();
     tramaValida = xSemaphoreCreateBinary();
+
     while (1) {
-        /*SIM808_getNMEA(dispositivo.trama);
+        SIM808_getNMEA(dispositivo.trama);
         while (!SIM808_validateNMEAFrame(dispositivo.trama)) {
-           SIM808_getNMEA(dispositivo.trama);
-           xSemaphoreTake(tramaValida,0);
-           vTaskDelay(pdMS_TO_TICKS(100));
-        }*/
-        
+            xSemaphoreTake(tramaValida,0);
+            SIM808_getNMEA(dispositivo.trama);
+            vTaskDelay(pdMS_TO_TICKS(500));
+        }
+        xSemaphoreGive(tramaValida);
         if (!dispositivo.inicializado) {
             GPS_getUTC(&tiempoDelSistema, dispositivo.trama);
             RTCC_TimeSet(&tiempoDelSistema);
             xSemaphoreGive(horaSeteada);
             dispositivo.inicializado = true;
         }
-        LEDA_Toggle();
-        vTaskDelay(pdMS_TO_TICKS(5000)); //Si la trama es valida y seteo la hora que espere segundo
+        vTaskDelay(pdMS_TO_TICKS(1000)); //Si la trama es valida y seteo la hora que espere segundo
     }
 }
 

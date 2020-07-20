@@ -30,6 +30,8 @@
 #include <stdint.h>
 #include <time.h>
 #include "../Communications/GPS.h"
+#include "FreeRTOS.h"
+#include "semphr.h"
 
 typedef struct{
     float temperaturaRegistrada;
@@ -37,10 +39,12 @@ typedef struct{
     GPSPosition_t posicion;
 } medida_t ;
 
-medida_t mediciones[200];
+medida_t mediciones[10];
 uint8_t ultimaMedida;
 
-void alertarPersona(void *p_params);
+extern SemaphoreHandle_t prenderYapagarLucesRojas;
+extern SemaphoreHandle_t prenderYapagarLucesVerdes;
+
 void conversiones(void *p_params);
 
 #endif

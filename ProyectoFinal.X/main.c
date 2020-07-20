@@ -76,24 +76,22 @@ int main(void) {
     dispositivo.midiendo = false;
     dispositivo.umbralDeTemperatura = 40.0;
     dispositivo.dispositivoID = 1234;
-    strcpy(dispositivo.numeroDeContacto, "\"096039005\"");
+    strcpy(dispositivo.numeroDeContacto, "\"099343156\"");
     strcpy(dispositivo.trama, "+CGNSINF: 1,1,20200715213000.000,-32.370193,-54.172768,117.100");
     ultimaMedida = 0;
     apagarLeds();
 
-    xTaskCreate(SIM808_taskCheck, "modemTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 12, NULL);
+    xTaskCreate(mantenerGPS, "mantenimientoGPS", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
 
-    xTaskCreate(SIM808_initModule, "modemIni", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 11, &modemInitHandle);
+    xTaskCreate(SIM808_taskCheck, "modemTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
 
-    xTaskCreate(mantenimientoUSB, "mantenimientoUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 10, NULL);
-    
-    xTaskCreate(mantenerGPS, "mantenimientoGPS", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 10, NULL);
+    xTaskCreate(SIM808_initModule, "modemIni", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 2, &modemInitHandle);
 
-    xTaskCreate(interfazTermometro, "interfazTermometro", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 9, NULL);
+    xTaskCreate(mantenimientoUSB, "mantenimientoUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
 
-    xTaskCreate(interfazUSB, "interfazUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 7, NULL);
+    xTaskCreate(interfazTermometro, "interfazTermometro", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
 
-    //xTaskCreate(menu, "menu", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 9, NULL);
+    //xTaskCreate(interfazUSB, "interfazUSB", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 7, NULL);
 
     /* Finally start the scheduler. */
     vTaskStartScheduler();

@@ -24,6 +24,8 @@
 /* Section: Included Files                                                    */
 /* ************************************************************************** */
 /* ************************************************************************** */
+#include "FreeRTOS.h"
+#include "semphr.h"
 
 typedef struct{
     uint32_t dispositivoID;      // ID unico del dispositivo
@@ -36,6 +38,8 @@ typedef struct{
 } termometro_t;
 
 termometro_t dispositivo;
+
+extern SemaphoreHandle_t medir;
 
 bool boton2Flag;
 
