@@ -46,7 +46,7 @@ void invertirLedsMedicion() {
 }
 
 void prenderLedsRojosPor2Seg(void *p_params) {
-    uint8_t i, j;
+    uint8_t i;
     while (1) {
         if (xSemaphoreTake(prenderYapagarLucesRojas,0) == pdTRUE) {
             for (i = 0; i < MAX_LEDS; i++) {
@@ -62,7 +62,7 @@ void prenderLedsRojosPor2Seg(void *p_params) {
 }
 
 void prenderLedsVerdesPor2Seg(void *p_params) {
-    uint8_t i, j;
+    uint8_t i;
     while (1) {
         if (xSemaphoreTake(prenderYapagarLucesVerdes,0) == pdTRUE) {
             for (i = 0; i < MAX_LEDS; i++) {

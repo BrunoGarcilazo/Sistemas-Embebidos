@@ -35,7 +35,6 @@
 #include "../mcc_generated_files/pin_manager.h"
 
 #include "rtcManager.h"
-#include "usbManager.h"
 #include "../UI/interfazUSB.h"
 #include "../UI/interfazConversiones.h"
 #include "../System/menu.h"
@@ -60,7 +59,7 @@ void mantenerGPS(void *p_params) {
     tramaValida = xSemaphoreCreateBinary();
 
     while (1) {
-        SIM808_getNMEA(dispositivo.trama);
+        //SIM808_getNMEA(dispositivo.trama);
         while (!SIM808_validateNMEAFrame(dispositivo.trama)) {
             xSemaphoreTake(tramaValida,0);
             SIM808_getNMEA(dispositivo.trama);

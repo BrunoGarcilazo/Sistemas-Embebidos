@@ -77,7 +77,7 @@ int main(void) {
     dispositivo.umbralDeTemperatura = 40.0;
     dispositivo.dispositivoID = 1234;
     strcpy(dispositivo.numeroDeContacto, "\"099343156\"");
-    //strcpy(dispositivo.trama, "+CGNSINF: 1,1,20200715213000.000,-32.370193,-54.172768,117.100");
+    strcpy(dispositivo.trama, "+CGNSINF: 1,1,20200715213000.000,-32.370193,-54.172768,117.100");
     ultimaMedida = 0;
     apagarLeds();
 

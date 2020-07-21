@@ -23,6 +23,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <time.h>
+#include <math.h>
 
 
 #include "../System/conversiones.h"
@@ -30,17 +31,16 @@
 #include "interfazConversiones.h"
 #include "../Platform/rtcManager.h"
 
-
 void interfazUSB(void* params) {
     uint8_t buffer[4];
     uint16_t numBytes;
     while (1) {
         if (USBUSARTIsTxTrfReady() & (USBGetDeviceState() >= CONFIGURED_STATE) && !USBIsDeviceSuspended()) {
-            numBytes = getsUSBUSART(buffer, strlen (buffer));
+            numBytes = getsUSBUSART(buffer, strlen(buffer));
             if (numBytes > 0) {
-                if (!dispositivo.inicializado){
+                /*if (!dispositivo.inicializado) {
                     inicializar();
-                }
+                }*/
                 menu();
             }
         }
@@ -48,15 +48,16 @@ void interfazUSB(void* params) {
     }
 }
 
-void mantenimientoUSB(void * p_param){
+void mantenimientoUSB(void * p_param) {
     while (1) {
         if ((USBGetDeviceState() >= CONFIGURED_STATE) && !USBIsDeviceSuspended()) {
             CDCTxService();
         }
         vTaskDelay(pdMS_TO_TICKS(10));
     }
-    
+
 }
+
 /**
  * Pide al Usuario un ID para el Dispositivo
  * @return si el ID ingresado se guardo con exito o no (fue valido)
@@ -68,12 +69,12 @@ bool pedirID() { // sin terminar
     memset(entrada, 0, sizeof (entrada)); //Se limpia la entrada
     buscarEntrada(entrada, sizeof (entrada));
     for (i = 0; i < 10; i++) { // Metodo de conversion de Array de char a int : shorturl.at/acoAL
-        if((entrada[i] - ASCII_TO_INT_DIFFERENCE) >= 10 || (entrada[i] - ASCII_TO_INT_DIFFERENCE) < 0){ // Solo puede ser numerico
+        if ((entrada[i] - ASCII_TO_INT_DIFFERENCE) >= 10 || (entrada[i] - ASCII_TO_INT_DIFFERENCE) < 0) { // Solo puede ser numerico
             return false;
-        }       
+        }
         k = 10 * k + (entrada[i] - ASCII_TO_INT_DIFFERENCE);
     }
-    if (k > 4294967295 || k < 0){
+    if (k > 4294967295 || k < 0) {
         return false;
     } else {
         dispositivo.dispositivoID = k;
@@ -85,51 +86,52 @@ bool pedirID() { // sin terminar
  * 
  * @return numero dado es valido o no
  */
-bool validarTelefono(char *numero){
+bool validarTelefono(char *numero) {
     uint8_t i;
-    if((numero[0] - ASCII_TO_INT_DIFFERENCE) == 0){
-        if((numero[1] - ASCII_TO_INT_DIFFERENCE) == 9){
-            for(i=0;i<9;i++){
-                if((numero[i] - ASCII_TO_INT_DIFFERENCE) >= 10 || (numero[i] - 48) < 0){
+    if ((numero[0] - ASCII_TO_INT_DIFFERENCE) == 0) {
+        if ((numero[1] - ASCII_TO_INT_DIFFERENCE) == 9) {
+            for (i = 0; i < 9; i++) {
+                if ((numero[i] - ASCII_TO_INT_DIFFERENCE) >= 10 || (numero[i] - 48) < 0) {
                     return false; // No es un numero
                 }
             }
-             // Valide todos los numeros
-            return true;         
-        }else{
+            // Valide todos los numeros
+            return true;
+        } else {
             return false; // No es de la manera 09XXXXXX
         }
-    }else{
+    } else {
         return false; // No comienza con 0
     }
-    
+
 }
+
 /**
  * Funcion que pide un numero de contacto al Usuario
  * @return  Telefono ingresado valido o no
  */
-bool pedirNumeroDeContacto(){
-    uint8_t i,k;
+bool pedirNumeroDeContacto() {
+    uint8_t i, k;
     char entrada[9];
     uint8_t numeroSolo[9];
     uint8_t numeroFormatoSMS[11];
-    
-    memset(entrada, 0, (sizeof(entrada))); //Se limpia la entrada
-    buscarEntrada(entrada, (sizeof(entrada)));
-    
-    if(validarTelefono(entrada)){
+
+    memset(entrada, 0, (sizeof (entrada))); //Se limpia la entrada
+    buscarEntrada(entrada, (sizeof (entrada)));
+
+    if (validarTelefono(entrada)) {
         // Convierto la entrada en un array de char con el formato \"092020400\"
         numeroFormatoSMS[0] = '"';
-        for(i=0;i<sizeof(entrada);i++){
-            numeroFormatoSMS[i+1] = entrada[i];
+        for (i = 0; i<sizeof (entrada); i++) {
+            numeroFormatoSMS[i + 1] = entrada[i];
         }
         numeroFormatoSMS[10] = '"';
         // Ahora numeroFormatoSMS = "096123456"
-        for(k=0;k<sizeof(entrada);k++){
+        for (k = 0; k<sizeof (entrada); k++) {
             dispositivo.numeroDeContacto[k] = numeroFormatoSMS[k];
         }
         return true;
-    }else{
+    } else {
         return false;
     }
 }
@@ -139,23 +141,24 @@ bool pedirNumeroDeContacto(){
  * @param entrada dada por el Usuario
  * @return entrada valida o no
  */
-bool validarTemperatura(char entrada[4]){   
+bool validarTemperatura(char entrada[4]) {
     uint8_t parteEntera;
     parteEntera = ((10 * (entrada[0] - ASCII_TO_INT_DIFFERENCE)) + (entrada[1] - ASCII_TO_INT_DIFFERENCE));
-    if(parteEntera > 42 || parteEntera < 32){
+    if (parteEntera > 42 || parteEntera < 32) {
         return false;
-    }else{
-        if(entrada[2]!='.'){
+    } else {
+        if (entrada[2] != '.') {
             return false;
-        }else{
-            if((entrada[3] - ASCII_TO_INT_DIFFERENCE) < 0 || (entrada[3] - ASCII_TO_INT_DIFFERENCE) > 9){
+        } else {
+            if ((entrada[3] - ASCII_TO_INT_DIFFERENCE) < 0 || (entrada[3] - ASCII_TO_INT_DIFFERENCE) > 9) {
                 return false;
-            }else{
+            } else {
                 return true;
-            } 
+            }
         }
     }
 }
+
 /**
  *  Funcion que pide el Umbral de Temperatura al Usuario
  * @return Temperatura valida o no
@@ -165,79 +168,76 @@ bool pedirTemperatura() {
     uint8_t entrada[4];
     buscarEntrada(entrada, sizeof (entrada));
     verificado = validarTemperatura(entrada);
-    if(verificado){
+    if (verificado) {
         dispositivo.umbralDeTemperatura = atof(entrada);
         return true;
-    }else{
+    } else {
         return false;
     }
-    
+
 }
+
 /**
  * Funcion que envia por USB las medidas guardadas hasta el momento
  */
-void imprimirMedidas(){
-    char id[15];
-    strcpy(id,"\r\nMedida    \r\n");
-    
-    char temperaturaMensaje[26];
-    strcpy(temperaturaMensaje,"\r\nTemperatura: ");
-    
-    char fechaMensaje[36];
-    strcpy(fechaMensaje,"Fecha y Hora: ");
-    
-    char indiceStringID[3];
-    
-    
-    char posicionString[55];
-    char posicionMensaje[69];
-    strcpy(posicionMensaje,"Localizacion: ");
-    
+void imprimirMedidas() {
+    uint8_t id[100];
+    strcpy(id, "\r\nMedida ");
+
+    uint8_t temperaturaMensaje[100];
+    strcpy(temperaturaMensaje, "\r\nTemperatura: ");
+
+    uint8_t fechaMensaje[100];
+    strcpy(fechaMensaje, "Fecha y Hora: ");
+
+    uint8_t indiceStringID[100];
+
+    uint8_t posicionString[100];
+    uint8_t posicionMensaje[100];
+    strcpy(posicionMensaje, "Localizacion: ");
+
     uint8_t i;
-    uint8_t fechaYhora[24];
-    struct tm *tiempoMedida; 
-    char temperatura[4];
+    uint8_t fechaYhora[100];
+    struct tm *tiempoMedida;
+    uint8_t temperatura[100];
     time_t timetMedida;
-    for(i=0;i<ultimaMedida;i++){
-        mediciones[i].tiempo = 0;
+    for (i = 0; i < ultimaMedida; i++) {
+
         timetMedida = mediciones[i].tiempo;
-        
+
         tiempoMedida = gmtime(&timetMedida);
+
+        strftime(fechaYhora, 24, " %d/%m/%Y-%H:%M ", tiempoMedida);
+        strcat(fechaMensaje, fechaYhora);
+
         
-        strftime(fechaYhora,24, " %d/%m/%Y-%H:%M ",tiempoMedida);
-           
-        sprintf(temperatura,"%f",mediciones[i].temperaturaRegistrada);
         
-        sprintf(indiceStringID,"%d",i);
-        id[9] = indiceStringID[0];
-        id[10] = indiceStringID[1];
-        id[11] = indiceStringID[2];
-        
-        strcat(temperaturaMensaje,temperatura);
-        strcat(temperaturaMensaje,"\r\n");
-        
-        strcat(fechaMensaje,fechaYhora);
-        
+        sprintf(temperatura, "%.1f", mediciones[i].temperaturaRegistrada);
+        strcat(temperaturaMensaje, temperatura);
+        strcat(temperaturaMensaje, "\r\n");
+
+        sprintf(indiceStringID, "%d", i);
+        strcat(id, indiceStringID);
+        strcat(id, "\r\n");
+
         GPS_generateGoogleMaps(posicionString, mediciones[i].posicion);
-        strcat(posicionMensaje,posicionString);
-        
+        strcat(posicionMensaje, posicionString);
+
         enviarMensaje(id);
         enviarMensaje(fechaMensaje);
         enviarMensaje(temperaturaMensaje);
         enviarMensaje(posicionMensaje);
-
-       
-
-        
-        
-        
-
-        //enviarMensaje(datos);
-        vTaskDelay(pdMS_TO_TICKS(500));
+        memset(fechaYhora, 0, sizeof fechaYhora);
+        memset(fechaYhora, 0, sizeof temperatura);
+        memset(fechaYhora, 0, sizeof indiceStringID);
+        strcpy(id, "\r\nMedida ");
+        strcpy(temperaturaMensaje, "\r\nTemperatura: ");
+        strcpy(fechaMensaje, "Fecha y Hora: ");
+        strcpy(posicionMensaje, "Localizacion: ");
     }
     /**
      Recorrer la estructura con las Medidas y enviar los datos por USB.
-     */ 
+     */
 }
 /* *****************************************************************************
  End of File

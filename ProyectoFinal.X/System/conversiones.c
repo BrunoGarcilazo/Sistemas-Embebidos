@@ -49,7 +49,7 @@ xSemaphoreHandle prenderYapagarLucesVerdes;
  * Hace el Promedio de todos los Samples obtenidos del ADC
  * @return 
  */
-uint16_t promedioSamples(uint16_t *samplesConversiones, uint8_t tamanio) {
+float promedioSamples(uint16_t *samplesConversiones, uint8_t tamanio) {
     uint8_t i;
     uint16_t sumaDeValores;
     sumaDeValores = 0;
@@ -64,7 +64,7 @@ uint16_t promedioSamples(uint16_t *samplesConversiones, uint8_t tamanio) {
  * @param promedio Promedio de las temperaturas medidas por el ADC
  * @return Valor en grados
  */
-uint16_t conversorADCTemp(float promedio) {
+float conversorADCTemp(float promedio) {
     uint8_t vecesQueEntra10;
     float temperatura;
 
