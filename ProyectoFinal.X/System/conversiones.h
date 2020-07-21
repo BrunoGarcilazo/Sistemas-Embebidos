@@ -39,7 +39,7 @@ typedef struct{
     GPSPosition_t posicion;
 } medida_t ;
 
-medida_t mediciones[10];
+medida_t mediciones[200];
 uint8_t ultimaMedida;
 
 extern SemaphoreHandle_t prenderYapagarLucesRojas;

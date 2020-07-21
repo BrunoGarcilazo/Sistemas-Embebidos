@@ -37,7 +37,7 @@
 //Archivos del programa
 #include "menu.h"
 #include "../Platform/usbManager.h"
-#include "../Platform/rtcManager.h"
+#include "../Platform/gpsManager.h"
 #include "../UI/interfazUSB.h"
 
 // *****************************************************************************
@@ -50,20 +50,11 @@ void menu() {
     MENU_STATUS status;
     uint8_t buffer[4];
     uint8_t numBytes;
-    bool temperaturaOk;
-    temperaturaOk = false;
-    bool telefonoOk;
-    telefonoOk = false;
-    bool idOk;
-    idOk = false;
-
     status = EN_MENU;
 
 
     /**
-     * Lista de men�:
-     * Setear hora
-     * Mostrar hora
+     * Lista de menu:
      * Poner ID de dispositivo
      * Umbral de temperatura
      * Telefono para enviar mensajes
@@ -91,30 +82,15 @@ void menu() {
                                 }
                                 break;
                             case ('a'): //Poner Id del dispositivo, numero unico de 32 bits.
-                                while (!idOk) {
-                                    enviarMensaje(PEDIDO_DE_ID);
-                                    idOk = pedirID();
-                                }
-                                idOk = false;
-                                enviarMensaje(DATO_CORRECTO);
+                                pedirID();
                                 status = EN_MENU;
                                 break;
                             case ('b'): //Umbral de temperatura
-                                while (!temperaturaOk) {
-                                    enviarMensaje(PEDIDO_DE_UMBRAL);
-                                    temperaturaOk = pedirTemperatura();
-                                }
-                                enviarMensaje(DATO_CORRECTO);
-                                temperaturaOk = false;
+                                pedirUmbralTemperatura();
                                 status = EN_MENU;
                                 break;
                             case ('c')://Telefono para enviar mensajes
-                                while (!telefonoOk) { // HAY QUE PROBARLO
-                                    enviarMensaje(FORMATO_DE_TELEFONO);
-                                    telefonoOk = pedirNumeroDeContacto();
-                                }
-                                enviarMensaje(DATO_CORRECTO);
-                                telefonoOk = false;
+                                pedirNumeroDeContacto();
                                 status = EN_MENU;
                                 break;
                             case ('d')://Imprimir lista de medidas 
@@ -125,6 +101,7 @@ void menu() {
                                 status = EN_MENU;
                                 break;
                             case ('f')://Terminar conexion
+                                enviarMensaje("\r\nConexion terminada. Gracias por confiar\r\n");
                                 break;
                             default:
                                 break;
@@ -137,6 +114,8 @@ void menu() {
         }
     }
 }
+
+
 
 /* *****************************************************************************
  End of File

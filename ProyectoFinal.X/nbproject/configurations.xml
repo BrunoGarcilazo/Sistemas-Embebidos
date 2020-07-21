@@ -51,9 +51,9 @@
       </logicalFolder>
       <logicalFolder name="f3" displayName="Platform" projectFiles="true">
         <itemPath>Platform/usbManager.h</itemPath>
-        <itemPath>Platform/rtcManager.h</itemPath>
         <itemPath>Platform/WS2812.h</itemPath>
         <itemPath>Platform/ledManager.h</itemPath>
+        <itemPath>Platform/gpsManager.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="System" projectFiles="true">
         <itemPath>System/menu.h</itemPath>
@@ -116,8 +116,8 @@
       <logicalFolder name="f3" displayName="Platform" projectFiles="true">
         <itemPath>Platform/usbManager.c</itemPath>
         <itemPath>Platform/WS2812.c</itemPath>
-        <itemPath>Platform/rtcManager.c</itemPath>
         <itemPath>Platform/ledManager.c</itemPath>
+        <itemPath>Platform/gpsManager.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="System" projectFiles="true">
         <itemPath>System/menu.c</itemPath>
@@ -254,7 +254,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="3000"/>
+        <property key="heap-size" value="1024"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>
@@ -444,8 +444,6 @@
                   value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="1d000000-1d03ffff"/>
-        <property key="programmerToGoFilePath"
-                  value="C:/Users/estudiante.fit/OneDrive/AA UCU/05 Semestre Cinco/Embebidos/Laboratorios/ProyectoFinal.X/debug/default/ProyectoFinal_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.pgmentry.voltage" value="low"/>

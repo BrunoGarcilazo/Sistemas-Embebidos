@@ -21,21 +21,30 @@
 #include  <stdbool.h>
 #include "../System/conversiones.h"
 #include "interfazConversiones.h"
+#include "interfazUSB.h"
 
 
-SemaphoreHandle_t medir;
+SemaphoreHandle_t puedoMedir;
 
 void interfazTermometro(void* params) {
     ultimaMedida = 0;
     TaskHandle_t conversionHandler = NULL;
-    medir = xSemaphoreCreateBinary();
+    puedoMedir = xSemaphoreCreateBinary();
     xTaskCreate(conversiones, "Conversiones", configMINIMAL_STACK_SIZE + 500, NULL, tskIDLE_PRIORITY + 2, &conversionHandler);
     while (1) {
         if (boton2Flag) {
-            if (xSemaphoreTake(medir,0) == pdTRUE) { //Si el semaforo esta libre
-                xSemaphoreTake(medir,0); //Detengo la medida
-            } else { //Si el semaforo no esta libre 
-                xSemaphoreGive(medir); //Permito medir
+            if (xSemaphoreTake(inicializado, 0) == pdTRUE) {
+                if (xSemaphoreTake(puedoMedir, 0) == pdTRUE) { //Si el semaforo esta libre
+                    xSemaphoreTake(puedoMedir, 0); //Detengo la medida
+                    xSemaphoreGive(inicializado);
+                } else { //Si el semaforo no esta libre 
+                    xSemaphoreGive(puedoMedir); //Permito medir
+                }
+            } else {
+                if (xSemaphoreTake(puedoMedir, 0) == pdTRUE) { //Si el semaforo esta libre
+                    xSemaphoreTake(puedoMedir, 0); //Detengo la medida
+                    xSemaphoreGive(inicializado);
+                }
             }
             boton2Flag = false;
         }

@@ -34,13 +34,12 @@
 #include "../mcc_generated_files/rtcc.h"
 #include "../mcc_generated_files/pin_manager.h"
 
-#include "rtcManager.h"
+#include "gpsManager.h"
 #include "../UI/interfazUSB.h"
 #include "../UI/interfazConversiones.h"
 #include "../System/menu.h"
 
 SemaphoreHandle_t tramaValida;
-SemaphoreHandle_t horaSeteada;
 
 /* ************************************************************************** */
 /* ************************************************************************** */
@@ -55,43 +54,23 @@ SemaphoreHandle_t horaSeteada;
  * @param p_params
  */
 void mantenerGPS(void *p_params) {
-    horaSeteada = xSemaphoreCreateBinary();
     tramaValida = xSemaphoreCreateBinary();
 
     while (1) {
         //SIM808_getNMEA(dispositivo.trama);
         while (!SIM808_validateNMEAFrame(dispositivo.trama)) {
-            xSemaphoreTake(tramaValida,0);
+            xSemaphoreTake(tramaValida, 0);
             SIM808_getNMEA(dispositivo.trama);
             vTaskDelay(pdMS_TO_TICKS(500));
         }
+        GPS_getUTC(&tiempoDelSistema, dispositivo.trama);
+        RTCC_TimeSet(&tiempoDelSistema);
         xSemaphoreGive(tramaValida);
-        if (!dispositivo.inicializado) {
-            GPS_getUTC(&tiempoDelSistema, dispositivo.trama);
-            RTCC_TimeSet(&tiempoDelSistema);
-            xSemaphoreGive(horaSeteada);
-            dispositivo.inicializado = true;
-        }
+
         LEDA_Toggle();
-        vTaskDelay(pdMS_TO_TICKS(1000)); //Si la trama es valida y seteo la hora que espere segundo
+        vTaskDelay(pdMS_TO_TICKS(1000)); //Si la trama es valida y la hora esta seteada que espere segundo
     }
 }
-
-/**
- * Cada un segundo actualiza la hora del sistema
- * @param p_params
- */
-void mantenerHora(void *p_params) {
-    while (1) {
-        if (xSemaphoreTake(horaSeteada, 110)) {
-            RTCC_TimeGet(&tiempoDelSistema);
-            vTaskDelay(pdMS_TO_TICKS(1000));
-            xSemaphoreGive(horaSeteada);
-        }
-    }
-}
-
-
 /* *****************************************************************************
  End of File
  */

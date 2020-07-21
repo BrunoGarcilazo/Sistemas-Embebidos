@@ -35,10 +35,11 @@
 #include "../mcc_generated_files/usb/usb_device_cdc.h"
 #include "../mcc_generated_files/pin_manager.h"
 
-#include "../Platform/ledManager.h"
-#include "../Platform/rtcManager.h"
 #include "conversiones.h"
+#include "../Platform/ledManager.h"
+#include "../Platform/gpsManager.h"
 #include "../UI/interfazConversiones.h"
+#include "../UI/interfazUSB.h"
 #include "../Communications/GPS.h"
 #include "../Communications/SIM808.h"
 
@@ -115,23 +116,21 @@ void conversiones(void *p_params) {
     contador = 0;
 
     prenderYapagarLucesRojas = xSemaphoreCreateBinary();
-    xSemaphoreTake(prenderYapagarLucesRojas,0);
     prenderYapagarLucesVerdes = xSemaphoreCreateBinary();
-    xSemaphoreTake(prenderYapagarLucesVerdes,0);
+    
     
     xTaskCreate(prenderLedsRojosPor2Seg, "LucesRojas", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 6, NULL);
     xTaskCreate(prenderLedsVerdesPor2Seg, "LucesVerdes", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 6, NULL);
 
-
     while (1) {
-        if (tramaValida != NULL && medir != NULL) {
+        if (tramaValida != NULL && puedoMedir != NULL) {
             if (xSemaphoreTake(tramaValida, 0) == pdTRUE &&
-                    xSemaphoreTake(medir, 0) == pdTRUE) {
+                    xSemaphoreTake(puedoMedir, 0) == pdTRUE) {
 
-                xSemaphoreGive(medir);
+                xSemaphoreGive(puedoMedir);
                 while (contador != 10) {
-                    if (xSemaphoreTake(medir,0) == pdTRUE) {
-                        xSemaphoreGive(medir);
+                    if (xSemaphoreTake(puedoMedir,0) == pdTRUE) {
+                        xSemaphoreGive(puedoMedir);
                         while (!ADC1_IsConversionComplete()) {
                         }
                         muestra = ADC1_ConversionResultGet();
@@ -145,12 +144,11 @@ void conversiones(void *p_params) {
                     }
                 }
                 contador = 0;
-                if (xSemaphoreTake(medir,0) == pdTRUE) {
-                    xSemaphoreGive(medir);
+                if (xSemaphoreTake(puedoMedir,0) == pdTRUE) {
+                    xSemaphoreGive(puedoMedir);
                     promedio = promedioSamples(samplesConversiones, conversionesAHacer);
                     promedio = conversorADCTemp(promedio);
                     
-                    RTCC_TimeGet(&tiempoDelSistema);
                     GPS_getPosition(&posicion, dispositivo.trama);
 
                     medida.tiempo = mktime(&tiempoDelSistema);
@@ -161,7 +159,7 @@ void conversiones(void *p_params) {
                     mediciones[ultimaMedida] = medida;
                     ultimaMedida++;
 
-                    if (xSemaphoreTake(medir,0) == pdTRUE) {
+                    if (xSemaphoreTake(puedoMedir,0) == pdTRUE) {
                         if (promedio > dispositivo.umbralDeTemperatura) {
                             xSemaphoreGive(prenderYapagarLucesRojas);
                             alertarPersona(&medida);
@@ -175,6 +173,7 @@ void conversiones(void *p_params) {
                 } else {
                     continue;
                 }
+                xSemaphoreGive(inicializado);
                 xSemaphoreGive(tramaValida);
             } else {
                 vTaskDelay(pdMS_TO_TICKS(30));
@@ -182,7 +181,6 @@ void conversiones(void *p_params) {
         } else {
             vTaskDelay(pdMS_TO_TICKS(1000));
         }
-
     }
 }
 

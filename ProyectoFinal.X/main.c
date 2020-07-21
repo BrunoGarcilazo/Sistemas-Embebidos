@@ -58,7 +58,7 @@
 
 #include "Communications/GPS.h"
 #include "Communications/SIM808.h"
-#include "Platform/rtcManager.h"
+#include "Platform/gpsManager.h"
 #include "UI/interfazUSB.h"
 #include "UI/interfazConversiones.h"
 #include "System/conversiones.h"
@@ -71,15 +71,13 @@
 int main(void) {
     // initialize the device
     SYSTEM_Initialize();
-    boton2Flag = false;
     dispositivo.inicializado = false;
-    dispositivo.midiendo = false;
-    dispositivo.umbralDeTemperatura = 40.0;
-    dispositivo.dispositivoID = 1234;
-    strcpy(dispositivo.numeroDeContacto, "\"099343156\"");
-    strcpy(dispositivo.trama, "+CGNSINF: 1,1,20200715213000.000,-32.370193,-54.172768,117.100");
     ultimaMedida = 0;
+    boton2Flag = false;
     apagarLeds();
+    
+    strcpy(dispositivo.trama, "+CGNSINF: 1,1,20200715213000.000,-32.370193,-54.172768,117.100");
+    
 
     xTaskCreate(mantenerGPS, "mantenimientoGPS", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
 
