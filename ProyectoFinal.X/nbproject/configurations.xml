@@ -58,6 +58,7 @@
       <logicalFolder name="f2" displayName="System" projectFiles="true">
         <itemPath>System/menu.h</itemPath>
         <itemPath>System/conversiones.h</itemPath>
+        <itemPath>System/utils.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="UI" projectFiles="true">
         <itemPath>UI/interfazUSB.h</itemPath>
@@ -121,6 +122,7 @@
       <logicalFolder name="f2" displayName="System" projectFiles="true">
         <itemPath>System/menu.c</itemPath>
         <itemPath>System/conversiones.c</itemPath>
+        <itemPath>System/utils.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f5" displayName="UI" projectFiles="true">
         <itemPath>UI/interfazUSB.c</itemPath>
@@ -442,6 +444,8 @@
                   value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="1d000000-1d03ffff"/>
+        <property key="programmerToGoFilePath"
+                  value="C:/Users/estudiante.fit/OneDrive/AA UCU/05 Semestre Cinco/Embebidos/Laboratorios/ProyectoFinal.X/debug/default/ProyectoFinal_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.pgmentry.voltage" value="low"/>
