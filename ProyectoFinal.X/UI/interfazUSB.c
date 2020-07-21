@@ -20,16 +20,80 @@
 #include  "../mcc_generated_files/usb/usb_device_cdc.h"
 
 #include  <stdint.h>
+#include <math.h> 
 #include <stdio.h>
+
 #include <string.h>
+//#include <stdlib.h>
 #include <time.h>
 #include <math.h>
 
 
 #include "../System/conversiones.h"
 #include "interfazUSB.h"
-#include "interfazConversiones.h"
 #include "../Platform/rtcManager.h"
+
+// Reverses a string 'str' of length 'len' 
+void reverse(char* str, int len) 
+{ 
+    int i = 0, j = len - 1, temp; 
+    while (i < j) { 
+        temp = str[i]; 
+        str[i] = str[j]; 
+        str[j] = temp; 
+        i++; 
+        j--; 
+    } 
+} 
+  
+// Converts a given integer x to string str[].  
+// d is the number of digits required in the output.  
+// If d is more than the number of digits in x,  
+// then 0s are added at the beginning. 
+int intToStr(int x, char str[], int d) 
+{ 
+    int i = 0; 
+    while (x) { 
+        str[i++] = (x % 10) + '0'; 
+        x = x / 10; 
+    } 
+  
+    // If number of digits required is more, then 
+    // add 0s at the beginning 
+    while (i < d) 
+        str[i++] = '0'; 
+  
+    reverse(str, i); 
+    str[i] = '\0'; 
+    return i; 
+} 
+  
+// Converts a floating-point/double number to a string. 
+void ftoa(float n, char* res, int afterpoint) 
+{ 
+    // Extract integer part 
+    int ipart = (int)n; 
+  
+    // Extract floating part 
+    float fpart = n - (float)ipart; 
+  
+    // convert integer part to string 
+    int i = intToStr(ipart, res, 0); 
+  
+    // check for display option after point 
+    if (afterpoint != 0) { 
+        res[i] = '.'; // add dot 
+  
+        // Get the value of fraction part upto given no. 
+        // of points after dot. The third parameter  
+        // is needed to handle cases like 233.007 
+        fpart = fpart * pow(10, afterpoint); 
+  
+        intToStr((int)fpart, res + i + 1, afterpoint); 
+    } 
+} 
+
+
 
 void interfazUSB(void* params) {
     uint8_t buffer[4];
@@ -180,65 +244,84 @@ bool pedirTemperatura() {
 /**
  * Funcion que envia por USB las medidas guardadas hasta el momento
  */
-void imprimirMedidas() {
-    uint8_t id[100];
-    strcpy(id, "\r\nMedida ");
-
-    uint8_t temperaturaMensaje[100];
-    strcpy(temperaturaMensaje, "\r\nTemperatura: ");
-
-    uint8_t fechaMensaje[100];
-    strcpy(fechaMensaje, "Fecha y Hora: ");
-
-    uint8_t indiceStringID[100];
-
-    uint8_t posicionString[100];
-    uint8_t posicionMensaje[100];
-    strcpy(posicionMensaje, "Localizacion: ");
-
+void imprimirMedidas(){
+  //  char id[15];
+  //  strcpy(id,"\r\nMedida    \r\n");
+    
+    char temperaturaMensaje[26];
+    strcpy(temperaturaMensaje,"\r\nTemperatura: ");
+    
+    //char fechaMensaje[38];
+    //strcpy(fechaMensaje,"\r\nFecha y Hora: ");
+    
+    //char indiceStringID[3];
+    
+    
+    //char posicionString[55];
+    //char posicionMensaje[69];
+    //strcpy(posicionMensaje,"Localizacion: ");
+    
     uint8_t i;
-    uint8_t fechaYhora[100];
-    struct tm *tiempoMedida;
-    uint8_t temperatura[100];
-    time_t timetMedida;
-    for (i = 0; i < ultimaMedida; i++) {
-
-        timetMedida = mediciones[i].tiempo;
-
-        tiempoMedida = gmtime(&timetMedida);
-
-        strftime(fechaYhora, 24, " %d/%m/%Y-%H:%M ", tiempoMedida);
-        strcat(fechaMensaje, fechaYhora);
+    //uint8_t fechaYhora[24];
+    //struct tm *tiempoMedida; 
+    medida_t *medida;
+    char temperatura[4];
+   // time_t timetMedida;
+    for(i=0;i<ultimaMedida;i++){
+        medida = &mediciones[i];
+       // timetMedida = mediciones[i].tiempo;
+        
+       // tiempoMedida = gmtime(&timetMedida);
+        
+      //  strftime(fechaYhora,24, " %d/%m/%Y-%H:%M ",tiempoMedida);
+           
+        //sprintf(temperatura,"%.1f",(int)medida->temperaturaRegistrada);
+        float temp = medida->temperaturaRegistrada;
+        ftoa(temp,temperatura,1);
 
         
+      //  sprintf(indiceStringID,"%d",i);
+      //  id[9] = indiceStringID[0];
+      //  id[10] = indiceStringID[1];
+      //  id[11] = indiceStringID[2];
         
-        sprintf(temperatura, "%.1f", mediciones[i].temperaturaRegistrada);
-        strcat(temperaturaMensaje, temperatura);
-        strcat(temperaturaMensaje, "\r\n");
-
-        sprintf(indiceStringID, "%d", i);
-        strcat(id, indiceStringID);
-        strcat(id, "\r\n");
-
-        GPS_generateGoogleMaps(posicionString, mediciones[i].posicion);
-        strcat(posicionMensaje, posicionString);
-
-        enviarMensaje(id);
-        enviarMensaje(fechaMensaje);
+        strcat(temperaturaMensaje,temperatura);
+        strcat(temperaturaMensaje,"\r\n");
+        
+      //  strcat(fechaMensaje,fechaYhora);
+        
+      //  GPS_generateGoogleMaps(posicionString, mediciones[i].posicion);
+      //  strcat(posicionMensaje,posicionString);
+        enviarMensaje("\r\n");
+        vTaskDelay(pdMS_TO_TICKS(50));
+      //  enviarMensaje(id);
+        vTaskDelay(pdMS_TO_TICKS(50));
+       // enviarMensaje(fechaMensaje);
+        vTaskDelay(pdMS_TO_TICKS(50));
         enviarMensaje(temperaturaMensaje);
-        enviarMensaje(posicionMensaje);
-        memset(fechaYhora, 0, sizeof fechaYhora);
-        memset(fechaYhora, 0, sizeof temperatura);
-        memset(fechaYhora, 0, sizeof indiceStringID);
-        strcpy(id, "\r\nMedida ");
-        strcpy(temperaturaMensaje, "\r\nTemperatura: ");
-        strcpy(fechaMensaje, "Fecha y Hora: ");
-        strcpy(posicionMensaje, "Localizacion: ");
+        vTaskDelay(pdMS_TO_TICKS(50));
+      //  enviarMensaje(posicionMensaje);
+        vTaskDelay(pdMS_TO_TICKS(50));
+        
+        // Coloco todas las variables en estados "inciciales" otra vez
+      //  timetMedida = NULL;
+        memset(temperatura, 0, sizeof temperatura);
+      //  memset(fechaYhora,0,sizeof fechaYhora);
+      //  memset(fechaMensaje,0,sizeof fechaMensaje);
+      //  memset(posicionMensaje,0,sizeof posicionMensaje);
+        memset(temperaturaMensaje,0,sizeof temperaturaMensaje);
+        
+      //  tiempoMedida = NULL;
+      //  strcpy(id,"\r\nMedida    \r\n");
+        strcpy(temperaturaMensaje,"\r\nTemperatura: ");
+        
+      //  strcpy(fechaMensaje,"\r\nFecha y Hora: ");
+      //  strcpy(posicionMensaje,"Localizacion: ");
+        
+        vTaskDelay(pdMS_TO_TICKS(1000));
     }
-    /**
-     Recorrer la estructura con las Medidas y enviar los datos por USB.
-     */
-}
+ 
 /* *****************************************************************************
  End of File
  */
+}
