@@ -28,7 +28,9 @@
 
 
 #include "../System/conversiones.h"
+#include "../Platform/usbManager.h"
 #include "interfazUSB.h"
+#include "../System/menu.h"
 #include "interfazConversiones.h"
 #include "../Platform/gpsManager.h"
 #include "../System/utils.h"
@@ -115,7 +117,7 @@ void pedirUmbralTemperatura() {
 void pedirID() { // sin terminar
     uint32_t idAingresar;
     uint8_t largoDeEntrada = 11;
-    uint32_t idMaximo = 4294967295;
+    int32_t idMaximo = 4294967295;
     uint8_t i;
     char entrada[largoDeEntrada]; // Array donde se va a recibir la entrada
     bool entradaValida = true;
@@ -287,4 +289,12 @@ void imprimirMedidas() {
     /* *****************************************************************************
      End of File
      */
+}
+
+void borrarMedidas(){
+    int i;
+    medida_t medidaNula;
+    for(i=0;i<ultimaMedida;i++){
+        //mediciones[i] = medidaNula;
+    }
 }
