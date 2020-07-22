@@ -27,8 +27,11 @@
 #include <string.h>
 #include <stdlib.h>
 
-//Archivos del Sistema
+
+#include "../System/conversiones.h"
+#include "../Platform/usbManager.h"
 #include "interfazUSB.h"
+#include "../System/menu.h"
 #include "interfazConversiones.h"
 #include "../System/conversiones.h"
 #include "../Platform/gpsManager.h"
