@@ -142,17 +142,17 @@ void conversiones(void *p_params) {
     while (1) {
         /*Si existen los semaforos de tramaValida y de permiso de medicion de la interfaz*/
         if (tramaValida != NULL && puedoMedir != NULL) {
-            
+
             /*Si los dos semaforos estan libres*/
             if (xSemaphoreTake(tramaValida, 0) == pdTRUE &&
                     xSemaphoreTake(puedoMedir, 0) == pdTRUE) {
 
                 /*Liberamos el puedo medir, asi interfazConversiones sabe que puede detener la conversion*/
                 xSemaphoreGive(puedoMedir);
-                
+
                 /*Mientras contador sea menor al numero de conversiones a hacer*/
                 while (contador != conversionesAHacer) {
-                    
+
                     /*Hacemos take del semaforo de permiso de la interfaz por si se detuvo la medida*/
                     if (xSemaphoreTake(puedoMedir, 0) == pdTRUE) {
                         xSemaphoreGive(puedoMedir);
@@ -164,24 +164,27 @@ void conversiones(void *p_params) {
                         invertirLedsMedicion();
                         vTaskDelay(pdMS_TO_TICKS(250));
                     } else { /*Si se detuvo la medida apagamos los leds y cortamos el while*/
+                        /*Liberamos los semaforos de trama valida e inicializado*/
+                        xSemaphoreGive(inicializado);
+                        xSemaphoreGive(tramaValida);
                         apagarLeds();
                         break;
                     }
                 }
                 contador = 0;
-                
+
                 /*Checkeamos el permiso*/
                 if (xSemaphoreTake(puedoMedir, 0) == pdTRUE) {
-                    
+
                     /*Lo habilitamos para que pueda blockearse*/
                     xSemaphoreGive(puedoMedir);
-                    
+
                     /*Hacemos el promedio de las muestras*/
                     promedio = promedioSamples(samplesConversiones, conversionesAHacer);
-                    
+
                     /*Comvertimos el promedio de conversiones a temeperatura*/
                     promedio = conversorADCTemp(promedio);
-
+                    
                     /*Tomamos los datos de posicion de la trama*/
                     GPS_getPosition(&posicion, dispositivo.trama);
 
@@ -190,13 +193,13 @@ void conversiones(void *p_params) {
 
                     /*Seteamos la posicion de GPS en la medida*/
                     medida.posicion = posicion;
-                    
+
                     /*Seteamos la temperatura*/
                     medida.temperaturaRegistrada = promedio;
 
                     /*Seteamos en el array*/
                     mediciones[ultimaMedida] = medida;
-                    
+
                     /*Incrementamos le indice a agregar en el array de medidas*/
                     ultimaMedida++;
 
@@ -209,16 +212,22 @@ void conversiones(void *p_params) {
                             xSemaphoreGive(prenderYapagarLucesVerdes); //Habilita a la tarea de luces verdes
                         }
                     } else { /*Si se blockeo la medida continuamos el bucle y apagamos las luces*/
+                        /*Liberamos los semaforos de trama valida e inicializado*/
+                        xSemaphoreGive(inicializado);
+                        xSemaphoreGive(tramaValida);
                         apagarLeds();
                         continue;
                     }
                 } else { /*Si la medida esta blockeada vamos a la siguiente iteracion del bucle general*/
+                    /*Liberamos los semaforos de trama valida e inicializado*/
+                    xSemaphoreGive(inicializado);
+                    xSemaphoreGive(tramaValida);
                     continue;
                 }
                 /*Libera los semaforos de trama valida e inicializado*/
                 xSemaphoreGive(inicializado);
                 xSemaphoreGive(tramaValida);
-                
+
                 /*No se libera el permiso de interfaz porque este solo debe ser liberado desde interfazConversiones*/
             } else {
                 vTaskDelay(pdMS_TO_TICKS(30)); //Demora 30 ms en pedir de nuevo permiso para medir
