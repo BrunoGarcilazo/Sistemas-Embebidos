@@ -1,4 +1,3 @@
-/* ************************************************************************** */
 /** En este archivo estan algunas funciones para el manejo de las entradas
  * y salidas del usb.
 
@@ -14,25 +13,21 @@
   @Description
     Implementar funciones que permitar el envio y recibimiento de packetes via USB
  */
-/* ************************************************************************** */
 
-/* ************************************************************************** */
-/* ************************************************************************** */
-/* Section: Included Files                                                    */
-/* ************************************************************************** */
-/* ************************************************************************** */
-
-/*Libraries*/
+// <editor-fold defaultstate="collapsed" desc="Interfaces">
+/*Librerias*/
 #include <stdint.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
 
-/*MCC Includes*/
+/*MCC*/
 #include  "FreeRTOS.h"
 #include  "task.h"
 #include "../mcc_generated_files/usb/usb_device_cdc.h" 
+// </editor-fold>
 
+// <editor-fold defaultstate="collapsed" desc="Funciones de Interfaz">
 void buscarEntrada(uint8_t * buffer, uint8_t large) {
     int8_t numBytes; //Numero de bytes recibidos
     while (true) {
@@ -62,6 +57,4 @@ void enviarMensaje(uint8_t *mensaje) {
         }
     } while (!enviado);
 }
-/* *****************************************************************************
- End of File
- */
+// </editor-fold>

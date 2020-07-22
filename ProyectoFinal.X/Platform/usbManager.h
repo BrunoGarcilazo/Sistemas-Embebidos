@@ -16,19 +16,16 @@
  */
 /* ************************************************************************** */
 
-#ifndef _USB_MANAGER_H    /* Guard against multiple inclusion */
+#ifndef _USB_MANAGER_H
 #define _USB_MANAGER_H
 
-
-/* ************************************************************************** */
-/* Section: Included Files                                                    */
-/* ************************************************************************** */
+// <editor-fold defaultstate="collapsed" desc="Includes">
+/*Librerias*/
 #include <stdint.h>
 #include <stdbool.h>
+// </editor-fold>
 
-/* ************************************************************************** */
-/* Section: Funciones de interfaz                                             */
-/* ************************************************************************** */
+// <editor-fold defaultstate="collapsed" desc="Funciones de Interfaz">
 
 /**
  * Termina cuando se ha recibido algo.
@@ -46,8 +43,7 @@ void buscarEntrada(uint8_t * buffer, uint8_t large);
  * @param mensaje Array de chars a enviar
  */
 void enviarMensaje(char *mensaje);
+// </editor-fold>
 
 #endif /* _USB_MANAGER_H */
-/* *****************************************************************************
- End of File
- */
+

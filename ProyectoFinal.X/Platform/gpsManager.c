@@ -1,52 +1,45 @@
-/* ************************************************************************** */
-/** En este archivo hay funciones que manejan el RTC en base a interaccion via USB
+/** En este archivo hay funciones que se encargar de la gestion de la trama GPS
 
   @Company
     UCUDAL
 
   @File Name
-    rtcManager.c
+    gpsManager.h
 
   @Summary
-    Funciones que usan el RTC y USB
+    Tareas que se encargan de manejar los datos obtenidos por el gps
 
   @Description
-    Procesar input del usuario e interactuar con el USB
+    Libera un semaforo cuando la trama es valida. Permite a otras tareas usar datos del GPS
  */
-/* ************************************************************************** */
-/* ************************************************************************** */
-/* ************************************************************************** */
-/* Section: Included Files                                                    */
-/* ************************************************************************** */
-/* ************************************************************************** */
 
+// <editor-fold defaultstate="collapsed" desc="Includes">
+//Sistema Operativo
 #include "FreeRTOS.h"
 #include "../freeRTOS/include/semphr.h"
 #include "task.h"
 
-
-/*Libraries*/
+//Librerias
 #include <time.h>
 #include <stdbool.h>
 #include <string.h>
 
-/*MCC Includes*/
+//MCC
 #include "../mcc_generated_files/rtcc.h"
 #include "../mcc_generated_files/pin_manager.h"
 
+//Archivos del sistema
 #include "gpsManager.h"
 #include "../UI/interfazUSB.h"
 #include "../UI/interfazConversiones.h"
 #include "../System/menu.h"
+// </editor-fold>
 
+// <editor-fold defaultstate="collapsed" desc="Datos Globales">
 SemaphoreHandle_t tramaValida;
+// </editor-fold>
 
-/* ************************************************************************** */
-/* ************************************************************************** */
-// Section: Interface Functions                                               */
-/* ************************************************************************** */
-/* ************************************************************************** */
-
+// <editor-fold defaultstate="collapsed" desc="Funciones de interfaz">
 /**
  * El sistema trata de obtener una trama valida cada 100ms. Una vez conseguida la coloca en el RTC.
  * Una vez colocada la hora en el RTC el sistema libera un semaforo para que se pueda usar la hora y la actualiza
@@ -71,6 +64,5 @@ void mantenerGPS(void *p_params) {
         vTaskDelay(pdMS_TO_TICKS(1000)); //Si la trama es valida y la hora esta seteada que espere segundo
     }
 }
-/* *****************************************************************************
- End of File
- */
+// </editor-fold>
+

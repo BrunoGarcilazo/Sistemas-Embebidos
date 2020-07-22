@@ -1,4 +1,3 @@
-/* ************************************************************************** */
 /** Menu
 
   @Company
@@ -12,19 +11,14 @@
 
   @Description
     La tarea menu muestra el menu y espera por un input.
-    Cuando el input es valido se crea una funcion.
+    Cuando el input es valido se crea una funcion que responde al comando.
  */
-/* ************************************************************************** */
 
-#ifndef _MENU_H    /* Guard against multiple inclusion */
+#ifndef _MENU_H
 #define _MENU_H
 
-/* ************************************************************************** */
-/* ************************************************************************** */
-/* Section: Included Files                                                    */
-/* ************************************************************************** */
-/* ************************************************************************** */
-
+// <editor-fold defaultstate="collapsed" desc="Tipos de datos">
+/*Representa el estado del menu*/
 typedef enum {
     /**
      * Refiere al estado normal donde el usuario debe pedir algo.
@@ -37,19 +31,15 @@ typedef enum {
     EN_ESPERA,
 
 } MENU_STATUS;
+// </editor-fold>
 
-
-/* ***************************************************************************** */
-/* ***************************************************************************** */
-/* Funciones de interfaz                                                         */
-/* ***************************************************************************** */
-/* ***************************************************************************** */
-
+// <editor-fold defaultstate="collapsed" desc="Fuciones de interfaz">
 /**
  * Esta tarea se encarga de enviar el menu, esperar una respuesta y llamar a la funcion correspondiente
  * para responder al usuario
  * @param p_params
  */
 void menu();
+// </editor-fold>
 
-#endif /* _MENU_H */
+#endif

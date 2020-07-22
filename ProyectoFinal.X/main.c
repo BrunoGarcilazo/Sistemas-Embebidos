@@ -72,13 +72,12 @@ int main(void) {
     // initialize the device
     SYSTEM_Initialize();
     dispositivo.inicializado = false;
-    ultimaMedida = 0;
     boton2Flag = false;
     apagarLeds();
     
+    //Trama de prueba para el programa    
     strcpy(dispositivo.trama, "+CGNSINF: 1,1,20200715213000.000,-32.370193,-54.172768,117.100");
-    
-
+   
     xTaskCreate(mantenerGPS, "mantenimientoGPS", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 3, NULL);
 
     xTaskCreate(SIM808_taskCheck, "modemTask", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);

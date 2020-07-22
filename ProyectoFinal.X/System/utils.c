@@ -1,30 +1,14 @@
-/* ************************************************************************** */
-/** Descriptive File Name
+// <editor-fold defaultstate="collapsed" desc="Includes">
 
-  @Company
-    Company Name
-
-  @File Name
-    filename.c
-
-  @Summary
-    Brief description of the file.
-
-  @Description
-    Describe the purpose of this file.
- */
-/* ************************************************************************** */
-
-/* ************************************************************************** */
-/* ************************************************************************** */
-/* Section: Included Files                                                    */
-/* ************************************************************************** */
-/* ************************************************************************** */
-#include "utils.h"
-
+//Liberias
 #include <math.h> 
 #include <stdio.h> 
 
+//Archivos del sistema
+#include "utils.h"
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Funciones de interfaz">
 // Reverses a string 'str' of length 'len' 
 void reverse(char* str, int len) 
 { 
@@ -83,5 +67,7 @@ void ftoa(float n, char* res, int afterpoint)
   
         intToStr((int)fpart, res + i + 1, afterpoint); 
     } 
-} 
+}
+// </editor-fold>
+
 

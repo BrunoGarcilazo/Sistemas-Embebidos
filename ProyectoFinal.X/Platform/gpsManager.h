@@ -1,4 +1,3 @@
-/* ************************************************************************** */
 /** En este archivo hay funciones que se encargar de la gestion de la trama GPS
 
   @Company
@@ -13,31 +12,33 @@
   @Description
     Libera un semaforo cuando la trama es valida. Permite a otras tareas usar datos del GPS
  */
-/* ************************************************************************** */
 
 #ifndef _GPS_MANAGER_H    /* Guard against multiple inclusion */
 #define _GPS_MANAGER_H
 
-/* ************************************************************************** */
-/* Section: Include                                                           */
-/* ************************************************************************** */
-#include <time.h>
-#include "../freeRTOS/include/semphr.h"
+// <editor-fold defaultstate="collapsed" desc="Includes">
 
-/*Tiempo que usa el sistema*/
+//FreeRtos
+#include "semphr.h"
+
+//Librerias
+#include <time.h>
+// </editor-fold>
+
+// <editor-fold defaultstate="collapsed" desc="Datos Globales">
+
+/*Tiempo que usa el sistema, se actualiza cada un seg*/
 struct tm tiempoDelSistema;
 
 /*Semaforo que indica si la trama obtenida es valida*/
 extern SemaphoreHandle_t tramaValida;
+// </editor-fold>
 
-/* ************************************************************************** */
-/* Seccion: Funciones de interfaz                                             */
-/* ************************************************************************** */
-
+// <editor-fold defaultstate="collapsed" desc="Tareas">
 /*
- * Tarea que se encarga de refrescar los datos del GPS
+ * Tarea que se encarga de refrescar los datos del GPS y la hora
  * @param p_params
  */
 void mantenerGPS(void *p_params);
-
-#endif /* _GPS_MANAGER_H */
+// </editor-fold>
+#endif
