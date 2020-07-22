@@ -23,18 +23,12 @@
 
 //Librerias
 #include <stdint.h>
-#include <math.h> 
-#include <string.h>
-#include <stdlib.h>
 
-
-#include "../System/conversiones.h"
-#include "../Platform/usbManager.h"
+//Archivos del sistema
 #include "interfazUSB.h"
 #include "../System/menu.h"
 #include "interfazConversiones.h"
 #include "../System/conversiones.h"
-#include "../Platform/gpsManager.h"
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Datos Globales">
