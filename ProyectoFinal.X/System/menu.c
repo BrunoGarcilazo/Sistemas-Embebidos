@@ -262,6 +262,22 @@ void imprimirMedidas() {
         vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
+/** Funcion que "elimina" todas las Medidas existentes.
+ *  "Setea" todos sus valores a cero, luego se indica que
+ *  ultimaMedida = 0 ; de esta manera, cuando se mida denuevo,
+ *  se comenzara por el inicio del arreglo ;mediciones' una vez mas.
+ */
+void borrarMedidas(){
+            
+    int i;
+    GPSPosition_t posNula;
+    for(i=0;i<ultimaMedida;i++){
+        mediciones[i].temperaturaRegistrada = 0.0;
+        mediciones[i].tiempo = 0x00000000;
+        mediciones[i].posicion = posNula;
+    }
+    ultimaMedida = 0;
+}
 
 void menu() {
     MENU_STATUS status;
@@ -314,6 +330,7 @@ void menu() {
                                 status = EN_MENU;
                                 break;
                             case ('e')://Borrar medidias 
+                                borrarMedidas();
                                 status = EN_MENU;
                                 break;
                             case ('f')://Terminar conexion
