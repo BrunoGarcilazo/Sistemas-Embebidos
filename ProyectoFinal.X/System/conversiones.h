@@ -30,6 +30,14 @@
 #include "../Communications/GPS.h"
 // </editor-fold>
 
+// <editor-fold defaultstate="collapsed" desc="Macros">
+
+#define TEMP_RANGO_MAX      10.0
+#define ADC1_MAX            1023.0
+#define TEMP_MIN            32.0
+
+// </editor-fold>
+
 // <editor-fold defaultstate="collapsed" desc="Tipos de datos">
 /**
  * Tipo de dato encargado de representar una medida tomada por el conversion AD ("termometro")

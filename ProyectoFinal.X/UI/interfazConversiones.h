@@ -46,7 +46,7 @@ termometro_t dispositivo;
  * Semaforo que señaliza si la tarea de conversiones puede ejecutar una conversion
  * Se usa para parar las medidas, por lo que en una conversion se hace muchas veces take a este semaforo
  */
-extern SemaphoreHandle_t puedoMedir;
+extern SemaphoreHandle_t medir;
 
 //Flag que indica el estado del boton2, se pone en true mediante una interrupcion
 bool boton2Flag;

@@ -22,10 +22,6 @@
       <logicalFolder name="MCC Generated Files"
                      displayName="MCC Generated Files"
                      projectFiles="true">
-        <logicalFolder name="memory" displayName="memory" projectFiles="true">
-          <itemPath>mcc_generated_files/memory/flash_demo.h</itemPath>
-          <itemPath>mcc_generated_files/memory/flash.h</itemPath>
-        </logicalFolder>
         <logicalFolder name="usb" displayName="usb" projectFiles="true">
           <itemPath>mcc_generated_files/usb/usb_hal_pic32mm.h</itemPath>
           <itemPath>mcc_generated_files/usb/usb_ch9.h</itemPath>
@@ -45,9 +41,9 @@
         <itemPath>mcc_generated_files/mcc.h</itemPath>
         <itemPath>mcc_generated_files/system.h</itemPath>
         <itemPath>mcc_generated_files/rtcc.h</itemPath>
-        <itemPath>mcc_generated_files/tmr2.h</itemPath>
         <itemPath>mcc_generated_files/uart1.h</itemPath>
         <itemPath>mcc_generated_files/adc1.h</itemPath>
+        <itemPath>mcc_generated_files/adc_module_features.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="Platform" projectFiles="true">
         <itemPath>Platform/usbManager.h</itemPath>
@@ -91,10 +87,6 @@
       <logicalFolder name="MCC Generated Files"
                      displayName="MCC Generated Files"
                      projectFiles="true">
-        <logicalFolder name="memory" displayName="memory" projectFiles="true">
-          <itemPath>mcc_generated_files/memory/flash.c</itemPath>
-          <itemPath>mcc_generated_files/memory/flash_demo.c</itemPath>
-        </logicalFolder>
         <logicalFolder name="usb" displayName="usb" projectFiles="true">
           <itemPath>mcc_generated_files/usb/usb_device_events.c</itemPath>
           <itemPath>mcc_generated_files/usb/usb_device.c</itemPath>
@@ -109,7 +101,6 @@
         <itemPath>mcc_generated_files/mcc.c</itemPath>
         <itemPath>mcc_generated_files/pin_manager.c</itemPath>
         <itemPath>mcc_generated_files/rtcc.c</itemPath>
-        <itemPath>mcc_generated_files/tmr2.c</itemPath>
         <itemPath>mcc_generated_files/adc1.c</itemPath>
         <itemPath>mcc_generated_files/uart1.c</itemPath>
       </logicalFolder>

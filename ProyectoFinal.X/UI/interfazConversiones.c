@@ -31,24 +31,24 @@
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Variables">
-SemaphoreHandle_t puedoMedir;
+SemaphoreHandle_t medir;
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Tareas">
 
 void interfazTermometro(void* params) {
-    ultimaMedida = 0; //Setea el contador para ingresar medidas a 0, de esta forma se empieza desde el principio
-    puedoMedir = xSemaphoreCreateBinary(); //Crea el semaforo binario que controla las mediciones
-    xTaskCreate(conversiones, "Conversiones", configMINIMAL_STACK_SIZE + 500, NULL, tskIDLE_PRIORITY + 2, NULL);
+    medir = xSemaphoreCreateBinary(); //Crea el semaforo binario que controla las mediciones
+    xTaskCreate(conversiones, "Conversiones", configMINIMAL_STACK_SIZE + 300, NULL, tskIDLE_PRIORITY + 2, NULL);
     while (1) {
         if (boton2Flag) { //Cuando el boton fue presionado
             if (xSemaphoreTake(inicializado, 0) == pdTRUE) {
-                if (xSemaphoreTake(puedoMedir, 0) != pdTRUE) { //Si el semaforo no esta libre
-                    xSemaphoreGive(puedoMedir); //Permito medir
+                if (xSemaphoreTake(medir, 0) == pdFALSE) { //Si el semaforo esta trancado
+                    xSemaphoreGive(medir); //Permito medir
                 }
             } else {
-                if (xSemaphoreTake(puedoMedir, 0) == pdTRUE) { //Si el semaforo esta libre
-                    //Detengo la medida
+                if (xSemaphoreTake(medir, 0) == pdTRUE) { //Si el semaforo esta libre
+                    //Trancamos la medida
+                    xSemaphoreGive(inicializado);
                 }
             }
             boton2Flag = false; //Ponemos el flag en false

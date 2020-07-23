@@ -83,25 +83,22 @@
 #include "pin_manager.h"
 #include "clock.h"
 #include "system.h"
+#include "rtcc.h"
+#include "uart1.h"
 #include "usb/usb.h"
 #include "adc1.h"
 #include "interrupt_manager.h"
 #include "exceptions.h"
-#include "uart1.h"
-#include "rtcc.h"
-#include "memory/flash.h"
-#include "tmr2.h"
 
 void SYSTEM_Initialize(void)
 {
     PIN_MANAGER_Initialize();
-    CLOCK_Initialize();
     INTERRUPT_Initialize();
-    USBDeviceInit();
+    CLOCK_Initialize();
     UART1_Initialize();
-    ADC1_Initialize();
+    USBDeviceInit();
     USBDeviceAttach();
-    TMR2_Initialize();
+    ADC1_Initialize();
     RTCC_Initialize();
     INTERRUPT_GlobalEnable();
 }

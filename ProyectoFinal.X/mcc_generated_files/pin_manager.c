@@ -48,11 +48,14 @@
 /**
     Section: Includes
 */
-#include <stdbool.h>
+
 #include <xc.h>
 #include "pin_manager.h"
 #include "system.h"
-#include "../UI/interfazConversiones.h"
+
+
+
+bool boton2Flag = false;
 
 /**
  Section: File specific functions
@@ -142,7 +145,7 @@ void PIN_MANAGER_Initialize (void)
 
 void __attribute__ ((weak)) BTN2_CallBack(void)
 {
-    
+
 }
 
 void __attribute__ ((weak)) BTN1_CallBack(void)

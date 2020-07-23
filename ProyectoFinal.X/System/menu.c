@@ -258,8 +258,6 @@ void imprimirMedidas() {
         strcpy(temperaturaMensaje, "\r\nTemperatura: ");
         strcpy(fechaMensaje, "\r\nFecha y Hora: ");
         strcpy(posicionMensaje, "\r\nLocalizacion: ");
-        //Enviamos cada un segundo
-        vTaskDelay(pdMS_TO_TICKS(1000));
     }
 }
 /** Funcion que "elimina" todas las Medidas existentes.

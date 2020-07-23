@@ -88,7 +88,7 @@ int main(void) {
 
     xTaskCreate(interfazTermometro, "interfazTermometro", configMINIMAL_STACK_SIZE, NULL, tskIDLE_PRIORITY + 1, NULL);
     
-    xTaskCreate(interfazUSB, "interfazUSB", configMINIMAL_STACK_SIZE + 500, NULL, tskIDLE_PRIORITY + 1, NULL);
+    xTaskCreate(interfazUSB, "interfazUSB", configMINIMAL_STACK_SIZE + 300, NULL, tskIDLE_PRIORITY + 1, NULL);
 
     /* Finally start the scheduler. */
     vTaskStartScheduler();
@@ -137,11 +137,17 @@ void vApplicationStackOverflowHook(TaskHandle_t pxTask, char *pcTaskName) {
     (void) pcTaskName;
     (void) pxTask;
 
+    char nombre[20];
     /* Run time task stack overflow checking is performed if
     configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook	function is 
     called if a task stack overflow is detected.  Note the system/interrupt
     stack is not checked. */
     taskDISABLE_INTERRUPTS();
+    int i;
+    for (i = 0; i < 20; i++) {
+        nombre[i] = pcTaskName[i];
+    }
+
     apagarLeds();
     for (;;);
 }

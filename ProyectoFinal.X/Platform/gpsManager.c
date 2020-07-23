@@ -41,7 +41,7 @@ SemaphoreHandle_t tramaValida;
 
 // <editor-fold defaultstate="collapsed" desc="Funciones de interfaz">
 /**
- * El sistema trata de obtener una trama valida cada 100ms. Una vez conseguida la coloca en el RTC.
+ * El sistema trata de obtener una trama valida cada 1s. Una vez conseguida la coloca en el RTC.
  * Una vez colocada la hora en el RTC el sistema libera un semaforo para que se pueda usar la hora y la actualiza
  * cada un segundo.
  * @param p_params

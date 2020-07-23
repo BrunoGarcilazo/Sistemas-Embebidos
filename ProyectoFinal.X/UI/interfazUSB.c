@@ -23,6 +23,7 @@
 
 //Librerias
 #include <stdint.h>
+#include <string.h>
 
 //Archivos del sistema
 #include "interfazUSB.h"

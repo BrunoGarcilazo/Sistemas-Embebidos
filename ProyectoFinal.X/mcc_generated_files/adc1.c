@@ -1,4 +1,3 @@
-
 /**
   ADC1 Generated Driver File
 
@@ -9,20 +8,20 @@
     adc1.c
 
   @Summary
-    This is the generated header file for the ADC1 driver using Foundation Services Library
+    This is the generated driver implementation file for the ADC1 driver using PIC24 / dsPIC33 / PIC32MM MCUs
 
   @Description
-    This header file provides APIs for driver for ADC1.
+    This source file provides APIs for ADC1.
     Generation Information :
-        Product Revision  :  Foundation Services Library - pic24-dspic-pic32mm : v1.26
-        Device            :  PIC32MM0256GPM064
+        Product Revision  :  PIC24 / dsPIC33 / PIC32MM MCUs - 1.167.0
+        Device            :  PIC32MM0256GPM064      
     The generated drivers are tested against the following:
-        Compiler          :  XC32 1.42
-        MPLAB 	          :  MPLAB X 3.45
+        Compiler          :  XC16 v1.50
+        MPLAB 	          :  MPLAB X v5.35
 */
 
 /*
-    (c) 2016 Microchip Technology Inc. and its subsidiaries. You may use this
+    (c) 2020 Microchip Technology Inc. and its subsidiaries. You may use this
     software and any derivatives exclusively with Microchip products.
 
     THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
@@ -46,123 +45,95 @@
 /**
   Section: Included Files
 */
-
-#include <xc.h>
 #include "adc1.h"
 
 /**
-  Section: Data Type Definitions
+  Section: File Specific Functions
 */
 
-/* ADC Driver Hardware Instance Object
-
-  @Summary
-    Defines the object required for the maintenance of the hardware instance.
-
-  @Description
-    This defines the object required for the maintenance of the hardware
-    instance. This object exists once per hardware instance of the peripheral.
-
- */
-typedef struct
-{
-	uint8_t intSample;
-}
-
-ADC_OBJECT;
-
-static ADC_OBJECT adc1_obj;
+// ADC1 Default Interrupt Handler
+static void (*ADC1_DefaultInterruptHandler)(void) = NULL;
 
 /**
   Section: Driver Interface
 */
 
-
 void ADC1_Initialize (void)
 {
-    // ASAM enabled; DONE disabled; FORM Integer 16-bit; SAMP disabled; SSRC Internal counter ends sampling and starts conversion; SIDL disabled; MODE12 10-bit; ON enabled; 
-
-   AD1CON1 = 0x8074;
-
-    // CSCNA enabled; BUFM disabled; SMPI Generates interrupt after completion of every sample/conversion operation; OFFCAL disabled; VCFG AVDD/AVSS; BUFREGEN disabled; 
-
-   AD1CON2 = 0x400;
-
-    // SAMC 31; EXTSAM disabled; ADRC PBCLK; ADCS 255; 
-
-   AD1CON3 = 0x1FFF;
-
+    // ASAM disabled; DONE disabled; FORM Integer 16-bit; SAMP disabled; SSRC Clearing sample bit ends sampling and starts conversion; SIDL disabled; MODE12 10-bit; ON enabled; 
+    AD1CON1 = 0x8000;
+    // CSCNA disabled; BUFM disabled; SMPI Generates interrupt after completion of every sample/conversion operation; OFFCAL disabled; VCFG AVDD/AVSS; BUFREGEN disabled; 
+    AD1CON2 = 0x00;
+    // SAMC 2; EXTSAM disabled; ADRC PBCLK; ADCS 3; 
+    AD1CON3 = 0x203;
     // CH0SA AN0; CH0NA AVSS; 
-
-   AD1CHS = 0x0;
-
-    // CSS9 disabled; CSS8 disabled; CSS7 disabled; CSS6 disabled; CSS5 disabled; CSS4 disabled; CSS3 disabled; CSS2 disabled; CSS15 enabled; CSS1 disabled; CSS14 disabled; CSS0 disabled; CSS13 disabled; CSS12 disabled; CSS11 disabled; CSS10 disabled; CSS30 disabled; CSS19 disabled; CSS18 disabled; CSS29 disabled; CSS17 disabled; CSS28 disabled; CSS16 disabled; CSS27 disabled; 
-
-   AD1CSS = 0x8000;
-
+    AD1CHS = 0x00;
+    // CSS9 disabled; CSS8 disabled; CSS7 disabled; CSS6 disabled; CSS5 disabled; CSS4 disabled; CSS3 disabled; CSS2 disabled; CSS15 disabled; CSS1 disabled; CSS14 disabled; CSS0 disabled; CSS13 disabled; CSS12 disabled; CSS11 disabled; CSS10 disabled; CSS30 disabled; CSS19 disabled; CSS18 disabled; CSS29 disabled; CSS17 disabled; CSS28 disabled; CSS16 disabled; CSS27 disabled; 
+    AD1CSS = 0x00;
+    // ASEN disabled; WM Legacy operation; ASINT No interrupt; CM Less Than mode; BGREQ disabled; LPEN Full power; 
+    AD1CON5 = 0x00;
     // CHH9 disabled; CHH8 disabled; CHH7 disabled; CHH6 disabled; CHH5 disabled; CHH4 disabled; CHH3 disabled; CHH2 disabled; CHH1 disabled; CHH0 disabled; CHH11 disabled; CHH10 disabled; CHH13 disabled; CHH12 disabled; CHH15 disabled; CHH14 disabled; CHH17 disabled; CHH16 disabled; CHH19 disabled; CHH18 disabled; 
-
-   AD1CHIT = 0x0;
-
-
-   adc1_obj.intSample = AD1CON2bits.SMPI;
+    AD1CHIT = 0x00;
+    
+    //Assign Default Callbacks
+    ADC1_SetInterruptHandler(&ADC1_CallBack);
    
 }
 
+void __attribute__ ((weak)) ADC1_CallBack(void)
+{
+
+}
+
+void ADC1_SetInterruptHandler(void* handler)
+{
+    ADC1_DefaultInterruptHandler = handler;
+}
+
+void __attribute__ ((weak)) ADC1_Tasks ( void )
+{
+    if(IFS1bits.AD1IF)
+    {
+        if(ADC1_DefaultInterruptHandler) 
+        { 
+            ADC1_DefaultInterruptHandler(); 
+        }
+
+        // clear the ADC interrupt flag
+        IFS1CLR= 1 << _IFS1_AD1IF_POSITION;
+    }
+}
+
+/*******************************************************************************
+
+  !!! Deprecated Definitions and APIs !!!
+  !!! These functions will not be supported in future releases !!!
+
+*******************************************************************************/
 void ADC1_Start(void)
 {
    AD1CON1SET = (1 << _AD1CON1_SAMP_POSITION);
 }
+
 void ADC1_Stop(void)
 {
    AD1CON1CLR = (1 << _AD1CON1_SAMP_POSITION);
 }
+
 uint16_t ADC1_ConversionResultBufferGet(uint16_t *buffer)
 {
     int count;
     uint16_t *ADC16Ptr;
+    uint16_t sampleCount = AD1CON2bits.SMPI;
 
     ADC16Ptr = (uint16_t *)&(ADC1BUF0);
 
-    for(count=0;count<=adc1_obj.intSample;count++)
+    for(count=0;count<=sampleCount;count++)
     {
         buffer[count] = (uint16_t)*ADC16Ptr;
         ADC16Ptr++;
     }
     return count;
-}
-uint16_t ADC1_ConversionResultGet(void)
-{
-    return ADC1BUF0;
-}
-bool ADC1_IsConversionComplete( void )
-{
-    return AD1CON1bits.DONE; //Wait for conversion to complete   
-}
-void ADC1_ChannelSelect( ADC1_CHANNEL channel )
-{
-    AD1CHS = channel;
-}
-
-uint16_t ADC1_GetConversion(ADC1_CHANNEL channel)
-{
-    ADC1_ChannelSelect(channel);
-    
-    ADC1_Start();
-    ADC1_Stop();
-    
-    while (!ADC1_IsConversionComplete())
-    {
-    }
-       
-    return ADC1_ConversionResultGet();
-}
-
-
-void ADC1_Tasks ( void )
-{
-    // clear the ADC interrupt flag
-    IFS1CLR= 1 << _IFS1_AD1IF_POSITION;
 }
 
 

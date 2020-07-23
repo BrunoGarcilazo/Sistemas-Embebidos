@@ -19,7 +19,7 @@
 //FreeRtos
 #include "FreeRTOS.h"
 #include "task.h"
-#include "../freeRTOS/include/semphr.h"
+#include "semphr.h"
 
 //Libreria
 #include <stdbool.h>
@@ -32,6 +32,7 @@
 //MCC
 #include "../mcc_generated_files/usb/usb_device_cdc.h"
 #include "../mcc_generated_files/pin_manager.h"
+#include "../mcc_generated_files/adc1.h"
 
 //Archivos del sistema
 #include "conversiones.h"
@@ -47,20 +48,22 @@
 
 xSemaphoreHandle prenderYapagarLucesRojas;
 xSemaphoreHandle prenderYapagarLucesVerdes;
+
+uint8_t contador = 0;
+
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Funciones de Interfaz">
 
 /**
- * Hace el Promedio de todos los Samples obtenidos del ADC
- * @param samplesConversiones Array con samples
- * @param tamanio Largo del array
- * @return Promedio de todas las medidas
+ * Promedia los valores de los samples
+ * @param samples Conversiones Array con samples a promediar
+ * @param tamanio Tamaño de array, cantidad de medidas
+ * @return valor entre 0 - 1023
  */
-float promedioSamples(uint16_t *samplesConversiones, uint8_t tamanio) {
+float promedioSamples(float * samplesConversiones, uint8_t tamanio) {
     uint8_t i;
-    uint16_t sumaDeValores;
-    sumaDeValores = 0;
+    float sumaDeValores = 0;
     for (i = 0; i < tamanio; i++) {
         sumaDeValores = sumaDeValores + samplesConversiones[i];
     }
@@ -68,17 +71,14 @@ float promedioSamples(uint16_t *samplesConversiones, uint8_t tamanio) {
 }
 
 /**
- * Convierte el Promedio de los datos del ADC a una Temperatura en Celsius entre 32C y 42C
+ * Convierte el Promedio de los datos del ADC a una Temperatura en Celsius entre 32.0C y 42.0C
  * @param promedio Promedio de las temperaturas medidas por el ADC
  * @return Valor en grados
  */
 float conversorADCTemp(float promedio) {
-    uint8_t vecesQueEntra10;
     float temperatura;
 
-    //Corregir numeros magicos
-    vecesQueEntra10 = floorf(promedio / 10); //Calculamos las veces que entra el promedio en 10 redondeada abajo
-    temperatura = 32 + (0.1 * vecesQueEntra10); //a la minima temperatura le sumamos la division entre 10 de veces que entra
+    temperatura = ((promedio / ADC1_MAX) * TEMP_RANGO_MAX) + TEMP_MIN;
     return temperatura;
 }
 
@@ -121,15 +121,13 @@ void alertarPersona(medida_t *medida) {
 
 void conversiones(void *p_params) {
     uint8_t conversionesAHacer = 10;
-    uint16_t samplesConversiones[conversionesAHacer];
-    uint8_t contador;
-    uint16_t muestra;
+    float samplesConversiones[conversionesAHacer];
+    uint8_t contador = 0;
+    float muestra;
     float promedio;
 
     GPSPosition_t posicion;
     medida_t medida;
-
-    contador = 0;
 
     prenderYapagarLucesRojas = xSemaphoreCreateBinary();
     prenderYapagarLucesVerdes = xSemaphoreCreateBinary();
@@ -141,31 +139,34 @@ void conversiones(void *p_params) {
 
     while (1) {
         /*Si existen los semaforos de tramaValida y de permiso de medicion de la interfaz*/
-        if (tramaValida != NULL && puedoMedir != NULL) {
+        if (tramaValida != NULL && medir != NULL) {
 
             /*Si los dos semaforos estan libres*/
             if (xSemaphoreTake(tramaValida, 0) == pdTRUE &&
-                    xSemaphoreTake(puedoMedir, 0) == pdTRUE) {
+                    xSemaphoreTake(medir, 0) == pdTRUE) {
 
                 /*Liberamos el puedo medir, asi interfazConversiones sabe que puede detener la conversion*/
-                xSemaphoreGive(puedoMedir);
+                xSemaphoreGive(medir);
 
                 /*Mientras contador sea menor al numero de conversiones a hacer*/
                 while (contador != conversionesAHacer) {
 
                     /*Hacemos take del semaforo de permiso de la interfaz por si se detuvo la medida*/
-                    if (xSemaphoreTake(puedoMedir, 0) == pdTRUE) {
-                        xSemaphoreGive(puedoMedir);
-                        while (!ADC1_IsConversionComplete()) {
-                        }
-                        muestra = ADC1_ConversionResultGet();
-                        samplesConversiones[contador] = muestra;
-                        contador = contador + 1;
-                        invertirLedsMedicion();
+                    if (xSemaphoreTake(medir, 0) == pdTRUE) {
+                        xSemaphoreGive(medir);
+                        //taskENTER_CRITICAL();
+                        ADC1_ChannelSelect(channel_AN15);
+                        ADC1_SoftwareTriggerEnable();
                         vTaskDelay(pdMS_TO_TICKS(250));
+                        ADC1_SoftwareTriggerDisable();
+                        while (!ADC1_IsConversionComplete(channel_AN15)) {
+                        }
+                        muestra = ADC1_ConversionResultGet(channel_AN15);
+                        //taskEXIT_CRITICAL();
+                        samplesConversiones[contador] = muestra; //se guardan las 10 conversiones en un array
+                        invertirLedsMedicion(); //se prenden/apagan leds azules por cada conversion
+                        contador = contador + 1;
                     } else { /*Si se detuvo la medida apagamos los leds y cortamos el while*/
-                        /*Liberamos los semaforos de trama valida e inicializado*/
-                        xSemaphoreGive(inicializado);
                         xSemaphoreGive(tramaValida);
                         apagarLeds();
                         break;
@@ -174,17 +175,17 @@ void conversiones(void *p_params) {
                 contador = 0;
 
                 /*Checkeamos el permiso*/
-                if (xSemaphoreTake(puedoMedir, 0) == pdTRUE) {
+                if (xSemaphoreTake(medir, 0) == pdTRUE) {
 
                     /*Lo habilitamos para que pueda blockearse*/
-                    xSemaphoreGive(puedoMedir);
+                    xSemaphoreGive(medir);
 
                     /*Hacemos el promedio de las muestras*/
                     promedio = promedioSamples(samplesConversiones, conversionesAHacer);
 
                     /*Comvertimos el promedio de conversiones a temeperatura*/
                     promedio = conversorADCTemp(promedio);
-                    
+
                     /*Tomamos los datos de posicion de la trama*/
                     GPS_getPosition(&posicion, dispositivo.trama);
 
@@ -204,7 +205,7 @@ void conversiones(void *p_params) {
                     ultimaMedida++;
 
                     /*Checkeamos el permiso*/
-                    if (xSemaphoreTake(puedoMedir, 0) == pdTRUE) {
+                    if (xSemaphoreTake(medir, 0) == pdTRUE) {
                         if (promedio > dispositivo.umbralDeTemperatura) { //Si la temperatura fue mayor al umbral
                             xSemaphoreGive(prenderYapagarLucesRojas); //Habilita a la tarea de luces rojas
                             alertarPersona(&medida); //Manda mensaje a la persona
@@ -212,21 +213,18 @@ void conversiones(void *p_params) {
                             xSemaphoreGive(prenderYapagarLucesVerdes); //Habilita a la tarea de luces verdes
                         }
                     } else { /*Si se blockeo la medida continuamos el bucle y apagamos las luces*/
-                        /*Liberamos los semaforos de trama valida e inicializado*/
-                        xSemaphoreGive(inicializado);
                         xSemaphoreGive(tramaValida);
                         apagarLeds();
                         continue;
                     }
                 } else { /*Si la medida esta blockeada vamos a la siguiente iteracion del bucle general*/
-                    /*Liberamos los semaforos de trama valida e inicializado*/
-                    xSemaphoreGive(inicializado);
                     xSemaphoreGive(tramaValida);
+                    apagarLeds();
                     continue;
                 }
                 /*Libera los semaforos de trama valida e inicializado*/
-                xSemaphoreGive(inicializado);
                 xSemaphoreGive(tramaValida);
+                xSemaphoreGive(inicializado);
 
                 /*No se libera el permiso de interfaz porque este solo debe ser liberado desde interfazConversiones*/
             } else {
@@ -237,5 +235,6 @@ void conversiones(void *p_params) {
         }
     }
 }
+
 // </editor-fold>
 

@@ -74,8 +74,8 @@ static bool volatile rxOverflowed;
 
 */
 
-#define UART1_CONFIG_TX_BYTEQ_LENGTH (255)
-#define UART1_CONFIG_RX_BYTEQ_LENGTH (255)
+#define UART1_CONFIG_TX_BYTEQ_LENGTH (255+1)
+#define UART1_CONFIG_RX_BYTEQ_LENGTH (255+1)
 
 /** UART Driver Queue
 
