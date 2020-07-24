@@ -28,17 +28,17 @@
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Funciones de Interfaz">
+
 void buscarEntrada(uint8_t * buffer, uint8_t large) {
     int8_t numBytes; //Numero de bytes recibidos
     while (true) {
         if ((USBGetDeviceState() < CONFIGURED_STATE) ||
                 (USBIsDeviceSuspended() == true)) {
+            break;
         } else {
-            if (USBUSARTIsTxTrfReady()) {
-                numBytes = getsUSBUSART(buffer, large);
-                if (numBytes > 0) { // Si se recibio una entrada
-                    return; //Retorna
-                }
+            numBytes = getsUSBUSART(buffer, large);
+            if (numBytes > 0) { // Si se recibio una entrada
+                return; //Retorna
             }
         }
     }
@@ -49,9 +49,10 @@ void enviarMensaje(uint8_t *mensaje) {
     do {
         if ((USBGetDeviceState() < CONFIGURED_STATE) ||
                 (USBIsDeviceSuspended() == true)) {
+            break;
         } else {
             if (USBUSARTIsTxTrfReady()) {
-                putUSBUSART(mensaje,strlen(mensaje)); //Si pudo enviar el mensaje devuelve 
+                putUSBUSART(mensaje, strlen(mensaje)); //Si pudo enviar el mensaje devuelve 
                 enviado = true;
             }
         }

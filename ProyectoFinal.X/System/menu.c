@@ -13,7 +13,7 @@
     Funciones asociadas al menu que leen y escriben datos via USB
  */
 
-// <editor-fold defaultstate="collapsed" desc="Include Files">
+// <editor-fold defaultstate="collapsed" desc="Includes">
 //Includes de FreeRtos
 #include "FreeRTOS.h"
 #include "task.h"
@@ -110,7 +110,7 @@ void pedirUmbralTemperatura() {
             dispositivo.umbralDeTemperatura = atof(entrada);
             break;
         }
-    } while (!verificado); //Todo esto mientras no sea valido
+    } while (!verificado && (USBGetDeviceState() >= CONFIGURED_STATE) && !USBIsDeviceSuspended()); //Todo esto mientras no sea valido
 
     //Al final aviso que el dato enviado fue correcto
     enviarMensaje(DATO_CORRECTO);
@@ -147,7 +147,7 @@ void pedirID() { // sin terminar
             dispositivo.dispositivoID = idAingresar;
             break;
         }
-    } while (entradaValida);
+    } while (entradaValida && (USBGetDeviceState() >= CONFIGURED_STATE) && !USBIsDeviceSuspended());
 
     //Avisamos que los datos estan correctos
     enviarMensaje(DATO_CORRECTO);
@@ -172,17 +172,17 @@ void pedirNumeroDeContacto() {
         if (validarTelefono(entrada)) {
             // Convierto la entrada en un array de char con el formato \"092020400\"
             numeroFormatoSMS[0] = '"';
-            for (i = 0; i<sizeof (entrada); i++) {
+            for (i = 0; i < sizeof (entrada); i++) {
                 numeroFormatoSMS[i + 1] = entrada[i];
             }
-            numeroFormatoSMS[largoDeNumeroDeCelular + 1] = '"';
+            strcat(numeroFormatoSMS,"\"");
             // Ahora numeroFormatoSMS = "096123456"
-            for (k = 0; k < sizeof (entrada); k++) {
+            for (k = 0; k < strlen(numeroFormatoSMS); k++) { //Seteamos en el dispositivo
                 dispositivo.numeroDeContacto[k] = numeroFormatoSMS[k];
             }
             break;
         }
-    } while (1);
+    } while ((USBGetDeviceState() >= CONFIGURED_STATE) && !USBIsDeviceSuspended());
 
     //Avisamos que se setearon los datos bien
     enviarMensaje(DATO_CORRECTO);
@@ -217,8 +217,12 @@ void imprimirMedidas() {
     struct tm *tiempoMedida;
     medida_t *medida;
     time_t timetMedida;
-    
+
+
     for (i = 0; i < ultimaMedida; i++) {
+        if (!(USBGetDeviceState() >= CONFIGURED_STATE) && USBIsDeviceSuspended()) {
+            break;
+        }
         //Apuntamos a la medida requerida
         medida = &mediciones[i];
 
@@ -260,16 +264,20 @@ void imprimirMedidas() {
         strcpy(posicionMensaje, "\r\nLocalizacion: ");
     }
 }
+
 /** Funcion que "elimina" todas las Medidas existentes.
  *  "Setea" todos sus valores a cero, luego se indica que
  *  ultimaMedida = 0 ; de esta manera, cuando se mida denuevo,
  *  se comenzara por el inicio del arreglo ;mediciones' una vez mas.
  */
-void borrarMedidas(){
-            
-    int i;
+void borrarMedidas() {
+
+    uint8_t i;
     GPSPosition_t posNula;
-    for(i=0;i<ultimaMedida;i++){
+    for (i = 0; i < ultimaMedida; i++) {
+        if (!(USBGetDeviceState() >= CONFIGURED_STATE) && USBIsDeviceSuspended()) {
+            break;
+        }
         mediciones[i].temperaturaRegistrada = 0.0;
         mediciones[i].tiempo = 0x00000000;
         mediciones[i].posicion = posNula;
@@ -293,7 +301,11 @@ void menu() {
      * Terminar conexion
      */
     while (buffer[0] != 'f') { //Mientras la entrada no sea 
-        if (USBUSARTIsTxTrfReady()) {
+        //Si se desconecta y reconecta el USB deberia mostrar el menu de nuevo
+        if ((USBGetDeviceState() < CONFIGURED_STATE) ||
+                (USBIsDeviceSuspended() == true)) {
+            status = EN_MENU;
+        } else {
             switch (status) {
                 case(EN_MENU): //Si el estado es de menu imprimimos el mismo
                     enviarMensaje("\r\nBienvenido\r\nEnvie la tecla presente a la izquierda de la funcion\r\n");
@@ -344,5 +356,7 @@ void menu() {
             }
         }
     }
+    Nop();
 }
+
 // </editor-fold>

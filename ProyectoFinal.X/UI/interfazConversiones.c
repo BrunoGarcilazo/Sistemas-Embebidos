@@ -28,31 +28,34 @@
 #include "../System/conversiones.h"
 #include "interfazConversiones.h"
 #include "interfazUSB.h"
+#include "../Platform/gpsManager.h"
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Variables">
-SemaphoreHandle_t medir;
+SemaphoreHandle_t puedoMedir;
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Tareas">
 
 void interfazTermometro(void* params) {
-    medir = xSemaphoreCreateBinary(); //Crea el semaforo binario que controla las mediciones
-    xTaskCreate(conversiones, "Conversiones", configMINIMAL_STACK_SIZE + 300, NULL, tskIDLE_PRIORITY + 2, NULL);
+    puedoMedir = xSemaphoreCreateBinary(); //Crea el semaforo binario que controla las mediciones
+    xTaskCreate(conversiones, "Conversiones", configMINIMAL_STACK_SIZE + 300, NULL, tskIDLE_PRIORITY + 1, NULL);
     while (1) {
         if (boton2Flag) { //Cuando el boton fue presionado
             if (xSemaphoreTake(inicializado, 0) == pdTRUE) {
-                if (xSemaphoreTake(medir, 0) == pdFALSE) { //Si el semaforo esta trancado
-                    xSemaphoreGive(medir); //Permito medir
+                if (xSemaphoreTake(puedoMedir, 0) == pdFALSE) { //Si el semaforo esta trancado
+                    xSemaphoreGive(puedoMedir); //Permito medir
                 }
             } else {
-                if (xSemaphoreTake(medir, 0) == pdTRUE) { //Si el semaforo esta libre
+                if (xSemaphoreTake(puedoMedir, 0) == pdTRUE) { //Si el semaforo esta libre
                     //Trancamos la medida
-                    xSemaphoreGive(inicializado);
+                    xSemaphoreGive(tramaValida); //Liberamos el semaforo de trama valida
+                    xSemaphoreGive(inicializado); //Liberamos el semaforo inicializado
                 }
             }
             boton2Flag = false; //Ponemos el flag en false
         }
+        vTaskDelay(pdMS_TO_TICKS(5));
     }
 }
 

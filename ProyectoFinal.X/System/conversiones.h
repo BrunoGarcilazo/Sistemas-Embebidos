@@ -30,11 +30,12 @@
 #include "../Communications/GPS.h"
 // </editor-fold>
 
-// <editor-fold defaultstate="collapsed" desc="Macros">
+// <editor-fold defaultstate="collapsed" desc="Macros Y Constantes">
 
 #define TEMP_RANGO_MAX      10.0
 #define ADC1_MAX            1023.0
 #define TEMP_MIN            32.0
+#define MEDIDAS_MAX            200
 
 // </editor-fold>
 
@@ -53,7 +54,7 @@ typedef struct{
 /**
  * Array donde se guardan las mediciones tomadas por el "termometro"
  */
-medida_t mediciones[200];
+medida_t mediciones[MEDIDAS_MAX];
 
 /**
  * Indice donde se va a agregar la proxima medida en el array de mediciones

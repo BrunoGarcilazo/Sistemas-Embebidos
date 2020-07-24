@@ -14,7 +14,7 @@
     segun la salud del paciente
  */
 
-// <editor-fold defaultstate="collapsed" desc="Include Files">
+// <editor-fold defaultstate="collapsed" desc="Includes">
 
 //FreeRtos
 #include "FreeRTOS.h"
@@ -139,21 +139,21 @@ void conversiones(void *p_params) {
 
     while (1) {
         /*Si existen los semaforos de tramaValida y de permiso de medicion de la interfaz*/
-        if (tramaValida != NULL && medir != NULL) {
+        if (tramaValida != NULL && puedoMedir != NULL) {
 
             /*Si los dos semaforos estan libres*/
             if (xSemaphoreTake(tramaValida, 0) == pdTRUE &&
-                    xSemaphoreTake(medir, 0) == pdTRUE) {
+                    xSemaphoreTake(puedoMedir, 0) == pdTRUE) {
 
                 /*Liberamos el puedo medir, asi interfazConversiones sabe que puede detener la conversion*/
-                xSemaphoreGive(medir);
+                xSemaphoreGive(puedoMedir);
 
                 /*Mientras contador sea menor al numero de conversiones a hacer*/
                 while (contador != conversionesAHacer) {
 
                     /*Hacemos take del semaforo de permiso de la interfaz por si se detuvo la medida*/
-                    if (xSemaphoreTake(medir, 0) == pdTRUE) {
-                        xSemaphoreGive(medir);
+                    if (xSemaphoreTake(puedoMedir, 0) == pdTRUE) {
+                        xSemaphoreGive(puedoMedir);
                         //taskENTER_CRITICAL();
                         ADC1_ChannelSelect(channel_AN15);
                         ADC1_SoftwareTriggerEnable();
@@ -167,7 +167,6 @@ void conversiones(void *p_params) {
                         invertirLedsMedicion(); //se prenden/apagan leds azules por cada conversion
                         contador = contador + 1;
                     } else { /*Si se detuvo la medida apagamos los leds y cortamos el while*/
-                        xSemaphoreGive(tramaValida);
                         apagarLeds();
                         break;
                     }
@@ -175,10 +174,10 @@ void conversiones(void *p_params) {
                 contador = 0;
 
                 /*Checkeamos el permiso*/
-                if (xSemaphoreTake(medir, 0) == pdTRUE) {
+                if (xSemaphoreTake(puedoMedir, 0) == pdTRUE) {
 
                     /*Lo habilitamos para que pueda blockearse*/
-                    xSemaphoreGive(medir);
+                    xSemaphoreGive(puedoMedir);
 
                     /*Hacemos el promedio de las muestras*/
                     promedio = promedioSamples(samplesConversiones, conversionesAHacer);
@@ -198,14 +197,16 @@ void conversiones(void *p_params) {
                     /*Seteamos la temperatura*/
                     medida.temperaturaRegistrada = promedio;
 
-                    /*Seteamos en el array*/
-                    mediciones[ultimaMedida] = medida;
+                    if (ultimaMedida < MEDIDAS_MAX) {// Si el indice ultimaMedida esta dentro del array
+                        /*Seteamos en el array*/
+                        mediciones[ultimaMedida] = medida;
+                    }
 
                     /*Incrementamos le indice a agregar en el array de medidas*/
                     ultimaMedida++;
 
                     /*Checkeamos el permiso*/
-                    if (xSemaphoreTake(medir, 0) == pdTRUE) {
+                    if (xSemaphoreTake(puedoMedir, 0) == pdTRUE) {
                         if (promedio > dispositivo.umbralDeTemperatura) { //Si la temperatura fue mayor al umbral
                             xSemaphoreGive(prenderYapagarLucesRojas); //Habilita a la tarea de luces rojas
                             alertarPersona(&medida); //Manda mensaje a la persona
@@ -213,12 +214,9 @@ void conversiones(void *p_params) {
                             xSemaphoreGive(prenderYapagarLucesVerdes); //Habilita a la tarea de luces verdes
                         }
                     } else { /*Si se blockeo la medida continuamos el bucle y apagamos las luces*/
-                        xSemaphoreGive(tramaValida);
-                        apagarLeds();
                         continue;
                     }
                 } else { /*Si la medida esta blockeada vamos a la siguiente iteracion del bucle general*/
-                    xSemaphoreGive(tramaValida);
                     apagarLeds();
                     continue;
                 }

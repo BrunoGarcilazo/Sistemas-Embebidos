@@ -38,6 +38,7 @@ SemaphoreHandle_t inicializado;
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Funciones de Interfaz">
+
 /**
  * Esta funcion inicializa los datos imprescindibles para hacer una medida pidiendolos via USB
  */
@@ -59,13 +60,16 @@ void interfazUSB(void* params) {
     uint8_t buffer[4]; //Buffer de ingreso de datos
     uint8_t numBytes; //Numero de bytes ingresados
     while (1) {
-        if (USBUSARTIsTxTrfReady() & (USBGetDeviceState() >= CONFIGURED_STATE) && !USBIsDeviceSuspended()) {
+        if ((USBGetDeviceState() >= CONFIGURED_STATE) && !USBIsDeviceSuspended()) {
             numBytes = getsUSBUSART(buffer, strlen(buffer)); //Verificamos si se recibio algo
             if (numBytes > 0) { //Si se recibio algo
                 if (!dispositivo.inicializado) { //Si no se ha inicializado el dispositivo
                     inicializar(); //Ejecutamos la funcion de inicializacion
-                    dispositivo.inicializado = true; //El dispositivo queda como inicializado
-                    xSemaphoreGive(inicializado); //Liberamos el semaforo de inicializado
+                    if (dispositivo.numeroDeContacto[2] == '9' && dispositivo.umbralDeTemperatura != 0
+                            && dispositivo.dispositivoID != 0) { //Si se inicializaron todos los valores
+                        dispositivo.inicializado = true; //El dispositivo queda como inicializado
+                        xSemaphoreGive(inicializado); //Liberamos el semaforo de inicializado
+                    }
                 } else {
                     if (xSemaphoreTake(inicializado, 0) == pdTRUE) { //Semaforo libre = puedo ejecutar el menu
                         menu(); //Ejecutamos el menu

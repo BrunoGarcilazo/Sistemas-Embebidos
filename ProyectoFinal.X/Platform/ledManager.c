@@ -29,6 +29,16 @@
 // </editor-fold>
 
 // <editor-fold defaultstate="collapsed" desc="Funciones de Interfaz">
+/**
+ * Pone todos los leds en negro
+ */
+void apagarLeds() {
+    uint8_t j;
+    for (j = 0; j < MAX_LEDS; j++) {
+        coloresLeds[j] = BLACK;
+    }
+    WS2812_send(coloresLeds, MAX_LEDS);
+}
 
 /** Metodo llamado cuando se realiza una Medicion
  * Si los Leds estaban en Negro, se cambian a Azul y viceversa.
@@ -40,9 +50,7 @@ void invertirLedsMedicion() {
             coloresLeds[i] = BLUE;
         }
     } else {
-        for (i = 0; i < MAX_LEDS; i++) {
-            coloresLeds[i] = BLACK;
-        }
+        apagarLeds();
     }
     WS2812_send(coloresLeds, MAX_LEDS);
 }
@@ -89,14 +97,5 @@ void prenderLedsVerdesPor2Seg(void *p_params) {
     }
 }
 
-/**
- * Pone todos los leds en negro
- */
-void apagarLeds() {
-    uint8_t j;
-    for (j = 0; j < MAX_LEDS; j++) {
-        coloresLeds[j] = BLACK;
-    }
-    WS2812_send(coloresLeds, MAX_LEDS);
-}
+
 // </editor-fold>
