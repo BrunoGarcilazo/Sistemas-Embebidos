@@ -200,10 +200,11 @@ void conversiones(void *p_params) {
                     if (ultimaMedida < MEDIDAS_MAX) {// Si el indice ultimaMedida esta dentro del array
                         /*Seteamos en el array*/
                         mediciones[ultimaMedida] = medida;
+                        /*Incrementamos el indice a agregar en el array de medidas*/
+                        ultimaMedida++;
                     }
 
-                    /*Incrementamos le indice a agregar en el array de medidas*/
-                    ultimaMedida++;
+
 
                     /*Checkeamos el permiso*/
                     if (xSemaphoreTake(puedoMedir, 0) == pdTRUE) {
